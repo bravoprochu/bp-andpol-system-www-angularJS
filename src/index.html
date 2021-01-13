@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--<base href="/"/>-->
+    <title>Andpol New Start</title>
+    <meta charset="UTF-8">
+    <!-- build:css css/lib.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="../bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="../bower_components/angular-material-data-table/dist/md-data-table.css" />
+    <link rel="stylesheet" href="../bower_components/angular-toastr/dist/angular-toastr.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    
+    <!-- build:css css/app.css -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/.tmp/styles.css">
+    <!-- endinject -->
+    <!-- endbuild -->    
+    
+    
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    
+</head>
+<body ng-app="app" ng-strict-di>
+    <ng-include src="'app/common/preStart.html'"></ng-include>
+    <div ng-if="false" class="splashPage splashPageTextBox">
+        <h5>Trwa wczytywanie</h5>
+        <div id="fountainTextG"><div id="fountainTextG_1" class="fountainTextG">A</div><div id="fountainTextG_2" class="fountainTextG">n</div><div id="fountainTextG_3" class="fountainTextG">d</div><div id="fountainTextG_4" class="fountainTextG">p</div><div id="fountainTextG_5" class="fountainTextG">o</div><div id="fountainTextG_6" class="fountainTextG">l</div><div id="fountainTextG_7" class="fountainTextG">S</div><div id="fountainTextG_8" class="fountainTextG">y</div><div id="fountainTextG_9" class="fountainTextG">s</div><div id="fountainTextG_10" class="fountainTextG">t</div><div id="fountainTextG_11" class="fountainTextG">e</div><div id="fountainTextG_12" class="fountainTextG">m</div></div>
+    </div>
+    
+    
+    
+    <!-- build:js js/lib.js -->
+    <!-- bower:js -->
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-animate/angular-animate.js"></script>
+    <script src="../bower_components/angular-aria/angular-aria.js"></script>
+    <script src="../bower_components/angular-messages/angular-messages.js"></script>
+    <script src="../bower_components/angular-material/angular-material.js"></script>
+    <script src="../bower_components/angular-material-data-table/dist/md-data-table.js"></script>
+    <script src="../bower_components/qrcode/lib/qrcode.js"></script>
+    <script src="../bower_components/angular-qr/src/angular-qr.js"></script>
+    <script src="../bower_components/angular-qr-scanner/qr-scanner.js"></script>
+    <script src="../bower_components/angular-resource/angular-resource.js"></script>
+    <script src="../bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="../bower_components/moment/moment.js"></script>
+    <script src="../bower_components/moment/locale/pl.js"></script>
+    <script src="../bower_components/moment-duration-format/lib/moment-duration-format.js"></script>
+    <script src="../bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <script src="../bower_components/angular-i18n/angular-locale_pl.js"></script>
+    <script src="../bower_components/chart.js/dist/Chart.js"></script>
+    <script src="../bower_components/angular-chart.js/dist/angular-chart.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    
+    <!-- build:js js/app.js -->
+    <!-- inject:js -->
+    <script src="/src/app/app.js"></script>
+    <script src="/src/app/appSettings.js"></script>
+    <script src="/src/app/config.js"></script>
+    <script src="/src/app/config.routes.js"></script>
+    <script src="/src/app/common/dialogsService.js"></script>
+    <script src="/src/app/common/dirtyBag.js"></script>
+    <script src="/src/app/common/dirtyCheck.js"></script>
+    <script src="/src/app/common/naglowek.js"></script>
+    <script src="/src/app/common/nawigacjaSzczegoly.js"></script>
+    <script src="/src/app/common/notFoundCtrl.js"></script>
+    <script src="/src/app/common/preferencjeWarning.js"></script>
+    <script src="/src/app/common/qrCodeWydrukCtrl.js"></script>
+    <script src="/src/app/common/registerCtrl.js"></script>
+    <script src="/src/app/common/sessionEndsD.js"></script>
+    <script src="/src/app/common/startCtrl.js"></script>
+    <script src="/src/app/common/wyborKombinacji.js"></script>
+    <script src="/src/app/services/commonFunctions.js"></script>
+    <script src="/src/app/services/currentUser.js"></script>
+    <script src="/src/app/services/dataFactory.js"></script>
+    <script src="/src/app/services/dirtyBagContainer.js"></script>
+    <script src="/src/app/services/preferencjeStorage.js"></script>
+    <script src="/src/app/services/qrCodeGen.js"></script>
+    <script src="/src/app/services/statusCheck.js"></script>
+    <script src="/src/app/services/userAccount.js"></script>
+    <script src="/src/app/common/directives/border.js"></script>
+    <script src="/src/app/common/directives/canv.js"></script>
+    <script src="/src/app/common/directives/kalendarz.js"></script>
+    <script src="/src/app/common/directives/kontrahentCardSmall.js"></script>
+    <script src="/src/app/common/directives/kontrahentDealerSelect.js"></script>
+    <script src="/src/app/common/directives/kontrahentSelect.js"></script>
+    <script src="/src/app/common/directives/liniaPozioma.js"></script>
+    <script src="/src/app/common/directives/listaNazw.js"></script>
+    <script src="/src/app/common/directives/politykaCenowa.js"></script>
+    <script src="/src/app/common/directives/pozycjaMagazynowa.js"></script>
+    <script src="/src/app/common/directives/selectAll.js"></script>
+    <script src="/src/app/common/directives/selectPomocnicze.js"></script>
+    <script src="/src/app/common/directives/singleChoice.js"></script>
+    <script src="/src/app/common/directives/statusWatch.js"></script>
+    <script src="/src/app/common/directives/test.js"></script>
+    <script src="/src/app/common/directives/toggle.js"></script>
+    <script src="/src/app/common/directives/userInfo.js"></script>
+    <script src="/src/app/common/filters/bezPolskichZnakow.js"></script>
+    <script src="/src/app/common/filters/bezUsunietych.js"></script>
+    <script src="/src/app/common/filters/camelCase.js"></script>
+    <script src="/src/app/common/filters/dateGroupBy.js"></script>
+    <script src="/src/app/common/filters/noBrackets.js"></script>
+    <script src="/src/app/common/filters/objToString.js"></script>
+    <script src="/src/app/common/filters/roznica.js"></script>
+    <script src="/src/app/common/filters/separator.js"></script>
+    <script src="/src/app/common/filters/sumOfValue.js"></script>
+    <script src="/src/app/content/bazaJednostek/bazaJednostekCtrl.js"></script>
+    <script src="/src/app/content/dashboard/dashboardCtrl.js"></script>
+    <script src="/src/app/content/kontrahent/dealerNewTmplCtrl.js"></script>
+    <script src="/src/app/content/kontrahent/kontrahentCtrl.js"></script>
+    <script src="/src/app/content/kontrahent/kontrahentDetailCtrl.js"></script>
+    <script src="/src/app/content/kontrahent/kontrahentPlatnosc.js"></script>
+    <script src="/src/app/content/norma/gotowy.js"></script>
+    <script src="/src/app/content/norma/normaCtrl.js"></script>
+    <script src="/src/app/content/norma/normaDetailCtrl.js"></script>
+    <script src="/src/app/content/norma/normaRobocizna.js"></script>
+    <script src="/src/app/content/norma/wykonczenie.js"></script>
+    <script src="/src/app/content/obszycie/obszycieCtrl.js"></script>
+    <script src="/src/app/content/obszycie/obszycieDetailCtrl.js"></script>
+    <script src="/src/app/content/nazwyKombinacji/nazwyKombinacjiCtrl.js"></script>
+    <script src="/src/app/content/nazwyKombinacji/nazwyKombinacjiDetailCtrl.js"></script>
+    <script src="/src/app/content/planning/planningCtrl.js"></script>
+    <script src="/src/app/content/planning/planningDetailCtrl.js"></script>
+    <script src="/src/app/content/planning/planningDetailInfo.js"></script>
+    <script src="/src/app/content/planning/planningWykonany.js"></script>
+    <script src="/src/app/content/planning/planningZamowieniaBaza.js"></script>
+    <script src="/src/app/content/planning/planningZamowienieKombiInfo.js"></script>
+    <script src="/src/app/content/wykonczenia/wykonczenieCtrl.js"></script>
+    <script src="/src/app/content/wykonczenia/wykonczenieDetailCtrl.js"></script>
+    <script src="/src/app/content/wykonczenia/wykonczenieGrupaCtrl.js"></script>
+    <script src="/src/app/content/wykonczenia/wykonczenieGrupaDetailCtrl.js"></script>
+    <script src="/src/app/content/zamowienie/zamowieniaListaTabela.js"></script>
+    <script src="/src/app/content/zamowienie/zamowienieCtrl.js"></script>
+    <script src="/src/app/content/zamowienie/zamowienieDetailCtrl.js"></script>
+    <script src="/src/app/content/finanse/fakturaSprzedazy/fakturaSprzedazyCtrl.js"></script>
+    <script src="/src/app/content/finanse/fakturaSprzedazy/fakturaSprzedazyDetailCtrl.js"></script>
+    <script src="/src/app/content/finanse/fakturaSprzedazy/fakturaSprzedazyPozycja.js"></script>
+    <script src="/src/app/content/finanse/fakturaSprzedazy/niezafakturowaneWz.js"></script>
+    <script src="/src/app/content/finanse/fakturaZakupu/fakturaZakupuCtrl.js"></script>
+    <script src="/src/app/content/finanse/fakturaZakupu/fakturaZakupuDetailCtrl.js"></script>
+    <script src="/src/app/content/finanse/finanseShared/datyDokumentu.js"></script>
+    <script src="/src/app/content/finanse/politykaCenowa/politykaCenowaCtrl.js"></script>
+    <script src="/src/app/content/finanse/politykaCenowa/politykaCenowaDetailCtrl.js"></script>
+    <script src="/src/app/content/finanse/platnosci/platnosciCtrl.js"></script>
+    <script src="/src/app/content/finanse/platnosci/platnosciZaplaconeCtrl.js"></script>
+    <script src="/src/app/content/finanse/platnosci/platnoscPrzypomnienieCard.js"></script>
+    <script src="/src/app/content/finanse/platnosci/platnoscPrzypomnienieCardUpdateCtrl.js"></script>
+    <script src="/src/app/content/magazyn/pozycjaMagazynowa/magPozycjaMagazynowaCtrl.js"></script>
+    <script src="/src/app/content/magazyn/pozycjaMagazynowa/magPozycjaMagazynowaDetailCtrl.js"></script>
+    <script src="/src/app/content/magazyn/pz/magPzCard.js"></script>
+    <script src="/src/app/content/magazyn/pz/magPzCtrl.js"></script>
+    <script src="/src/app/content/magazyn/pz/magPZDetailCtrl.js"></script>
+    <script src="/src/app/content/magazyn/wz/magWzCtrl.js"></script>
+    <script src="/src/app/content/magazyn/wz/magWzDetailCtrl.js"></script>
+    <script src="/src/app/content/magazyn/wz/magWzZamowieniaWybrane.js"></script>
+    <script src="/src/app/content/produkcja/brygadzista/brygadzistaCtrl.js"></script>
+    <script src="/src/app/content/produkcja/stanowiska/stanowiskaCtrl.js"></script>
+    <script src="/src/app/content/produkcja/stanowiska/stanowiskaDetailCtrl.js"></script>
+    <script src="/src/app/content/planning/kalendarzDniRoboczych/kalendarzDniRoboczychCtrl.js"></script>
+    <script src="/src/app/content/planning/kalendarzDniRoboczych/kalendarzDniRoboczychDetailCtrl.js"></script>
+    <script src="/src/app/content/planning/planningKalendarz/planningKalendarz.js"></script>
+    <script src="/src/app/content/planning/planningKalendarz/planningKalendarzZakres.js"></script>
+    <script src="/src/app/content/tkaniny/pzTkaniny/pzTkaninyCtrl.js"></script>
+    <script src="/src/app/content/tkaniny/pzTkaniny/pzTkaninyDetailCtrl.js"></script>
+    <script src="/src/app/content/tkaniny/material/materialCtrl.js"></script>
+    <script src="/src/app/content/tkaniny/material/materialDetailCtrl.js"></script>
+    <script src="/src/app/content/tkaniny/tkaninaBelka/tkaninaBelkaCtrl.js"></script>
+    <script src="/src/app/content/tkaniny/tkaninaBelka/tkaninaBelkaDetailCtrl.js"></script>
+    <script src="/src/app/content/system/produkcjaDzial/dzienRoboczyDatePicker.js"></script>
+    <script src="/src/app/content/system/produkcjaDzial/produkcjaDzialCtrl.js"></script>
+    <script src="/src/app/content/system/produkcjaDzial/produkcjaDzialInfo.js"></script>
+    <script src="/src/app/content/system/produkcjaDzial/produkcjaDzialNowy.js"></script>
+    <script src="/src/app/content/system/usersManagement/usersManagementCtrl.js"></script>
+    <script src="/src/app/content/planning/materialowka/pozycjeMagazynowe/materialowkaRaport.js"></script>
+    <script src="/src/app/content/planning/materialowka/pozycjeMagazynowe/planningPozycjemagazynowe.js"></script>
+    <script src="/src/app/content/planning/materialowka/tkaniny/planningTkaninyBelka.js"></script>
+    <script src="/src/app/content/planning/planningRealizacja/tkaniny/planningRealizacjaTkaninyCtrl.js"></script>
+    <script src="/src/app/content/planning/materialowka/tkaniny/raport/planningTkaninyBelkaRaport.js"></script>
+    <!-- endinject -->
+   
+    <!-- inject:templates:js -->
+    <!-- endinject -->
+    <!-- endbuild -->
+
+</body>
+</html>

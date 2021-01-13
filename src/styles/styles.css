@@ -1,0 +1,265 @@
+﻿.md-tooltip {
+    height: auto;
+    line-height: 20px;
+}
+
+.panelbox {
+    min-width: 500px;
+    background-color: white;
+}
+
+
+
+.color-red {
+    color:red !important;
+}
+
+.lineHeightByk {
+    line-height:2em;
+    margin-top:10px;
+    margin-bottom: 5px;
+}
+
+.autocomplete-custom-template li {
+  border-bottom: 1px dotted #808080;
+  min-height:6em;
+  height: auto;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  white-space: normal; }
+
+.autocomplete-title {
+    display:block;
+    height:2em;
+    line-height:2em;
+    font-size:medium;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.autocomplete-subTitle {
+    display:block;
+    height:2em;
+    line-height:1em;
+    font-style:italic;
+    font-size:small;
+}
+
+
+.podkreslenie {
+font-style:italic;
+color:red;
+
+}
+
+.splashPage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.splashPageTextBox {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px; 
+    color:#808080;
+}
+
+
+
+
+#fountainTextG{
+	width:100%;
+	margin:auto;
+
+}
+
+.fountainTextG {
+	color:rgb(0,0,0);
+	font-family:Arial;
+	font-size:46px;
+	text-decoration:none;
+	font-weight:normal;
+	font-style:normal;
+	float:left;
+	animation-name:bounce_fountainTextG;
+		-o-animation-name:bounce_fountainTextG;
+
+		-webkit-animation-name:bounce_fountainTextG;
+		-moz-animation-name:bounce_fountainTextG;
+	animation-duration:2.09s;
+		-o-animation-duration:2.09s;
+
+		-webkit-animation-duration:2.09s;
+		-moz-animation-duration:2.09s;
+	animation-iteration-count:infinite;
+		-o-animation-iteration-count:infinite;
+
+		-webkit-animation-iteration-count:infinite;
+		-moz-animation-iteration-count:infinite;
+	animation-direction:normal;
+		-o-animation-direction:normal;
+
+		-webkit-animation-direction:normal;
+		-moz-animation-direction:normal;
+	transform:scale(.5);
+		-o-transform:scale(.5);
+		-ms-transform:scale(.5);
+		-webkit-transform:scale(.5);
+		-moz-transform:scale(.5);
+}#fountainTextG_1{
+	animation-delay:0.75s;
+		-o-animation-delay:0.75s;
+
+		-webkit-animation-delay:0.75s;
+		-moz-animation-delay:0.75s;
+}
+#fountainTextG_2{
+	animation-delay:0.9s;
+		-o-animation-delay:0.9s;
+
+		-webkit-animation-delay:0.9s;
+		-moz-animation-delay:0.9s;
+}
+#fountainTextG_3{
+	animation-delay:1.05s;
+		-o-animation-delay:1.05s;
+
+		-webkit-animation-delay:1.05s;
+		-moz-animation-delay:1.05s;
+}
+#fountainTextG_4{
+	animation-delay:1.2s;
+		-o-animation-delay:1.2s;
+
+		-webkit-animation-delay:1.2s;
+		-moz-animation-delay:1.2s;
+}
+#fountainTextG_5{
+	animation-delay:1.35s;
+		-o-animation-delay:1.35s;
+
+		-webkit-animation-delay:1.35s;
+		-moz-animation-delay:1.35s;
+}
+#fountainTextG_6{
+	animation-delay:1.5s;
+		-o-animation-delay:1.5s;
+
+		-webkit-animation-delay:1.5s;
+		-moz-animation-delay:1.5s;
+}
+#fountainTextG_7{
+	animation-delay:1.64s;
+		-o-animation-delay:1.64s;
+
+		-webkit-animation-delay:1.64s;
+		-moz-animation-delay:1.64s;
+}
+#fountainTextG_8{
+	animation-delay:1.79s;
+		-o-animation-delay:1.79s;
+
+		-webkit-animation-delay:1.79s;
+		-moz-animation-delay:1.79s;
+}
+#fountainTextG_9{
+	animation-delay:1.94s;
+		-o-animation-delay:1.94s;
+
+		-webkit-animation-delay:1.94s;
+		-moz-animation-delay:1.94s;
+}
+#fountainTextG_10{
+	animation-delay:2.09s;
+		-o-animation-delay:2.09s;
+
+		-webkit-animation-delay:2.09s;
+		-moz-animation-delay:2.09s;
+}
+#fountainTextG_11{
+	animation-delay:2.24s;
+		-o-animation-delay:2.24s;
+
+		-webkit-animation-delay:2.24s;
+		-moz-animation-delay:2.24s;
+}
+#fountainTextG_12{
+	animation-delay:2.39s;
+		-o-animation-delay:2.39s;
+
+		-webkit-animation-delay:2.39s;
+		-moz-animation-delay:2.39s;
+}
+#fountainTextG_13{
+	animation-delay:2.54s;
+		-o-animation-delay:2.54s;
+
+		-webkit-animation-delay:2.54s;
+		-moz-animation-delay:2.54s;
+}
+
+
+
+
+@keyframes bounce_fountainTextG{
+	0%{
+		transform:scale(1);
+		color:rgb(0,0,0);
+	}
+
+	100%{
+		transform:scale(.5);
+		color:rgb(255,255,255);
+	}
+}
+
+@-o-keyframes bounce_fountainTextG{
+	0%{
+		-o-transform:scale(1);
+		color:rgb(0,0,0);
+	}
+
+	100%{
+		-o-transform:scale(.5);
+		color:rgb(255,255,255);
+	}
+}
+
+@-ms-keyframes bounce_fountainTextG{
+	0%{
+		-ms-transform:scale(1);
+		color:rgb(0,0,0);
+	}
+
+	100%{
+		-ms-transform:scale(.5);
+		color:rgb(255,255,255);
+	}
+}
+
+@-webkit-keyframes bounce_fountainTextG{
+	0%{
+		-webkit-transform:scale(1);
+		color:rgb(0,0,0);
+	}
+
+	100%{
+		-webkit-transform:scale(.5);
+		color:rgb(255,255,255);
+	}
+}
+
+@-moz-keyframes bounce_fountainTextG{
+	0%{
+		-moz-transform:scale(1);
+		color:rgb(0,0,0);
+	}
+
+	100%{
+		-moz-transform:scale(.5);
+		color:rgb(255,255,255);
+	}
+}
+

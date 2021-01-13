@@ -1,0 +1,15 @@
+﻿<md-dialog aira-label="wartoscWz" ng-keypress="($event.charCode==13 || $event.keyCode==13)? vm.save() : return">
+    <div layout="column" layout-padding>
+        <div class="md-title">Wydanie Zewnętrzne - wartość</div>
+        <div class="lineHeightByk">&nbsp;</div>
+        <div class="md-body-1">Wartość nie może być wyższa od {{vm.locals.maxValue}}</div>
+        <md-input-container>
+            <label>Wartość WZ</label>
+            <input ng-model="vm.wartoscWz" type="number" min="1" max="{{vm.locals.maxValue}}" required ng-init="vm.wartoscWz=vm.locals.maxValue" md-autofocus/>
+        </md-input-container>
+        <div layout>
+            <md-button class="md-raised md-warn" ng-click="vm.save()">zapisz</md-button>
+            <md-button class="md-raised md-warn" ng-click="vm.cancel()">anuluj</md-button>
+        </div>
+    </div>
+</md-dialog>

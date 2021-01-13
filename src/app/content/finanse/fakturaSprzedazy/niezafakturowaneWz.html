@@ -1,0 +1,53 @@
+﻿        <md-toolbar class="md-accent" layout layout-align="end center">
+            <md-input-container ng-show="tableObj.searchShow" style="margin-bottom:-1em">
+                <label>Wyszukaj w tabeli</label>
+                <input ng-model="tableObj.searchText" type="text" />
+            </md-input-container>
+            <md-button class="md-icon-button" aria-label="tableSearch" ng-click="tableObj.search()">
+                <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                <md-icon md-svg-icon="search"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="dealersAdd" ng-click="tableObj.edit(0)">
+                <md-tooltip md-direction="top">Utwórz nowego</md-tooltip>
+                <md-icon md-svg-icon="add"></md-icon>
+            </md-button>
+        </md-toolbar>
+
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="tableObj.order">
+                    <tr md-row>
+                        <th md-column></th>
+                        <th md-column md-order-by="magWzId"><span>MagWzId</span></th>
+                        <th md-column md-order-by="basicInfo.numerDokumentu"><span>Nr dokumentu</span></th>
+                        <th style="min-width:250px" md-column md-order-by="basicInfo.kontrahent.nazwa"><span>Kontrahent</span></th>
+                        <th md-column md-order-by="basicInfo.czyPozMag"><span>Typ</span></th>
+                        <th md-column md-order-by="basicInfo.createdInfo.createdBy"><span>CreatedBy</span></th>
+                        <th md-column md-order-by="basicInfo.createdInfo.createdDateTime"><span>Utworzono</span></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="dane in dost | filter: tableObj.searchText | orderBy: tableObj.order | limitTo: tableObj.limit: (tableObj.page - 1) * tableObj.limit">
+                        <td md-cell>
+                            <div layout>
+                                <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="tableObj.addSingle(dane)" ng-disabled="dane.czyPozMag">
+                                    <md-tooltip md-direction="top">Dodaj single</md-tooltip>
+                                    <md-icon md-svg-src="add" aria-label="magWzAddSingle"></md-icon>
+                                </md-button>
+                                <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="tableObj.addGroup(dane)" >
+                                    <md-tooltip md-direction="top">Dodaj grupa</md-tooltip>
+                                    <md-icon md-svg-src="add" aria-label="magWzAddGroup"></md-icon>
+                                </md-button>
+                            </div>
+                        </td>
+                        <td md-cell>{{dane.magWzId}}</td>
+                        <td md-cell>{{dane.basicInfo.numerDokumentu}}</td>
+                        <td md-cell>{{dane.basicInfo.kontrahent.nazwa}}</td>
+                        <td md-cell><span ng-if="dane.czyPozMag">Pozycje magazynowe</span><span ng-if="!dane.czyPozMag">Zamowienia</span> </td>
+                        <td md-cell>{{dane.basicInfo.createdInfo.createdBy}}</td>
+                        <td md-cell>{{dane.basicInfo.createdInfo.createdDateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination md-limit="tableObj.limit" md-limit-options="tableObj.rowLimitOpt" md-page="tableObj.page" md-page-select="true" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.length}}"></md-table-pagination>

@@ -1,0 +1,28 @@
+﻿<!--<md-card>
+    <md-card-content>-->
+<div layout="column" layout-padding>
+    <div class="md-title">{{title}}</div>
+    <md-radio-group ng-disabled="isDisabled"
+                    ng-if="!isVertical"
+                    ng-model="vm.selected" 
+                    ng-change="vm.selectedChanged()" 
+                    layout layout-align="space around center">
+        <md-radio-button ng-repeat="poz in danePomocnicze track by poz[daneId]" ng-value="poz">
+            <span><strong>{{poz[pole]}}</strong></span>
+            <span ng-if="poz.uwagi"><em>&nbsp;[{{poz.uwagi}}]</em></span>
+        </md-radio-button>
+    </md-radio-group>
+
+    <md-radio-group ng-disabled="isDisabled"
+                    ng-if="isVertical" 
+                    ng-model="vm.selected" 
+                    ng-change="vm.selectedChanged()" 
+                    layout="column" layout-align="space around start">
+        <md-radio-button ng-repeat="poz in danePomocnicze track by poz[daneId]" ng-value="poz" >
+            <span><strong>{{poz[pole]}}</strong></span>
+            <span ng-if="poz.uwagi"><em>&nbsp;[{{poz.uwagi}}]</em></span>
+        </md-radio-button>
+    </md-radio-group>
+</div>
+    <!--</md-card-content>
+</md-card>-->

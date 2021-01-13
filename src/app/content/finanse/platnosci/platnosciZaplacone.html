@@ -1,0 +1,121 @@
+﻿<md-card>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+        <div ng-if="vm.startMode">
+
+            <md-toolbar layout layout-padding layout-align="start center">
+                <md-button class="md-icon-button" aria-label="dateRange" ng-click="vm.dateRange()">
+                    <md-tooltip md-direction="zakres dat">Zakres dat</md-tooltip>
+                    <md-icon md-svg-icon="dateRange"></md-icon>
+                </md-button>
+                <div class="md-title">{{vm.info}}</div>
+                <preferencje-warning></preferencje-warning>
+                <div flex></div>
+                <md-button ng-click="vm.idzDo('platnosci')" class="md-raised">
+                    Przejdź do nierozliczonych płatności
+                </md-button>
+
+            </md-toolbar>
+
+            <div layout layout-padding layout-wrap>
+                <md-content flex-gt-md="50" flex-md="90" flex-sm="100" flex-xs="100" layout="column" layout-padding>
+                    <div class="md-subhead">Kwota/miech <small>(tylko PLN)</small></div>
+                    <div layout="column" layout-gt-md="row">
+                        <md-content flex-gt-md="75">
+                            <canvas id="bar" class="chart chart-bar"
+                                    chart-data="vm.chart.data"
+                                    chart-labels="vm.chart.labels"
+                                    chart-series="vm.chart.series"
+                                    chart-legend="false"></canvas>
+                        </md-content>
+
+                            <ul flex-gt-md="25" class="md-caption">
+                                <li ng-repeat="kontr in vm.raport">
+                                    <span>
+                                        <strong>{{kontr.label}}</strong>
+                                    </span>
+                                    <span>({{kontr.wartosc | number:2}})</span>
+                                </li>
+                            </ul>
+                        </div>
+                </md-content>
+                <md-content flex-gt-md="50" flex-md="90" flex-sm="100" flex-xs="100" layout="column" layout-padding>
+                    <div class="md-subhead">TOP 10 kontrahentów <small>(tylko PLN)</small></div>
+                    <div layout="column" layout-gt-md="row">
+                        <md-content flex-gt-md="50">
+                            <canvas id="barKontrahent" class="chart chart-pie"
+                                    chart-data="vm.chartKontrahent.data[0]"
+                                    chart-labels="vm.chartKontrahent.labels"
+                                    chart-legend="false"></canvas>
+                        </md-content>
+                        <ol flex-gt-md="50" class="md-caption">
+                            <li ng-repeat="kontr in vm.chartKontrahentData  | orderBy: '-wartosc'">
+                                <span>
+                                    <strong>{{kontr.label}}</strong>
+                                </span>
+                                <span>({{kontr.wartosc | number:2}})</span>
+                            </li>
+                        </ol>
+
+
+                    </div>
+
+                </md-content>
+            </div>
+            <div>
+                <md-input-container ng-show="vm.table.searchShow" style="margin-bottom: -1em">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="vm.table.searchText" type="text" />
+                </md-input-container>
+                <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.table.search()">
+                    <md-tooltip md-direction="top">Wyszukaj w tabeli</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+            </div>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.table.order">
+                        <tr md-row>
+                            <th md-column md-order-by="platnoscPrzypomnienieId"><span>Id</span></th>
+                            <th style="min-width: 300px" md-column md-order-by="kontrahentNazwa"><span>Nazwa kontrahenta</span></th>
+                            <th style="min-width:200px" md-column md-order-by="fakturaNr"><span>Nr faktury</span></th>
+                            <th md-column md-order-by="terminPlatnosci"><span>Termin platnosci</span></th>
+                            <th md-column md-order-by="waluta.skrot"><span>Waluta</span></th>
+                            <th md-column md-order-by="kwota"><span>Kwota</span></th>
+                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                            <th md-column md-order-by="doneBy"><span>Zapłacone przez</span></th>
+                            <th md-column md-order-by="dataZaplaty"><span>Data zapłaty</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in d=(vm.table.dane() | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit)">
+                            <td md-cell>{{dane.platnoscPrzypomnienieId}}</td>
+                            <td md-cell>{{dane.kontrahentNazwa}}</td>
+                            <td md-cell>{{dane.fakturaNr}}</td>
+                            <td md-cell>{{dane.terminPlatnosci | date: "yyyy-MM-dd"}}</td>
+                            <td md-cell>{{dane.waluta.skrot}}</td>
+                            <td md-cell>{{dane.kwota | number: 2}}</td>
+                            <td md-cell>{{dane.uwagi}}</td>
+                            <td md-cell>{{dane.doneBy}}</td>
+                            <td md-cell>{{dane.dataZaplaty | date: "yyyy-MM-dd"}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot md-foot>
+                        <tr md-row>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell><strong>{{d | sumOfValue: 'kwota' | number:2}}</strong></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.table.limit" md-limit-options="vm.table.rowLimitOpt" md-page="vm.table.page" md-page-select="true" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.length}}"></md-table-pagination>
+        </div>
+    </md-card-content>
+</md-card>

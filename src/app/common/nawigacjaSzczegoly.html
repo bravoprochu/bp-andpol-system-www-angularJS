@@ -1,0 +1,39 @@
+﻿<md-sidenav class="md-sidenav-left" md-component-id="left" md-is-open="vm.navIsOpen">
+    <md-toolbar class="md-primary">
+        <div class="md-toolbar-tools">
+            <div class="md-subhead">Menu podręczne</div>
+        </div>
+    </md-toolbar>
+        <div layout="column">
+            <md-button ng-click="vm.qrCodeGenFn()" class="md-primary md-raised" ng-if="vm.qrCodeGen" ng-disabled="vm.inProgress||vm.isLoading">
+                BarCode generator
+            </md-button>
+            <md-button aria-label="back" class="md-accent md-raised" ng-click="vm.navIdzDo()" ng-disabled="vm.inProgress||vm.isLoading">
+                Wróć (lista)
+            </md-button>
+            <md-button aria-label="cancel" class="md-raised md-warn" ng-show="vm.navCanCancel" ng-click="vm.navAnuluj()" ng-disabled="vm.inProgress||vm.isLoading">
+                Anuluj zmiany
+            </md-button>
+            <md-button aria-label="save" class="md-raised md-warn md-hue-3" ng-show="vm.navCanSave" ng-disabled="!vm.isLoggedIn||vm.inProgress||vm.isLoading" ng-click="vm.navZapisz()">
+                Zapisz
+            </md-button>
+            <md-button aria-label="delete" class="md-raised md-warn md-hue-3" ng-show="vm.navCanDelete" ng-disabled="vm.inProgress||vm.isLoading" ng-click="vm.navDelete()">
+                Usuń
+            </md-button>
+            <div class="lineHeightByk">&nbsp;</div>
+            <md-divider></md-divider>
+            <div class="lineHeightByk">&nbsp;</div>
+            
+            <test></test>
+
+            <md-content style="height:450px" ng-if="vm.errorCollection.length>0" layout-padding>
+                <md-subheader class="md-no-sticky">Błędy formularza, <strong>wymagane pola:</strong></md-subheader>
+                    <md-chips ng-model="vm.errorCollection" readonly="true">
+                        <md-chip-template>
+                            <md-tooltip md-direction="top" ng-if="$chip.$name.length>10">{{$chip.$name}}</md-tooltip>
+                            <div>{{$chip.$name}}</div>
+                        </md-chip-template>
+                    </md-chips>
+            </md-content>
+        </div>
+</md-sidenav>

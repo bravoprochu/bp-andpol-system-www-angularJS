@@ -1,0 +1,79 @@
+﻿<md-card ng-if="startMode">
+    <md-card-content>
+        <div class="md-headline">Normy pracownicze</div>
+        <div layout ng-if="produkcjaDzialDost.length>0">
+            <md-input-container flex>
+                <label>Wybierz dział produkcyjny</label>
+                <md-select ng-model="wybranyDzial" md-on-close="produkcjaDzialAdd(wybranyDzial)" aria-label="wybranyDzial" ng-model-options="{trackBy: '$value.produkcjaDzialId'}">
+                    <md-option ng-repeat="dzial in produkcjaDzialDost" ng-value="dzial">
+                        {{dzial.nazwa}}<span>&nbsp;(dost: {{dzial.grupaRobocza.length}})</span>
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <div layout layout-align="start center">
+                <md-tooltip>Dodaj dział produkcyjny</md-tooltip>
+                <md-button class="md-icon-button" ng-click="produkcjaDzialAdd(wybranyDzial)" aria-label="dzialProdukcyjnyAdd">
+                    <md-icon md-svg-icon="add"></md-icon>
+                </md-button>
+            </div>
+        </div>
+        <linia-pozioma ng-if="selectedItems.length>0"></linia-pozioma>
+        <div layout="column" ng-repeat="dzial in selectedItems | filter: {status: '!usuniety'}">
+            <div layout style="max-height:3em">
+                <md-input-container>
+                    <label>Dział</label>
+                    <input ng-model="dzial.produkcjaDzial.nazwa" name="{{dzial.produkcjaDzial.nazwa|camelCase}}" type="text" disabled />
+                </md-input-container>
+                <md-input-container>
+                    <label>Czas wykonania (minuty)</label>
+                    <input ng-model="dzial.wartosc" name="{{dzial.produkcjaDzial.nazwa|camelCase}}_wartosc" type="number" min="1" ng-change="dataChanged(dzial)" />
+                </md-input-container>
+                <div flex></div>
+                <div layout layout-align="center start">
+                    <md-button ng-click="produkcjaDzialRemove(dzial)" class="md-raised md-warn">usuń</md-button>
+                </div>
+            </div>
+
+
+
+
+
+            <div layout ng-if="dzial.grupaRoboczaDost.length>0">
+                <md-input-container flex>
+                    <label>Wybierz zaangażowaną grupę pracowników</label>
+                    <md-select ng-model="dzial.grupaRoboczaSelected" aria-label="wybranyDzial" ng-model-options="{trackBy: '$value.id'}" md-on-close="grupaRoboczaAdd(dzial, dzial.grupaRoboczaSelected)">
+                        <md-option ng-repeat="r in dzial.grupaRoboczaDost" ng-value="r">
+                            {{r.nazwa}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div layout layout-align="start center">
+                    <md-tooltip>Dodaj zaangażowaną grupę pracowników</md-tooltip>
+                    <md-button class="md-icon-button" ng-click="grupaRoboczaAdd(dzial, dzial.grupaRoboczaSelected)" aria-label="grupaRoboczaAdd">
+                        <md-icon md-svg-icon="add"></md-icon>
+                    </md-button>
+                </div>
+                <!--<div layout layout-align="center start" ng-if="dzial.produkcjaDzial!=null">
+                    <md-button class="md-raised md-accent" ng-click="grupaRoboczaAdd(dzial)" ng-disabled="dzial.grupaRoboczaWybrane.length>=dzial.produkcjaDzial.grupaRobocza.length || dzial.produkcjaDzial.grupaRobocza.length==0" aria-label="grupaRoboczaAdd">dodaj zangażowanych pracowników</md-button>
+                </div>-->
+
+            </div>
+            <div layout ng-repeat="r in dzial.grupaRoboczaWybrane | filter: {status: '!usuniety'}" layout-align="end start" style="max-height:3em">
+                <md-input-container>
+                    <label>Zaangażowany pracownik</label>
+                    <input ng-model="r.robocizna.nazwa" name="{{r.robocizna.nazwa|camelCase}}" type="text" disabled />
+                </md-input-container>
+                <md-input-container>
+                    <label>Ilość osób biorących udział</label>
+                    <input ng-model="r.wartosc" name="{{dzial.produkcjaDzial.nazwa|camelCase}}_{{$index+1}}_wartosc" type="number" min="1" required ng-change="dataChanged(dzial, r)" />
+                </md-input-container>
+                <div layout layout-align="center start">
+                    <md-button ng-click="grupaRoboczaRemove(dzial, r)" class="md-icon-button" aria-label="grupaRoboczaRemove">
+                        <md-icon md-svg-icon="delete"></md-icon>
+                    </md-button>
+                </div>
+            </div>
+            <linia-pozioma ng-if="!$last"></linia-pozioma>
+        </div>
+    </md-card-content>
+</md-card>

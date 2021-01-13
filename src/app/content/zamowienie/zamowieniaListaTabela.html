@@ -1,0 +1,69 @@
+﻿<md-toolbar class="md-toolbar-tools" layout layout-align="end center">
+    <div class="md-title">{{title}}</div>
+    <div flex></div>
+    <div layout>
+        <md-button class="md-icon-button" aria-label="tableSearch" ng-click="table.search()">
+            <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+            <md-icon md-svg-icon="search"></md-icon>
+        </md-button>
+        <md-input-container ng-show="table.searchShow" style="margin-bottom:-2em">
+            <label>Wyszukaj w tabeli</label>
+            <input ng-model="table.searchText" type="text" />
+        </md-input-container>
+    </div>
+</md-toolbar>
+<md-table-container>
+    <table md-table md-row-select="table.rowSelect" multiple="true">
+        <thead md-head md-order="table.order">
+            <tr md-row>
+                <th md-column></th>
+                <th md-column md-order-by="zamowienieId" style="max-width:10px"><span>Id</span></th>
+                <th md-column md-order-by="reference" style="min-width:250px"><span>Reference</span></th>
+                
+                <th md-column md-order-by="ilosc"><span>Ilość</span></th>
+                <th md-column md-order-by="zamowienieKombiRaportIlosc" style="min-width:250px"><span>Kombinacje</span></th>
+                <th md-column md-order-by="zamowienieStatus.poziomProdukcji" style="max-width:10px"><span>PP</span></th>
+                <th md-column md-order-by="zamowienieStatus.procentRealizacjiPoziomu" style="max-width:10px"><span>%</span></th>
+                <th md-column md-order-by="zamowienieStatus.info" style="max-width:50px"><span>Status info</span></th>
+                <th md-column md-order-by="kontrahentShort" style="min-width:350px"><span>Kontrahent</span></th>
+                <th md-column md-order-by="dealerShort" style="min-width:350px"><span>Dealer</span></th>
+                <th md-column md-order-by="dealerDostawaShort" style="min-width:350px"><span>Dealer dostawa</span></th>
+                <th md-column md-order-by="zamowienieNr"><span>Nr zamówienia</span></th>
+                <th md-column md-order-by="commission"><span>Commission</span></th>
+                <th md-column md-order-by="dataZamowienia"><span>Data zamówienia</span></th>
+                <th md-column md-order-by="dataRealizacji"><span>Data realizacji</span></th>
+                <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+            </tr>
+        </thead>
+        <tbody md-body>
+            <tr md-row ng-repeat="dane in source | filter: table.searchText | orderBy: table.order | limitTo: table.limit: (table.page - 1) * table.limit">
+                <td md-cell>
+                    <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="table.edit(dane.zamowienieId)">
+                        <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                        <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                    </md-button>
+                </td>
+                <td md-cell>{{dane.zamowienieId}}</td>
+                <td md-cell>{{dane.reference}}</td>
+                <td md-cell>{{dane.ilosc}}</td>
+                <td md-cell>
+                    <md-tooltip md-direction="top">{{dane.zamowienieKombiRaportIlosc}}</md-tooltip>
+                    {{dane.zamowienieKombiRaport}}
+                </td>
+                <td md-cell><span ng-if="dane.zamowienieStatus.planningInProgress">{{dane.zamowienieStatus.poziomProdukcji}}</span></td>
+                <td md-cell><span ng-if="dane.zamowienieStatus.planningInProgress">{{dane.zamowienieStatus.procentRealizacjiPoziomu | number: 2}}%</span></td>
+                <td md-cell><span ng-if="dane.zamowienieStatus.planningInProgress">{{dane.zamowienieStatus.info}}</span></td>
+                <td md-cell>{{dane.kontrahentShort}}</td>
+                <td md-cell>{{dane.dealerShort}}</td>
+                <td md-cell>{{dane.dealerDostawaShort}}</td>
+                <td md-cell>{{dane.zamowienieNr}}</td>
+                <td md-cell>{{dane.commission}}</td>
+                <td md-cell>{{dane.dataZamowienia | date: "yyyy-MM-dd" }}</td>
+                <td md-cell>{{dane.dataRealizacji | date: "yyyy-MM-dd"}}</td>
+                <td md-cell>{{dane.uwagi}}</td>
+
+            </tr>
+        </tbody>
+    </table>
+</md-table-container>
+<md-table-pagination md-limit="table.limit" md-limit-options="table.rowLimitOpt" md-page-select="true" md-page="table.page" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{source.length}}"></md-table-pagination>

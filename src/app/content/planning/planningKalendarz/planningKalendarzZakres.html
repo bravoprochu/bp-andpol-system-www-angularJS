@@ -1,0 +1,51 @@
+﻿<div layout-padding layout="column" ng-if="vm.dataObj.planningKalendarzZakres && !vm.dataObj.hasErrors">
+    <div layout layout-align="start end">
+        <div class="md-title">{{vm.dataObj.planningKalendarzZakres.planningZakres.czasStart | date: 'yyyy-MM-dd (EEE) HH:mm'}} - {{vm.dataObj.planningKalendarzZakres.planningZakres.czasEnd | date: 'yyyy-MM-dd  (EEE) HH:mm'}}</div>
+        &nbsp;
+        &nbsp;
+        <span ng-if="vm.dataObj.planningKalendarzZakres.planningKalendarzDzienList.length>1">({{vm.dataObj.planningKalendarzZakres.planningKalendarzDzienList.length}} dni)</span>
+        <div flex></div>
+    </div>
+    
+    <md-slider ng-model="vm.dataObj.planningKalendarzZakresIdx"
+               ng-change="vm.planningKalendarzDzienListUpdate()"
+               aria-label="planningKalendarzZakresIdx"
+               md-discrete 
+               min="1" 
+               max="{{vm.dataObj.planningKalendarzZakres.planningKalendarzDzienList.length}}" 
+               step="1">
+    </md-slider>
+    <div layout layout-wrap layout-fill>
+        <div ng-repeat="plan in vm.dataObj.planningKalendarzZakresWybrane" flex-gt-lg="25" flex="33" flex-sm="100">
+            <div ng-if="plan.planningDzien.raportShort.zaplanowane.length>0" class="md-subhead"><strong>{{plan.dzienRoboczy | date: 'yyyy-MM-dd (EEE)'}}</strong></div>
+            <div ng-if="!plan.planningDzien.raportShort.zaplanowane.length>0" md-colors="::{background: 'red-500'}" class="md-subhead"><strong>{{plan.dzienRoboczy | date: 'yyyy-MM-dd (EEE)'}}</strong></div>
+            <md-divider></md-divider>
+            <div layout>
+                <span class="md-body-1">{{plan.planningDzien.zakresPlanninguBrutto.czasStart | date: 'HH:mm'}}</span>
+                <span>&nbsp;&ndash;&nbsp;</span>
+                <span class="md-body-1">{{plan.planningDzien.zakresPlanninguBrutto.czasEnd | date: 'HH:mm'}}</span>
+                &nbsp;
+                <span class="md-body-1">({{plan.planningDzien.zakresPlanninguBrutto.duration | date: 'HH:mm'}} Rh)</span>
+            </div>
+            <br />
+                <div class="md-subhead" ng-if="plan.planningDzien.raportShort.zaplanowane.length>0">Zaplanowane</div>
+                <div class="md-body-1" ng-repeat="item in plan.planningDzien.raportShort.zaplanowane">{{item}}</div>
+            <br />
+            <div class="md-subhead">Strata</div>
+            <div class="md-body-1" ng-repeat="r in plan.planningDzien.raportZaplanowaneStrata" ng-if="!plan.planningDzien.strataShow">
+                <md-tooltip md-direction="top">Strata timespan: {{r.strata}}</md-tooltip>
+                <span>{{r.robociznaNazwa}}</span>&nbsp;&ndash;&nbsp;
+                <span>{{r.roboczoGodziny}} Rh /[Stan: {{r.skladWyjsciowy}}]</span>
+            </div>
+            <div style="line-height:2em;">&nbsp;</div>
+
+            <!--niezaplanowane-->
+            <!--<div ng-if="plan.planningDzien.raportShort.brakCzasu.length>0">
+                <toggle class="md-subhead" title="Niezaplanowane" source="plan.planningDzien.nieZaplanowaneShow"></toggle>
+                <div ng-if="plan.planningDzien.nieZaplanowaneShow" class="md-body-1" ng-repeat="item in plan.planningDzien.raportShort.brakCzasu">{{item}}</div>
+            </div>-->
+
+
+        </div>
+    </div>
+</div>

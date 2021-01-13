@@ -1,0 +1,56 @@
+﻿<md-dialog aria-label="dealerNew" flex="80">
+    <ng-form name="vm.formRozchodInne">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{vm.title}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div layout="column" layout-padding>
+                <label>
+                    Wartości rozchodu są <strong>dodatnie !</strong> <em>(max: {{vm.stanMax | number: 2}})</em> Jedyny wariant gdy wartość rozchodu jest ujemna to sytuacja gdy anulowany jest wpis (korekta rozchodu) <em>(min: {{vm.stanMin | number:2}}).</em>
+                </label>
+                <linia-pozioma></linia-pozioma>
+                <div >
+                    <label>Data rozchodu</label>
+                    <md-datepicker required
+                                   ng-model="vm.dane.dataRozchodu">
+                    </md-datepicker>
+                </div>
+                <div >
+                    <md-input-container>
+                        <label>Wartość</label>
+                        <input ng-model="vm.dane.wartosc" ng-max="vm.stanMax" ng-min="vm.stanMin" type="number" name="wartosc" required />
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Jedn</label>
+                        <input ng-model="vm.dane.jednostkaMiary.nazwa" disabled />
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Stan aktualny</label>
+                        <input ng-model="vm.stanAktualny" disabled>
+                    </md-input-container>
+                </div>
+                <single-choice dane-id="jednRozchodMagRodzajId" selected-item="vm.dane.rozchodMagRodzaj" dane-pomocnicze="vm.danePomocnicze.rozchodMagRodzaj" opis="Rodzaj rozchodu"></single-choice>
+                <md-input-container>
+                    <label>Uwagi</label>
+                    <input ng-model="vm.dane.uwagi" name="uwagi" required />
+                </md-input-container>
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions>
+            <div layout layout-padding>
+                <span flex></span>
+                <md-button ng-click="vm.navSave()" class="md-button" aria-label="newDealerSave" ng-show="vm.formRozchodInne.$valid && vm.formRozchodInne.$dirty">
+                    &nbsp;Aktualizuj
+                    <md-icon md-svg-icon="save"></md-icon>
+                </md-button>
+                <md-button ng-click="vm.navCancel()" class="md-button" aria-label="newDealerCancel">
+                    &nbsp;Anuluj
+                    <md-icon md-svg-icon="cancel"></md-icon>
+                </md-button>
+            </div>
+        </md-dialog-actions>
+    </ng-form>
+</md-dialog>

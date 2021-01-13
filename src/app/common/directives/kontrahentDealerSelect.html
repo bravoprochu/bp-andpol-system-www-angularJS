@@ -1,0 +1,36 @@
+﻿<md-autocomplete flex="100"
+                 md-no-cache="true"
+                 md-search-text="dealerSearchText"
+                 md-selected-item="selectedItem"
+                 md-items="dealer in danePomocnicze"
+                 md-input-name="dealerDostawa"
+                 md-item-text="dealer.nazwa"
+                 md-min-length="0"
+                 placeholder="Dealer dostawa">
+    <md-item-template>
+        <span md-highlight-text="vm.dealerSearchText" md-highlight-flags="^i">{{dealer.nazwa}}</span>&nbsp;<small>({{dealer.kontrahentNazwa}})</small>
+        <span ng-show="dealer.czyAdresDostawy"><small ng-if="dealer.czyWjedziePrzyczepa">&nbsp;[P]</small></span>
+    </md-item-template>
+    <md-not-found>
+        Nie znaleziono "{{dealer.nazwa}}".
+    </md-not-found>
+</md-autocomplete>
+<div style="line-height:2em">&nbsp;</div>
+<div ng-if="selectedItem">
+    <div class="md-title">{{selectedItem.nazwa}}</div>
+    <div class="md-body-1">{{selectedItem.adres}} <small ng-if="selectedItem.czyWjedziePrzyczepa" style="color:red">&nbsp;&nbsp;&nbsp;[P]</small></div>
+</div>
+
+
+
+
+                 <!--md-no-cache="true"
+                 md-search-text="dealerSearchText"
+                 md-search-text-change="dealerSearchTextChange()"
+                 md-selected-item="selectedItem"
+                 md-selected-item-change="dealerChange()"
+                 md-items="dealer in danePomocnicze"
+                 md-input-name="dealer"
+                 md-item-text="dealer.nazwa"
+                 md-min-length="0"
+                 placeholder="Dealer dostawa">-->

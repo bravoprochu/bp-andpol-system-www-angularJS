@@ -1,0 +1,3 @@
+[0419/163747.239:ERROR:process_reader_win.cc(142)] SuspendThread: Odmowa dostêpu. (0x5)
+[0419/163747.240:ERROR:exception_snapshot_win.cc(87)] thread ID 12292 not found in process
+[0419/163747.240:WARNING:crash_report_exception_handler.cc(60)] ProcessSnapshotWin::Initialize failed

@@ -1,0 +1,83 @@
+﻿<md-card ng-repeat="matGrupa in vm.dataObj.planningTkaniny track by matGrupa.material.nazwa">
+    <md-card-content>
+        <div layout-padding layout>
+            <div class="md-title" ng-class="{'podkreslenie': !matGrupa.materialWszystkiePrzypisanePrawidlowo}">{{matGrupa.material.nazwa}}&nbsp;<small><i>(Id:&nbsp;{{matGrupa.material.materialId}})</i></small></div>
+            <md-button class="md-icon-button md-warn md-raised" aria-label="{{$index}}dodajObszycie" ng-click="vm.materialZuzycieGrupaDodaj(matGrupa)" ng-disabled="matGrupa.materialBelkaDost.length<=matGrupa.planningMaterialBelka.length" ng-if="matGrupa.materialBelkaDost.length>0">
+                <md-tooltip md-direction="top">Zaplanuj szczegółowy podział na belki</md-tooltip>
+                <md-icon md-svg-icon="add"></md-icon>
+            </md-button>
+        </div>
+        Obszycia - podział na belki
+        <div>
+            <div layout="column" layout-fill ng-repeat="grupa in matGrupa.planningMaterialBelka track by $index">
+                <div layout layout-align="start start" style="margin-bottom:-2em">
+                    <div style="width:70px">
+                        <md-progress-circular md-mode="indeterminate" ng-if="grupa.isLoading"></md-progress-circular>
+                        <md-input-container ng-if="!grupa.isLoading">
+                            <md-icon md-svg-icon="refresh" ng-click="vm.zuzyciePrzelicz(grupa)">
+                                <md-tooltip md-direction="top">Przelicz zużycie</md-tooltip>
+                            </md-icon>
+                        </md-input-container>
+                    </div>
+                    <md-input-container>
+                        <label>Zużycie (mb)</label>
+                        <input ng-model="grupa.zuzycie" />
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Elementów obszycia:</label>
+                        <input ng-model="grupa.listaObszyc.length" type="number" disabled />
+                    </md-input-container>
+                    <div flex="30">
+                        <md-autocomplete md-items="belka in vm.materialBelkaSprawdzWybrane(matGrupa)"
+                                         md-search-text="grupa.belkaSearchText"
+                                         md-search-text-change="vm.materialBelkaTextChanged(matGrupa, grupa)"
+                                         md-selected-item="grupa.materialBelka"
+                                         md-selected-item-change="vm.materialBelkaChange(matGrupa, grupa, belka)"
+                                         md-item-text="belka.nazwa"
+                                         md-no-cache="true"
+                                         md-min-length="0"
+                                         md-floating-label="Wybierz belkę"
+                                         md-input-name="{{matGrupa.material.nazwa | camelCase}}"
+                                         required>
+                            <md-item-template>
+                                <span style="font-size:x-small">[ID:&nbsp;{{belka.id}}]</span>
+                                <span md-highlight-text="grupa.searchText">{{belka.nazwa}}</span>
+                                <span span style="font-size:x-small">[P:&nbsp;{{belka.dataPrzyjecia | date: 'yyyy-MM-dd'}}]</span>&nbsp;&nbsp;
+                                <span span style="font-size:x-small" ng-if="belka.uwagi">({{belka.uwagi}})</span>
+
+                            </md-item-template>
+
+                        </md-autocomplete>
+
+
+                    </div>
+                    <md-input-container>
+                        <label>Uwagi</label>
+                        <input ng-model="grupa.uwagi" />
+                    </md-input-container>
+                    <div>
+                        <md-tooltip md-direction="top">Szczegółowa lista obszyć</md-tooltip>
+                        <md-switch ng-model="grupa.pokazSzczegoly" aria-label="pokazSzczegoly"></md-switch>
+                    </div>
+                    <div layout layout-align="space-around center" ng-show="$first" style="margin-top:0.5em">
+                        <md-button class="md-icon-button" aria-label="grupaPrzypisanaOk" ng-if="grupa.belkaPrzypisanaPrawidlowo" aria-label="grupaPrzypisanaPrawidlowo">
+                            <md-icon md-svg-icon="thumbUp"></md-icon>
+                        </md-button>
+                    </div>
+                    <div layout layout-align="space-around center" ng-hide="{{$first}}" style="margin-top:0.5em">
+                        <md-button class="md-icon-button" aria-label="grupaPrzypisanaOk" ng-if="grupa.belkaPrzypisanaPrawidlowo"><md-icon md-svg-icon="thumbUp"></md-icon></md-button>
+                        <md-button class="md-icon-button" aria-label="grupaPrzypisanaNotOk" ng-if="!grupa.belkaPrzypisanaPrawidlowo"><md-icon md-svg-icon="thumbDown"></md-icon></md-button>
+                        <md-button class="md-icon-button" aria-label="grupaEdit" ng-click="vm.materialZuzycieGrupaDodaj(matGrupa, grupa)"><md-icon md-svg-icon="edit"></md-icon></md-button>
+                        <md-button class="md-icon-button" aria-label="grupaDel" ng-click="vm.materialZuzycieGrupaUsun(matGrupa, grupa)"><md-icon md-svg-icon="delete"></md-icon></md-button>
+
+                    </div>
+                </div>
+                <!--SZCZEGÓŁY OBSZYĆ-->
+                <div ng-if="grupa.pokazSzczegoly">
+                    <div class="md-caption" layout="column" ng-repeat="obsz in grupa.listaObszyc | orderBy: 'nazwa'">{{obsz.name}}&nbsp;&nbsp;[{{obsz.dlugosc}}/{{obsz.szerokosc}}]</div><br />
+                </div>
+            </div>
+
+        </div>
+    </md-card-content>
+</md-card>

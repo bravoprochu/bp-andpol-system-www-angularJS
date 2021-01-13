@@ -1,0 +1,34 @@
+﻿<!--<div ng-show="vm.isLoggedIn">
+    <h4><span>Witaj</span> <b>{{vm.userName}} !</b><br /> <small>{{vm.sessionEnds}}</small></h4>
+    <h6>należysz do grupy: <b>{{vm.role}}</b></h6>
+    <button ng-click="vm.clearProfile()" class="btn btn-danger btn-xs">wyloguj się</button>
+</div>-->
+<div layout="row">
+    <div ng-if="vm.isLoggedIn">
+        <div layout="row" layout-align="center center">
+            <md-button class="md-icon-button" ng-click="vm.clearProfile()">
+                <md-icon md-svg-icon="exit2"></md-icon>
+                <md-tooltip>
+                    Wyloguj się..
+                </md-tooltip>
+            </md-button>
+            <div ng-if="!vm.screenSmall">
+                <div class="md-body-2">
+                    <md-tooltip md-direction="bottom"><span ng-repeat="r in vm.roles" style="height:auto;line-height:1em">{{r}}<br /></span></md-tooltip>
+                    Witaj</>&nbsp;<b>{{vm.userName}}&nbsp;!</b><br />
+                </div>
+                <div class="md-caption">
+                        {{vm.sessionEnds}}
+                </div>
+            </div>
+            <div ng-if="vm.screenSmall">
+                <div class="md-body-2">
+                    {{vm.userName}}&nbsp;!
+                </div>
+                <div class="md-caption">
+                    {{vm.sessionEnds}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

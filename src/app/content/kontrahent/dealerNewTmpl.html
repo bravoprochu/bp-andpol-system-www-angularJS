@@ -1,0 +1,72 @@
+﻿    <md-dialog aria-label="dealerNew" ng-cloak flex="60">
+        <md-toolbar>
+            <div class="md-toolbar-tools md-primary">
+                <h2>{{vm.title}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <ng-form name="vm.formNewDealer">
+                <div layout="column" layout-padding>
+                    <div layout layout-padding>
+                        <md-input-container flex="66">
+                            <label>Nazwa</label>
+                            <input ng-model="vm.dealerNew.nazwa" required />
+                        </md-input-container>
+                        <div layout="column">
+                            <md-switch ng-model="vm.dealerNew.czyAdresDostawy">Adres dostawy ?</md-switch>
+                            <md-switch ng-if="vm.dealerNew.czyAdresDostawy" ng-model="vm.dealerNew.czyWjedziePrzyczepa">WjedziePrzyczepa ?</md-switch>
+                        </div>
+                        
+                    </div>
+                    <div layout layout-padding layout-align="space-between">
+                        <md-input-container>
+                            <label>Kod Kraju  (2 znaki)</label>
+                            <input maxlength="2" ng-model="vm.dealerNew.kodKraju" required />
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Kod Pocztowy</label>
+                            <input ng-model="vm.dealerNew.kod" required />
+                        </md-input-container>
+                    </div>
+                    <div layout layout-padding layout-align="space-between">
+                        <md-input-container>
+                            <label>Miejscowość</label>
+                            <input ng-model="vm.dealerNew.miejscowosc" required />
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Ulica</label>
+                            <input ng-model="vm.dealerNew.ulica" required />
+                        </md-input-container>
+                        <md-input-container>
+                            <label>nr</label>
+                            <input ng-model="vm.dealerNew.nr" />
+                        </md-input-container>
+                    </div>
+                    <md-input-container>
+                        <label>Godziny otwarcia</label>
+                        <input ng-model="vm.dealerNew.godzinyOtwarcia" />
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Uwagi</label>
+                        <input ng-model="vm.dealerNew.uwagi" />
+                    </md-input-container>
+
+
+                    </div>
+            </ng-form>
+    <md-dialog-actions>
+            <span flex></span>
+            <md-button ng-click="vm.navSave()" class="md-button" aria-label="newDealerSave" ng-show="vm.formNewDealer.$valid && vm.formNewDealer.$dirty">
+                &nbsp;Aktualizuj&nbsp;
+                <md-icon md-svg-icon="save"></md-icon>
+            </md-button>
+            <md-button ng-click="vm.navCancel()" class="md-button" aria-label="newDealerCancel">
+                &nbsp;Anuluj&nbsp;
+                <md-icon md-svg-icon="cancel"></md-icon>
+            </md-button>
+    </md-dialog-actions>
+
+    </md-dialog-content>
+
+
+</md-dialog>

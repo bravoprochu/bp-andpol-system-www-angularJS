@@ -1,0 +1,47 @@
+﻿<md-dialog aria-label="loginDlg" ng-form="vm.formDlgMain" ng-keypress="vm.loginEnter($event)">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{vm.title}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div layout="colum" layout-padding">
+                <div layout="column" layout-margin>
+                    <div layout flex="100">
+                        <md-input-container>
+                            <label>Nazwa użytkownika (email)</label>
+                            <input ng-model="vm.userData.userName" ng-disabled="vm.loginInProgress" name="userName" required>
+                        </md-input-container>
+                    </div>
+                    <md-input-container>
+                        <label>Hasło</label>
+                        <input ng-model="vm.userData.password" ng-disabled="vm.loginInProgress" name="password" type="password" required>
+                    </md-input-container>
+                </div>
+                <div>
+
+                </div>
+            </div>
+            <div layout layout-align="center center" ng-if="vm.loginInProgress">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <div layout layout-align="center center" ng-if="vm.loginInProgress">
+                <div class="md-body-1">Trwa wczytywanie danych...</div>
+            </div>
+            <div layout layout-align="center center" ng-if="vm.loginFailed">
+                <div class="md-body-1 podkreslenie">NIEOKREŚLONY BŁĄD</div>
+            </div>
+
+
+</md-dialog-content>
+        <md-dialog-actions layout layout-padding layout-align="space-between center">
+                <md-button class="md-icon-button" ng-click="vm.idzDo('register')" aria-label="register">
+                    <md-tooltip md-direction="left">Zarejestruj się</md-tooltip>
+                    <md-icon md-svg-icon="register"></md-icon>
+                </md-button>
+                <md-button ng-if="!vm.loginInProgress && vm.formDlgMain.$valid" class="md-icon-button" ng-click="vm.login()" aria-label="login">
+                    <md-tooltip md-direction="right">Zaloguj się</md-tooltip>
+                    <md-icon md-svg-icon="login"></md-icon>
+                </md-button>   
+        </md-dialog-actions>
+</md-dialog>

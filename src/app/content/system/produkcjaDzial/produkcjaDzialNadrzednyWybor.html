@@ -1,0 +1,18 @@
+﻿<md-dialog aria-label="dzialNadrzedny"  flex="80" flex-gt-md="40">
+    <md-dialog-content layout="column" layout-padding>
+        <div class="md-title">Nadrzędne działy produkcyjne</div>
+
+        <div class="md-body">Na podstawie wybranych działów będą wyszukiwane zaplanowane/zrealizowane zamówienia. Zaplanowanie ich utworzy kolejny etap produkcyjny</div>
+        <select-all dane-pomocnicze="vm.locals.danePomocnicze"
+                    nazwa="nazwa"
+                    selected-items="vm.wybrane"
+                    key="produkcjaDzialId"></select-all>
+
+        
+        
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button ng-click="vm.dialogClose()" class="md-primary md-raised" aria-label="closeDialog">Anuluj</md-button>
+        <md-button ng-click="vm.dialogUpdate()" class="md-primary md-raised" aria-label="saveDialog">Aktualizuj</md-button>
+    </md-dialog-actions>
+</md-dialog>

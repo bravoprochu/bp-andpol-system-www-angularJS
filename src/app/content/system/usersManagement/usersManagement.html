@@ -1,0 +1,118 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="Uprawnienia użytkowników" ng-form="vm.formMain">
+
+                    <div layout layout-align="space-between center">
+                        <md-input-container style="min-height:0;">
+                            <label>Wyszukaj użytkownika</label>
+                            <input ng-model="vm.userSearchText" />
+                        </md-input-container>
+                        <div>
+                            <md-button ng-if="vm.navCanSave" ng-click="vm.navZapisz()" class="md-icon-button md-warn">
+                                <md-tooltip md-direction="bottom">zapisz zmiany</md-tooltip>
+                                <md-icon md-svg-icon="save"></md-icon>
+                            </md-button>
+                            <md-button ng-if="vm.formMain.$dirty" ng-click="vm.navAnuluj()" class="md-icon-button md-warn">
+                                <md-tooltip md-direction="bottom">anuluj zmiany</md-tooltip>
+                                <md-icon md-svg-icon="cancel"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+
+                    <linia-pozioma></linia-pozioma>
+                    <div layout-gt-sm="row" layout-padding>
+                        <div class="md-body" flex-order-gt-sm="2" flex-gt-sm="40">
+                            Każdemu zarejestrowanemu użytkownikowi można teraz przypisać dowolny widok.
+                        </div>
+                        <div class="lineHeightByk"></div>
+                        <div flex-order-gt-sm="1" flex-gt-sm="60">
+                            <div layout ng-repeat="user in vm.dataObj.users | orderBy: 'nazwa' | filter: {status: '!usuniety', $: vm.userSearchText}" style="line-height:3em">
+                                <md-button ng-click="vm.userRoleDelete(user)" class="md-icon-button" aria-label="userRoleUsun_$index">
+                                    <md-icon md-svg-icon="delete"></md-icon>
+                                </md-button>
+
+                                <toggle class="md-subhead" title="{{user.nazwa}}" source="user.showRoles"></toggle>
+
+                                <div layout="column" layout-padding style="line-height:0.8em" ng-if="user.showRoles">
+                                    <select-all dane-pomocnicze="vm.danePomocnicze.roles"
+                                                key="id" nazwa="nazwa"
+                                                selected-items="user.roles"
+                                                form-ref="vm.formMain"
+                                                parent="user"></select-all>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+            </md-tab>
+            <md-tab label="Brygadziści" ng-form="vm.brygadzistaForm">
+
+
+                <div layout="column" layout-padding>
+                    <div layout layout-align="space-between start">
+                        <div class="md-title">Brygadziści</div>&nbsp;
+                    </div>
+
+                    <div layout>
+                        <select-pomocnicze dane-pomocnicze="vm.danePomocnicze.users"
+                                           selected-item="vm.brygadzista.user"
+                                           input-name="user"
+                                           placeholder="Wybierz użytkownika"
+                                           required="true"
+                                           form-name="vm.brygadzistaForm"></select-pomocnicze>
+                        <select-pomocnicze dane-pomocnicze="vm.danePomocnicze.produkcjaDzial"
+                                           selected-item="vm.brygadzista.produkcjaDzial"
+                                           input-name="produkcjaDzial"
+                                           placeholder="Wybierz dział produkcyjny"
+                                           required="true"
+                                           form-name="vm.brygadzistaForm"></select-pomocnicze>
+                        <md-button class="md-icon-button md-raised" ng-click="vm.brygadzistaAddNew()" style="top:1em;" ng-disabled="vm.brygadzistaForm.$invalid">
+                            <md-tooltip md-direction="top">Dodaj nowego brygadzistę</md-tooltip>
+                            <md-icon md-svg-icon="add"></md-icon>
+                        </md-button>
+                    </div>
+                    <div layout>
+                        <md-input-container>
+                            <label>Wyszukaj brygadzistę</label>
+                            <input ng-model="vm.brygadzistaSearchText" />
+                        </md-input-container>
+                        &nbsp;
+                        <div class="md-body-1" ng-if="vm.dataObj.brygadzista.length>0">Wyświetlone {{vm.brygadzistaFiltered.length}}/{{vm.dataObj.brygadzista.length}}</div>
+                    </div>
+
+                </div>
+                <md-content style="max-height:500px;" layout-padding>
+                    <md-list flex-gt-md="50">
+                        <md-list-item ng-repeat="b in vm.brygadzistaFiltered=(vm.dataObj.brygadzista | filter: {status: '!usuniety', $: vm.brygadzistaSearchText})" class="md-2-line">
+                            <div layout class="md-list-item-text">
+                                <div class="md-subhead"><strong>{{b.user.nazwa}}</strong>, &nbsp;<span>{{b.produkcjaDzial.nazwa}}</span></div>
+                            </div>
+                            <md-icon md-svg-icon="delete" class="md-secondary" ng-click="vm.brygadzistaDelete(b)" aria-label="del"></md-icon>
+                        </md-list-item>
+                    </md-list>
+
+                </md-content>
+
+
+
+            </md-tab>
+        </md-tabs>
+
+
+
+        <!--<md-tabs flex-gt-md="80" flex="100" md-dynamic-height md-border-bottom>
+            <md-tab ng-repeat="dzial in vm.danePomocnicze.produkcjaDzial | orderBy: 'nazwa'" label="{{dzial.nazwa}}">
+                <select-distinct dane-pomocnicze="vm.danePomocnicze.users" selected-items=""></select-distinct>
+
+            </md-tab>
+        </md-tabs>-->
+
+
+
+    </md-card-content>
+</md-card>

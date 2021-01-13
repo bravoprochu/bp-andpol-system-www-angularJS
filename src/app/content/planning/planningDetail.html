@@ -1,0 +1,79 @@
+﻿<md-card>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <div ng-if="vm.objId>0">
+            <!--zaplanowany planning szczegoly-->
+            <planning-detail-info></planning-detail-info>
+
+        </div>
+        <div ng-if="vm.objId==0">
+            <div ng-if="!vm.dataObj.planningInProgress" layout>
+                <single-choice flex="30"
+                               selected-item="vm.dataObj.produkcjaDzial"
+                               dane-pomocnicze="vm.danePomocnicze.produkcjaDzial"
+                               pole="nazwa"
+                               uwagi="poziomProdukcji"
+                               dane-id="produkcjaDzialId"
+                               opis="Dział produkcji"
+                               title="Wybierz dział produkcji"></single-choice>
+                <div flex></div>
+                <!--info o wybranym dziale produkcyjnym-->
+                <div layout="column" flex="30">
+                    <produkcja-dzial-info produkcja-dzial="vm.dataObj.produkcjaDzial"></produkcja-dzial-info>
+                    <md-button ng-click="vm.zamowieniaBaza()" ng-disabled="vm.isLoading" class="md-raised md-warn">Pobierz dostępne zamówienia</md-button>
+                </div>
+
+
+            </div>
+            <div layout ng-if="vm.dataObj.planningInProgress">
+                <div class="md-display-1">
+                    <md-button class="md-icon-button md-raised" ng-click="vm.resetAll()" aria-label="planningReset" ng-disabled="vm.isLoading">
+                        <md-tooltip md-direction="top">Wróć do wyboru działu</md-tooltip>
+                        <md-icon md-svg-icon="clear"></md-icon>
+                    </md-button>
+                    {{vm.dataObj.produkcjaDzial.nazwa}}
+                </div>
+                <div flex></div>
+                <md-button class="md-warn md-raised" ng-click="vm.planningZapisz()" ng-disabled="vm.planningCanBeSave()">Zapisz planning&nbsp;&nbsp;<md-icon md-svg-icon="save"></md-icon></md-button>
+
+            </div>
+            <md-tabs md-dynamic-height md-border-bottom ng-if="vm.dataObj.zamowieniaWybrane.length>0">
+                <md-tab label="1. Kalendarz">
+                    <planning-kalendarz></planning-kalendarz>
+                </md-tab>
+                <md-tab label="2. Tkaniny" ng-if="vm.dataObj.produkcjaDzial.czyTkaninaBelka && vm.dataObj.planningTkaniny.length>0">
+                    <planning-tkaniny-belka></planning-tkaniny-belka>
+                </md-tab>
+                <md-tab label="3. Pozycje materiałowe" ng-if="vm.dataObj.produkcjaDzial.czyPozycjaMagazynowa && vm.dataObj.planningPozycjeMagazynowe.length>0">
+                    <planning-pozycjemagazynowe></planning-pozycjemagazynowe>
+                </md-tab>
+            </md-tabs>
+            <linia-pozioma></linia-pozioma>
+            <planning-zamowienia-baza ng-if="vm.dataObj.planningInProgress"
+                                      table-obj="vm.tableZamowienie"
+                                      zamowienia-dost="vm.dataObj.zamowieniaBaza"
+                                      dest-data-obj="vm.dataObj.zamowieniaWybrane"
+                                      ></planning-zamowienia-baza>
+            <planning-wykonany ng-if="false"></planning-wykonany>
+        </div>
+    </md-card-content>
+</md-card>
+
+
+
+
+
+
+
+<!--<linia-pozioma></linia-pozioma>
+<test></test>
+<textarea ng-model="vm.data"></textarea>
+<md-button ng-click="vm.dataSave()" class="md-icon-button" aria-label="uploadJson">
+    <md-tooltip md-direcion="top">Export JSON</md-tooltip>
+    <md-icon md-svg-icon="upload"></md-icon>
+</md-button>
+<md-button ng-click="vm.dataLoad()" class="md-icon-button" aria-label="downloadJson">
+    <md-tooltip md-direcion="top">Import JSON</md-tooltip>
+    <md-icon md-svg-icon="download"></md-icon>
+</md-button>-->
+

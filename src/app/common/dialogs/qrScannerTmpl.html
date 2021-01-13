@@ -1,0 +1,23 @@
+﻿<md-dialog aria-label="qrScanner">
+    <md-dialog-content layout="column" layout-padding>
+        <div>
+            <qr-scanner width="{{vm.screenWidth}}" ng-success="vm.onSuccess(data)" ng-error="vm.onError(error)" />
+        </div>
+
+        <md-switch ng-model="vm.scanResultPrzekaz" aria-label="przekazIZamknij" class="md-warn md-block">
+            Przekaż wynik i zamknij
+        </md-switch>
+
+        <div ng-show="!vm.scanResultPrzekaz">
+            <div layout="column" layout-align="center center">
+                <div class="md-body-2">Wynik skanu:</div>
+                <div class="md-body-1">{{vm.scanResult}}</div>
+            </div>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions>
+        <md-button aria-label="spinner" ng-click="vm.close()" class="md-warn">Zamknij</md-button>
+    </md-dialog-actions>
+
+</md-dialog>

@@ -1,0 +1,60 @@
+﻿<md-card>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+        <div layout="column">
+            <md-toolbar layout layout-align="end center">
+                <div flex></div>
+                <md-button ng-click="vm.idzDo('platnosciZaplacone')" class="md-raised">
+                    Pokaż zapłacone płatności
+                </md-button>
+                <md-input-container ng-show="vm.platnosc.searchShown">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="vm.platnosc.searchText" ng-change="vm.platnosc.filtruj()" type="text" />
+                </md-input-container>
+                <md-button class="md-icon-button" aria-label="platnoscSearch" ng-click="vm.platnosc.searchShow()">
+                    <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button md-warn" aria-label="platnoscDodaj" ng-click="vm.platnoscDodaj()">
+                    <md-tooltip md-direction="top">Dodaj nową płatność</md-tooltip>
+                    <md-icon md-svg-icon="add"></md-icon>
+                </md-button>
+            </md-toolbar>
+
+            <md-divider></md-divider>
+            <div layout-xs="column" ng-repeat="data in vm.platnosc.dane | orderBy: 'data' track by data.data">
+                <md-card>
+                    <md-card-content>
+                        <div layout="column" layout-gt-xs="row">
+                            <h2 flex ng-class="{'podkreslenie': data.spozniony}">
+                                {{data.data | date: 'yyyy-MM-dd'}}
+                                <small>
+                                    ({{data.data | date: 'EEEE'}}, {{data.deadline}})
+                                </small>
+                            </h2>
+                            <div layout="column">
+                                <div layout ng-repeat="waluta in data.platnoscPrzypomnienieWalutaRaport">
+                                    <span><strong>{{waluta.kwota | number: 2}}</strong>&nbsp;</span>
+                                    <span>{{waluta.waluta.skrot}}</span>
+                                </div>
+                                
+                                <!--<span ng-if="data.sumaPln[0] || data.sumaEuro[0]"><b>Razem:&nbsp</b></span>
+                                <span ng-if="data.sumaPln[0]">{{data.sumaPln[0] | number:2}}&nbsp<i><small>PLN</small></i></span>
+                                <span ng-if="data.sumaEuro[0]">{{data.sumaEuro[0] | number:2}}&nbsp<i><small>EURO</small></i></span>-->
+                            </div>
+
+                        </div>
+                        <md-tabs md-dynamic-height>
+                            <md-tab ng-repeat="platnosc in data.platnosci | filter: {isDone:false} track by platnosc.platnoscPrzypomnienieId" label="{{platnosc.kontrahent.skrot}} ({{platnosc.waluta.skrot}})">
+                                <platnosc-przypomnienie-card></platnosc-przypomnienie-card>
+                            </md-tab>
+                        </md-tabs>
+                    </md-card-content>
+                </md-card>
+
+
+                <md-divider hide-gt-xs></md-divider>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>

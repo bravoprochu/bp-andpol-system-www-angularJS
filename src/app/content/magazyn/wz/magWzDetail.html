@@ -1,0 +1,168 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" >
+
+
+
+        <div ng-form="vm.formMain">
+            <!--wspolne-->
+            <div layout layout-align="center center">
+                <div class="md-display-1">Wydanie Zewnętrzne {{vm.dataObj.numerDokumentu}}</div>
+                <md-button class="md-raised md-warn" ng-if="vm.dataObj.stateId>0 && !vm.dataObj.czyZaksiegowana" ng-click="vm.utworzKorekte()">Utwórz korektę</md-button>
+            </div>
+            <div class="lineHeightByk">&nbsp;</div>
+            <user-info obj="vm.dataObj" ng-if="vm.dataObj.stateId>0"></user-info>
+            <div layout="column" layout-gt-sm="row" layout-align="space-between start">
+                <kontrahent-select required flex="35" selected-item="vm.dataObj.kontrahent" dane-pomocnicze="vm.danePomocnicze.kontrahenci" name="Wybierz kontrahenta" is-disabled="vm.dataObj.stateId>0"></kontrahent-select>
+                <div>&nbsp;</div>
+                <md-datepicker required ng-model="vm.dataObj.dataWystawienia" md-placeholder="Data wystawienia" name="dataWystawienia" ng-disabled="vm.dataObj.stateId>0"></md-datepicker>
+            </div>
+            <div layout layout-fill>
+                <md-input-container flex="100">
+                    <label>Uwagi</label>
+                    <input ng-model="vm.dataObj.uwagi" type="text" md-maxlength="256" aria-label="uwagi" ng-disabled="vm.dataObj.stateId>0" />
+                </md-input-container>
+            </div>
+            <div class="lineHeightByk">&nbsp;</div>
+
+            <!--//wybrana wartość-->
+
+            <div layout="column" layout-gt-sm="row" ng-repeat="poz in vm.dataObj.pozycjeMagazynowe" style="margin-bottom:-2em"
+                 ng-if="(vm.dataObj.stateId==0 && vm.dataObj.typDanychDokumentu==1) || (vm.dataObj.stateId>0 && vm.dataObj.pozycjeMagazynowe.length>0)">
+                <md-input-container>
+                    <input value="{{$index+1}}" disabled />
+                </md-input-container>
+                <md-input-container flex flex-gt-sm="60">
+                    <label>Pozycja magazynowa</label>
+                    <input ng-model="poz.nazwa" disabled />
+                </md-input-container>
+                <md-input-container>
+                    <label>Jedn</label>
+                    <input ng-model="poz.jednostka" disabled type="text" />
+                </md-input-container>
+                <md-input-container>
+                    <label>Ilość</label>
+                    <input ng-model="poz.ilosc" disabled />
+                </md-input-container>
+                <div>
+                    <md-button class="md-icon-button md-raised md-warn" ng-click="vm.pozMagWybraneRemove(poz)" aria-label="magPZPozycjaKorektaDodajBtn" ng-disabled="vm.dataObj.stateId>0">
+                        <md-icon md-svg-icon="remove"></md-icon>
+                    </md-button>
+                </div>
+            </div>
+
+
+            <!--wybrane zamowienia-->
+            <planning-zamowienia-baza  ng-if="vm.dataObj.typDanychDokumentu==0 && vm.dataObj.zamowieniaWybrane.length>0"
+                                      table-obj="vm.pozMagWybrTable"
+                                      zamowienia-dost="vm.dataObj.zamowieniaWybrane"
+                                      ></planning-zamowienia-baza>
+
+
+
+
+        </div>
+
+        <!--<planning-zamowienia-baza table-obj="vm.pozMagWybrTable"
+                                    ng-if="(vm.dataObj.stateId==0 && vm.dataObj.zamowieniaWybrane.length>0 && vm.dataObj.typDanychDokumentu==0) || (vm.dataObj.stateId>0 && vm.dataObj.zamowieniaWybrane.length>0)"
+                                    zamowienia-dost="vm.dataObj.zamowieniaWybrane"></planning-zamowienia-baza>-->
+
+        <div ng-if="vm.dataObj.stateId==0">
+            <linia-pozioma></linia-pozioma>
+            <md-tabs md-dynamic-height md-border-bottom md-selected="vm.dataObj.typDanychDokumentu">
+
+                <md-tab label="Zamówienia">
+                    <planning-zamowienia-baza table-obj="vm.pozMagDostTable"
+                                              zamowienia-dost="vm.danePomocnicze.zamowieniaBaza"
+                                              dest-data-obj="vm.dataObj.zamowieniaWybrane"></planning-zamowienia-baza>
+                </md-tab>
+
+
+                <md-tab label="Pozycje magazynowe">
+                    <div layout="column">
+                        <div layout="column" layout-gt-sm="row" ng-form="vm.pozMagWybranaForm">
+                            <md-autocomplete required flex flex-gt-sm="60"
+                                             md-no-cache="true"
+                                             md-selected-item="vm.pozMagWybrana"
+                                             md-selected-item-change="vm.pozMagItemChange()"
+                                             md-items="poz in vm.pozMagDostepne | filter: vm.pozMagSearchText | orderBy: 'nazwa' | limitTo: 15"
+                                             md-item-text="poz.nazwa"
+                                             md-min-length="0"
+                                             md-search-text="vm.pozMagSearchText"
+                                             md-floating-label="wybierz pozycje magazynową">
+                                <md-item-template>
+                                    <span md-highlight-text="vm.pozMagSearchText" md-highlight-flags="^i">{{poz.nazwa}} </span>
+                                    <i><span> [{{poz.stanAktualny}} {{poz.jednostka}}]</span></i>
+                                </md-item-template>
+                                <md-not-found>
+                                    Nie znaleziono pozycji "{{vm.pozMagSearchText}}"
+                                </md-not-found>
+                            </md-autocomplete>
+
+                            <md-input-container flex="10">
+                                <label>Jedn</label>
+                                <input ng-model="vm.pozMagWybrana.jednostka" disabled type="text" />
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Ilość</label>
+                                <input ng-model="vm.pozMagWybrana.ilosc" ng-min="0" ng-max="vm.pozMagWybrana.stanAktualny" name="MagazynIlosc" ng-disabled="!vm.pozMagWybrana" required type="number" />
+                            </md-input-container>
+                            <div>
+                                <md-button class="md-icon-button md-raised md-warn" ng-click="vm.pozMagWybranaAdd()" ng-disabled="!vm.pozMagWybranaForm.$valid" aria-label="magPZPozycjaKorektaDodajBtn">
+                                    <md-icon md-svg-icon="add"></md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <linia-pozioma ng-if="vm.dataObj.pozycjeMagazynowe"></linia-pozioma>
+                </md-tab>
+            </md-tabs>
+        </div>
+
+
+        <!--dokumenty bazowe-->
+        
+        <div ng-if="vm.dataObj.dokumentyBazowe.length>0">
+            <div class="lineHeightByk">&nbsp;</div>
+            <div class="lineHeightByk">&nbsp;</div>
+
+                    <div class="md-headline">Dokumenty źródłowe</div>
+                    <linia-pozioma></linia-pozioma>
+                    <div ng-repeat="dok in vm.dataObj.dokumentyBazowe">
+                        <md-toolbar>
+                            <div class="md-toolbar-tools">
+                                <div class="md-title">{{dok.numerDokumentu}}</div>
+                                <div flex></div>
+                                <user-info obj="dok"></user-info>
+
+                                <div class="md-subhead"></div>
+                            </div>
+                        </md-toolbar>
+                        <planning-zamowienia-baza ng-if="dok.zamowieniaWybrane.length>0" table-obj="vm.pozMagWybrTable"
+                                                  zamowienia-dost="dok.zamowieniaWybrane"></planning-zamowienia-baza>
+                        <div ng-if="dok.pozycjeMagazynowe.length>0">
+                            <div layout="column" layout-gt-sm="row" ng-repeat="poz in dok.pozycjeMagazynowe" style="margin-bottom:-2em">
+                                <md-input-container>
+                                    <input value="{{$index+1}}" disabled />
+                                </md-input-container>
+                                <md-input-container flex flex-gt-sm="60">
+                                    <label>Pozycja magazynowa</label>
+                                    <input ng-model="poz.nazwa" disabled />
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Jedn</label>
+                                    <input ng-model="poz.jednostka" disabled type="text" />
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Ilość</label>
+                                    <input ng-model="poz.ilosc" disabled />
+                                </md-input-container>
+                            </div>
+
+                        </div>
+
+                    </div>
+        </div>
+
+</md-card>

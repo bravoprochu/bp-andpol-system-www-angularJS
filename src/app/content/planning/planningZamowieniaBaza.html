@@ -1,0 +1,76 @@
+﻿           <!--zamowienia do zaplanowania-->
+<div>
+
+    <md-toolbar layout layout-align="end center">
+        <div class="md-toolbar-tools">
+            <div class="md-title">{{tableObj.title}}</div>
+            <div flex></div>
+            <div layout layout-align="center center" style="line-height:1em;">
+                <!--<md-button ng-click="vm.raport.getData()" ng-disabled="vm.isLoading" ng-show="vm.dataObj.zamowieniaWybrane.length>0" class="md-raised md-warn">Pobierz dane zamówień</md-button>-->
+                <md-input-container ng-show="tableObj.searchShow">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="tableObj.searchText" type="text" />
+                </md-input-container>
+                <md-button class="md-icon-button" aria-label="tableSearch" ng-click="tableObj.search()">
+                    <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+            </div>
+        </div>
+    </md-toolbar>
+    <md-table-container>
+        <table md-table md-row-select="tableObj.rowSelect" multiple="true" ng-model="destDataObj">
+            <thead md-head md-order="tableObj.order">
+                <tr md-row>
+                    <th md-column md-order-by="zamowienieId" style="max-width:10px"><span>Id</span></th>
+                    <th md-column md-order-by="zamowienieNr"><span>Nr zamówienia</span></th>
+                    <th md-column md-order-by="reference"><span>Reference</span></th>
+                    <th md-column md-order-by="normaNazwa"><span>Nazwa normy</span></th>
+                    <th md-column md-order-by="zamowienieKombiInfo.zamowienieKombiRaport" style="min-width:250px"><span>Kombinacje</span></th>
+                    
+                    <!--<th md-column md-order-by="zamowienieStatus.poziomProdukcji" style="max-width:10px"><span>PP</span></th>
+                    <th md-column md-order-by="zamowienieStatus.procentRealizacjiPoziomu" style="max-width:10px"><span>%</span></th>
+                    <th md-column md-order-by="zamowienieStatus.info" style="max-width:50px"><span>Status info</span></th>-->
+                    <th md-column md-order-by="dealerInfo.kontrahentShort" style="min-width:350px;"><span>Kontrahent</span></th>
+                    <th md-column md-order-by="dealerInfo.dealerShort" style="min-width:350px;"><span>Dealer</span></th>
+                    <th md-column md-order-by="dealerInfo.dealerDostawaShort" style="min-width:350px;"><span>Dealer dostawa</span></th>
+                    <th md-column md-order-by="commission"><span>Commission</span></th>
+
+                    <th md-column md-order-by="dataZamowienia"><span>Data zamówienia</span></th>
+                    <th md-column md-order-by="dataRealizacji"><span>Data realizacji</span></th>
+                    <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row md-select="dane" md-on-select="tableObj.onSelect" md-on-deselect="tableObj.onDeselect"  md-row-select-id="zamowienieId" ng-repeat="dane in zamowieniaDost | filter: tableObj.searchText | orderBy: tableObj.order | limitTo: tableObj.limit: (tableObj.page - 1) * tableObj.limit">
+                    <td md-cell>{{dane.zamowienieId}}</td>
+                    <td md-cell>{{dane.zamowienieNr}}</td>
+                    <td md-cell>{{dane.reference}}</td>
+                    <td md-cell>{{dane.normaNazwa}}</td>
+                    <td md-cell>
+                        <!--<md-tooltip md-direction="top">{{dane.zamowienieKombiRaportIlosc}}</md-tooltip>-->
+                        {{dane.zamowienieKombiInfo.zamowieniaKombiRaport}}
+                    </td>
+                    <!--<td md-cell><span ng-if="dane.zamowienieStatus.planningInProgress">{{dane.zamowienieStatus.poziomProdukcji}}</span></td>
+                    <td md-cell><span ng-if="dane.zamowienieStatus.planningInProgress">{{dane.zamowienieStatus.procentRealizacjiPoziomu | number: 2}}%</span></td>
+                    <td md-cell><span ng-if="dane.zamowienieStatus.planningInProgress">{{dane.zamowienieStatus.info}}</span></td>-->
+
+                    <td md-cell>{{dane.dealerInfo.kontrahentShort}}</td>
+                    <td md-cell>{{dane.dealerInfo.dealerShort}}</td>
+                    <td md-cell>{{dane.dealerInfo.dealerDostawaShort}}</td>
+                    <td md-cell>{{dane.commission}}</td>
+                    
+                    <td md-cell>{{dane.dataZamowienia | date: "yyyy-MM-dd" }}</td>
+                    <td md-cell>{{dane.dataRealizacji | date: "yyyy-MM-dd"}}</td>
+                    <td md-cell>{{dane.uwagi}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-table-pagination md-limit="tableObj.limit" md-limit-options="tableObj.rowLimitOpt" md-page-select="true" md-page="tableObj.page" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z' }" md-total="{{zamowieniaDost.length}}"></md-table-pagination>
+</div>
+
+
+<div ng-if="!vm.raport.show && vm.dataObj.zamowieniaBaza.length==0" layout layout-align="center center" style="height:10em">
+    <div class="md-headline">Brak dostępnych zamówień</div>
+</div>

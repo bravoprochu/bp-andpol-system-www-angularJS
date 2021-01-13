@@ -1,0 +1,35 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <ng-form name="vm.formMain" layout-gt-md="row " layout-padding>
+            <div flex-gt-md="40">
+                <div layout="column" layout-padding>
+                    <div layout layout-align="top center">
+                        <md-input-container flex="30">
+                            <label>Id</label>
+                            <input ng-model="vm.dataObj.id" disabled />
+                        </md-input-container>
+                    </div>
+                    <md-input-container>
+                        <label>Nazwa</label>
+                        <input ng-model="vm.dataObj.nazwa" required name="nazwa" />
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Szerokość belki</label>
+                        <input ng-model="vm.dataObj.szerokoscBelki" required name="szerokoscBelki" type="number" />
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Uwagi</label>
+                        <input ng-model="vm.dataObj.uwagi" name="uwagi" />
+                    </md-input-container>
+                    <md-switch ng-model="vm.dataObj.czyUtrudnienie"><span>Tkanina z utrudnieniem</span></md-switch>
+                </div>
+            </div>
+            <div flex-gt-md="60">
+                <single-choice dane-id="materialGrupaKontrahentId" opis="Grupa" title="Kontrahent" selected-item="vm.dataObj.materialGrupaKontrahent" dane-pomocnicze="vm.danePomocnicze.materialGrupaKontrahent"></single-choice>
+            </div>
+        </ng-form>
+    </md-card-content>
+
+</md-card>

@@ -1,0 +1,55 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+
+        <div layout="column" layout-gt-sm="row" layout-padding>
+            <div flex="40">
+                <md-input-container>
+                    <label>Nazwa</label>
+                    <input ng-model="vm.dataObj.nazwa" required name="nazwa" />
+                </md-input-container>
+                <div layout>
+                    <md-input-container flex="100">
+                        <label>Uwagi, opis zastosowania</label>
+                        <input ng-model="vm.dataObj.uwagi" name="uwagi" />
+                    </md-input-container>
+                </div>
+            </div>
+            <div flex="60">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab ng-repeat="regula in vm.dataObj.reguly | orderBy: regula.czyAktywny" label="{{regula.kontrahent.nazwa | uppercase}}">
+                        <div layout="column" ng-form="{{regula.kontrahent.nazwa | camelCase}}" status-watch status="regula">
+                            <md-switch ng-model="regula.czyAktywna" aria-label="czyAktywna_{{$index}}" class="md-warn">Aktywna</md-switch>
+
+                            <div layout layout-padding layout-align="space-between center">
+                                <md-input-container>
+                                    <label>Wartość</label>
+                                    <input ng-model="regula.wartosc" type="number" name="wartosc" ng-disabled="!regula.czyAktywna" ng-required="regula.czyAktywna" />
+                                </md-input-container>
+                                <div class="lineHeightByk">&nbsp;</div>
+                                <md-radio-group ng-model="regula.typRozliczenia" ng-disabled="!regula.czyAktywna" class="md-primary" style="line-height:1em;">
+                                    <md-radio-button value=0>procentowo</md-radio-button>
+                                    <md-radio-button value=1>wartość jednostkowo</md-radio-button>
+                                    <md-radio-button value=2>wartość multi</md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+                    </md-tab>
+                </md-tabs>
+                <div class="md-caption">
+                    <strong>TypRozliczenia:</strong><br /><br />
+                    <strong>procentowo:</strong><em>&nbsp;Domyślnie powiększa/pomniejsza wartość kombinacji o wskazaną wartość wyrażoną w procentach</em><br />
+                    <strong>wartość jednostkowo:</strong><em>&nbsp;Dodaje/odejmuje wskazaną wartość od wartości kombi, bez względu na ilość wystąpień</em><br />
+                    <strong>wartość multi:</strong><em>&nbsp;Dodaje/odejmuje wskazaną wartość,&nbsp;<strong>przemnożoną przez ilość wystąpień</strong>, od wartości kombi, bez względu na ilość wystąpień</em><br />
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="md-caption">
+            Reguły dotyczą tylko kontrahentów którzy posiadają delaerów
+        </div>
+    </md-card-content>
+</md-card>

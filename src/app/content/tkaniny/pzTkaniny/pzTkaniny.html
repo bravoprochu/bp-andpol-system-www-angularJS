@@ -1,0 +1,55 @@
+﻿<md-card>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+        <md-toolbar class="md-accent" layout layout-align="end center">
+            <md-input-container ng-show="vm.table.searchShow" style="margin-bottom: -1em">
+                <label>Wyszukaj w tabeli</label>
+                <input ng-model="vm.table.searchText" type="text" />
+            </md-input-container>
+            <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.table.search()">
+                <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                <md-icon md-svg-icon="search"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="dealersAdd" ng-click="vm.table.edit(0)">
+                <md-tooltip md-direction="top">Utwórz nowego</md-tooltip>
+                <md-icon md-svg-icon="add"></md-icon>
+            </md-button>
+        </md-toolbar>
+
+        <md-table-container>
+            <table md-table md-progress="vm.promise">
+                <thead md-head md-order="vm.table.order">
+                    <tr md-row>
+                        <th md-column></th>
+                        <th md-column md-order-by="pzTkaninyId"><span>Id</span></th>
+                        <th md-column md-order-by="dataWystawienia"><span>DataWystawienia</span></th>
+                        <th md-column md-order-by="dokumentZrodlowyNr"><span>Dokument źródłowy</span></th>
+                        <th md-column md-order-by="czyPowierzona"><span>Czy powierzona</span></th>
+                        <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                        <th md-column md-order-by="createdBy"><span>CreatedBy</span></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="dane in vm.dataObj | filter: vm.table.searchText | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit">
+                        <td md-cell>
+                            <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.table.edit(dane.pzTkaninyId)">
+                                <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                            </md-button>
+                        </td>
+                        <td md-cell>{{dane.pzTkaninyId}}</td>
+                        <td md-cell>{{dane.dataWystawienia | date: 'yyyy-mm-dd'}}</td>
+                        <td md-cell>{{dane.dokumentZrodlowyNr}}</td>
+                        <td md-cell>
+                            <span ng-if="dane.czyPowierzona">powierzona</span>
+                            <span ng-if="!dane.czyPowierzona">nie</span>
+                        </td>
+                        <td md-cell>{{dane.uwagi}}</td>
+                        <td md-cell>{{dane.createdBy}}</td>
+                </tbody>
+
+            </table>
+        </md-table-container>
+        <md-table-pagination md-limit="vm.table.limit" md-page="vm.table.page" md-page-select="true" md-limit-options="vm.table.rowLimitOpt" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.length}}"></md-table-pagination>
+    </md-card-content>
+</md-card>

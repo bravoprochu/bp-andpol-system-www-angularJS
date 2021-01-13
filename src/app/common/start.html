@@ -1,0 +1,56 @@
+﻿<div ng-controller="startCtrl as vm" ng-cloak style="width:100%">
+    <div layout="row" layout-sm="column" layout-align="space-between center">
+        <img ng-if="!vm.isSmall()" ng-src="images/andpol_logo.png" style="margin-top:15px" />
+        <div flex ng-if="vm.isSmall()"></div>
+
+        <div layout="row" layout-align="end center">
+            <session-ends-d></session-ends-d>
+            <md-button ng-if="vm.isLoggedIn" class="md-icon-button" ng-click="vm.menuIsOpen=!vm.menuIsOpen" aria-label="otworzMenu">
+                <md-icon md-svg-icon="menu"></md-icon>
+                <md-tooltip md-direction="left">
+                    Otwórz menu
+                </md-tooltip>
+            </md-button>
+            <div ng-if="!vm.isLoggedIn">
+                <md-button class="md-icon-button" ng-click="vm.logIn()">
+                    <md-tooltip md-direction="left">Zaloguj się</md-tooltip>
+                    <md-icon md-svg-icon="login"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="vm.idzDo('register')">
+                    <md-tooltip md-direction="left">Zarejestruj się</md-tooltip>
+                    <md-icon md-svg-icon="register"></md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+    <!--<div ui-view style="height:{{vm.contentMainHeight}}px"></div>-->
+    <md-sidenav ng-if="vm.isLoggedIn" class="md-sidenav-right md-whiteframe-z2" md-is-open="vm.menuIsOpen" md-component-id="right" >
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">Menu</h1>
+        </md-toolbar>
+        <md-content layout-padding>
+                <md-input-container>
+                    <label for="testInput">Wyszukaj element menu</label>
+                    <input type="text" id="testInput" ng-model="vm.search"  md-autofocus md-select-on-focus />
+                </md-input-container>
+            <div layout="column" layout-align="space-between stretch" ng-repeat="state in vm.menu | filter:  vm.search | orderBy: 'data.label'" ng-click="vm.menuIsOpen=false" ui-sref="{{state.name}}" style="cursor:pointer; height:6em;" >
+                    <div class="md-subhead" style="color:#808080;margin-top:8px">
+                        
+                            {{state.data.nazwaGrupy}}
+                    </div>
+                    <div class="md-title" style="color:cornflowerblue;">
+                        <div>{{state.data.label}}</div>
+
+                        <md-divider class="lineHeightByk"></md-divider>
+                        <md-divider></md-divider>
+                        <md-divider></md-divider>
+
+                    </div>
+                    
+
+            </div>
+
+        </md-content>
+    </md-sidenav>
+    <div ng-cloak ui-view></div>
+</div>

@@ -1,0 +1,30 @@
+﻿<!--<md-list>
+    <md-subheader class="md-no-sticky">{{title}}</md-subheader>
+    <md-list-item class="md-2-line" ng-repeat="n in lista | orderBy: 'nazwa'">
+        <div class="md-list-item-text">
+            <h3> {{n.nazwa}} </h3>
+        </div>
+        <div>
+            <h3><strong>{{n.count}}</strong></h3>
+        </div>
+    </md-list-item>
+</md-list>-->
+<div layout layout-padding layout-align="space-between center">
+    <div>
+        <div class="md-title">{{title}}</div>
+        <div class="md-body-2">Pozycji na liście: {{lista.length}}</div>
+    </div>
+    <toggle source="isCollapsed"></toggle>
+</div>
+<div ng-repeat="n in lista | orderBy: 'nazwa'" ng-if="isCollapsed">
+    <div md-colors="{background: '{{color}}-{{odcien}}'}" ng-init="odcien=500" ng-mouseover="odcien=900" ng-mouseleave="odcien=500" ng-if="$odd" layout layout-padding>
+        <div class="md-subhead">{{n.nazwa}}</div>
+        <div flex></div>
+        <div><strong>{{n.count}}</strong></div>
+    </div>
+    <div md-colors="{background: '{{color}}-{{odcienEven}}'}" ng-init="odcien=300" ng-mouseover="odcienEven=700" ng-mouseleave="odcienEven=300" ng-if="$even" layout layout-padding>
+        <div class="md-subhead">{{n.nazwa}}</div>
+        <div flex></div>
+        <div><strong>{{n.count}}</strong></div>
+    </div>
+</div>

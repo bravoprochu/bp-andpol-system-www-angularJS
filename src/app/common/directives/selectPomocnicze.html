@@ -1,0 +1,25 @@
+﻿<md-autocomplete md-search-text="searchText"
+                 md-selected-item="selectedItem"
+                 md-selected-item-change="pomocniczeWybierz(pomocnicze)"
+                 md-items="pomocnicze in pomocniczeSearch() | limitTo:10"
+                 md-item-text="pomocnicze.nazwa"
+                 md-min-length="0"
+                 md-no-cache="true"
+                 ng-required="{{required}}"
+                 md-floating-label="{{placeholder}}"
+                 md-input-name="{{inputName}}">
+    <md-item-template>
+        <span md-highlight-text="pomocniczeSearchText" md-highlight-flags="^i">{{pomocnicze.nazwa}}</span>
+    </md-item-template>
+    <md-not-found>
+        <div ng-if="!idzDoUndefined">
+            <a ng-click="idzDo()">
+                Nie znaleziono&nbsp;<strong>"{{searchText}}"</strong>.&nbsp;Kliknij by utworzyć nowy wpis !
+                <md-icon class="md-warn" md-svg-icon="add"></md-icon>
+            </a>
+        </div>
+        <div ng-if="idzDoUndefined">
+            Nie znaleziono "{{searchText}}"
+        </div>
+    </md-not-found>
+</md-autocomplete>

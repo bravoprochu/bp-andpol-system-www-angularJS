@@ -1,0 +1,40 @@
+﻿<div>
+    <div layout>
+        <div class="md-display-1">{{vm.dataObj.produkcjaDzial.nazwa}}</div>
+        <div flex></div>
+        <md-button ng-click="vm.navDelete()" class="md-raised md-icon-button" md-colors="::{background: 'red-500'}" aria-label="usunPlanning" style="top:1em;">
+            <md-tooltip md-direction="top">Usuń planning</md-tooltip>
+            <md-icon md-svg-icon="deleteForever"></md-icon>
+        </md-button>
+    </div>
+
+
+
+    <div class="md-title">Elementy zaplanowane</div>
+    <div layout>
+        <md-list flex>
+            <md-list-item ng-repeat="item in vm.dataObj.elementyZaplanowane">
+                <div class="md-list-item-text">
+                    <p>{{item}}</p>
+                </div>
+                <md-divider ng-if="!$last"></md-divider>
+            </md-list-item>
+        </md-list>
+    </div>
+
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab ng-repeat="dzien in vm.dataObj.planningDzienRoboczy" label="{{dzien.dzienRoboczy | date: 'yyyy-MM-dd (EEE)'}}">
+            <div layout layout-padding ng-if="dzien.elementyZaplanowane.length>0">
+                <planning-zamowienie-kombi-info title="Elementy zaplanowane"
+                                                is-disabled="true"
+                                                line1="nazwa"
+                                                line2=""
+                                                line3="zamowienieInfo"
+                                                dane-pomocnicze="dzien.elementyZaplanowane">
+                </planning-zamowienie-kombi-info>
+            </div>
+
+
+        </md-tab>
+    </md-tabs>
+</div>

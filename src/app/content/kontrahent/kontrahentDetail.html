@@ -1,0 +1,435 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <div layout="column" layout-gt-sm="row">
+            <div flex="40" layout="column" layout-padding>
+                <md-card>
+                    <md-card-content>
+                        <div class="md-subhead">Typ kontrahenta</div>
+                        <md-radio-group ng-model="vm.dataObj.typKontrahenta" layout="row" layout-padding layout-align="space-around center">
+                            <md-radio-button value=1 ng-disabled="vm.dataObj.id">Firma</md-radio-button>
+                            <md-radio-button value=2 ng-disabled="vm.dataObj.id">Osoba fizyczna</md-radio-button>
+                        </md-radio-group>
+                        <div layout="column" layout-padding layout-align="center start">
+                            <md-checkbox ng-model="vm.dataObj.czyDostawca" name="czyDostawca" aria-label="czyDostawca">Dostawca</md-checkbox>
+                            <md-checkbox ng-model="vm.dataObj.czyOdbiorca" name="czyOdbiorca" aria-label="czyOdbiorca">Odbiorca</md-checkbox>
+                            <md-checkbox ng-model="vm.dataObj.czyDealerzy" name="czyDealerzy" ng-show="vm.dataObj.typKontrahenta==1" aria-label="czyDealerzy">Lista dealerów</md-checkbox>
+                        </div>
+
+                    </md-card-content>
+                </md-card>
+                <md-card ng-show="vm.dataObj.typKontrahenta==1">
+                    <md-card-content>
+                        <div layout="column" layout-padding>
+                            <div class="md-subhead">Podstawowe dane (firma):</div>
+                            <md-input-container ng-show="vm.dataObj.id">
+                                <label>Id</label>
+                                <input ng-model="vm.dataObj.id" disabled>
+                            </md-input-container>
+                            <div layout="row">
+                                <md-input-container flex="50">
+                                    <label>
+                                        Skrót nazwy kontrahenta&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.skrot.$error" ng-show="vm.formMain.skrot.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="required">Pele jest wymagane</span>&nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 30 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="30" name="skrot" ng-model="vm.dataObj.skrot" ng-required="vm.dataObj.typKontrahenta==1">
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="100">
+                                    <label>
+                                        Pełna nazwa kontrahenta&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.nazwa.$error" ng-show="vm.formMain.nazwa.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="required">Pole jest wymagane</span>&nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 100 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="100" name="nazwa" ng-model="vm.dataObj.nazwa" ng-required="vm.dataObj.typKontrahenta==1">
+                                </md-input-container>
+                            </div>
+
+                            <div layout="row">
+                                <md-input-container flex="50">
+                                    <label>
+                                        NIP&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.nip.$error" ng-show="vm.formMain.nip.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="required">NIP jest wymagany</span>&nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 12 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="12" name="nip" ng-model="vm.dataObj.nip" ng-required="vm.dataObj.typKontrahenta==1">
+
+                                </md-input-container>
+                            </div>
+                            <div layout="column">
+                                <md-input-container>
+                                    <label>
+                                        Pierwsze konto SWIFT&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.kontoBankoweSwift.$error" ng-show="vm.formMain.kontoBankoweSwift.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 11 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="11" name="kontoBankoweSwift" ng-model="vm.dataObj.kontoBankoweSwift">
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>
+                                        Pierwsze konto bankowe (numer bez spacji)&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.kontoBankowe.$error" ng-show="vm.formMain.kontoBankowe.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 28 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="28" name="kontoBankowe" ng-model="vm.dataObj.kontoBankowe">
+                                    <span ng-show="vm.dataObj.kontoBankowe"><em><small>{{vm.dataObj.kontoBankowe | separator: 4}}</small></em></span>
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>
+                                        Drugie konto SWIFT&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.kontoBankowe2Swift.$error" ng-show="vm.formMain.kontoBankowe2Swift.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 11 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="11" name="kontoBankowe2Swift" ng-model="vm.dataObj.kontoBankowe2Swift">
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>
+                                        Drugie konto bankowe (numer bez spacji)&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.kontoBankowe.$error" ng-show="vm.formMain.kontoBankowe.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 28 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="28" name="kontoBankowe2" ng-model="vm.dataObj.kontoBankowe2">
+                                    <span ng-show="vm.dataObj.kontoBankowe2"><em><small>{{vm.dataObj.kontoBankowe2 | separator: 4}}</small></em></span>
+                                </md-input-container>
+                            </div>
+
+                        </div>
+                    </md-card-content>
+                </md-card>
+                <md-card ng-show="vm.dataObj.typKontrahenta==2">
+                    <md-card-content>
+                        <div layout="column" layout-padding>
+                            <div class="md-subhead">Podstawowe dane (osoba fizyczna):</div>
+                            <md-input-container ng-show="vm.dataObj.id">
+                                <label>Id</label>
+                                <input ng-model="vm.dataObj.id" disabled>
+                            </md-input-container>
+                            <div layout="row">
+                                <md-input-container flex="80">
+                                    <label>
+                                        Imię&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.imie.$error" ng-show="vm.formMain.imie.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="required">Pele jest wymagane</span>&nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 100 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="100" name="imie" ng-model="vm.dataObj.imie" ng-required="vm.dataObj.typKontrahenta==2">
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="100">
+                                    <label>
+                                        Nazwisko&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.nazwisko.$error" ng-show="vm.formMain.nazwisko.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="required">Pele jest wymagane</span>&nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 50 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="50" name="nazwisko" ng-model="vm.dataObj.nazwisko" ng-required="vm.dataObj.typKontrahenta==2">
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="50">
+                                    <label>
+                                        PESEL&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.pesel.$error" ng-show="vm.formMain.pesel.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="required">Pele jest wymagane</span>&nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">Maksymalna długość to 11 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="11" maxlength="11" name="pesel" type="text" ng-model="vm.dataObj.pesel" ng-required="vm.dataObj.typKontrahenta==2">
+                                </md-input-container>
+                            </div>
+
+
+
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+
+            <div flex="30" layout="column" layout-padding>
+                <md-card>
+                    <md-card-content>
+                        <div layout="column" layout-padding>
+                            <div class="md-subhead">Adres (faktura)</div>
+                            <div layout="row">
+                                <md-input-container flex="40">
+                                    <label>
+                                        Kod kraju (2 znaki)&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.kodKraju.$error" ng-show="vm.formMain.kodKraju.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">xMaksymalna długość to 2 znaki</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="2" name="kodKraju" ng-model="vm.dataObj.kodKraju" type="text" maxlength="2" required>
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="40">
+                                    <label>
+                                        Kod pocztowy (max 8 znaków)&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.kodPocztowy.$error" ng-show="vm.formMain.kodPocztowy.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">xMaksymalna długość to 8 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="8" name="kodPocztowy" ng-model="vm.dataObj.kodPocztowy" type="text" maxlength="8" required>
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="100">
+                                    <label>
+                                        Miejscowość (max 50)&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.miejscowosc.$error" ng-show="vm.formMain.miejscowosc.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">xMaksymalna długość to 50 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="50" name="miejscowosc" ng-model="vm.dataObj.miejscowosc" type="text" maxlength="50" required>
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="100">
+                                    <label>
+                                        Ulica, numer domu/mieszkania (max 50)&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.ulica.$error" ng-show="vm.formMain.ulica.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">xMaksymalna długość to 50 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="50" name="ulica" ng-model="vm.dataObj.ulica" type="text" maxlength="50">
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="50">
+                                    <label>
+                                        Ulica, numer domu/mieszkania (max 50)&nbsp;&nbsp;&nbsp;
+                                        <span ng-messages="vm.formMain.ulicaNr.$error" ng-show="vm.formMain.ulicaNr.$touched">
+                                            &nbsp;&nbsp;
+                                            <span ng-message="md-maxlength">xMaksymalna długość to 30 znaków</span>&nbsp;&nbsp;&nbsp;
+                                        </span>
+                                    </label>
+                                    <input md-maxlength="30" name="ulicaNr" ng-model="vm.dataObj.ulicaNr" type="text" maxlength="30">
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+
+            <div flex="30" layout="column" layout-padding>
+                <md-card>
+                    <md-card-content>
+                        <div layout="column" layout-padding>
+                            <div class="md-subhead">Kontakt:</div>
+                            <md-input-container>
+                                <label>
+                                    Telefon 1&nbsp;&nbsp;&nbsp;
+                                    <span ng-messages="vm.formMain.tel.$error" ng-show="vm.formMain.tel.$touched">
+                                        &nbsp;&nbsp;
+                                        <span ng-message="md-maxlength">Maksymalna długość to 15 znaków</span>&nbsp;&nbsp;&nbsp;
+                                    </span>
+                                </label>
+                                <input md-maxlength="15" name="tel1" ng-model="vm.dataObj.tel1">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>
+                                    Telefon 2&nbsp;&nbsp;&nbsp;
+                                    <span ng-messages="vm.formMain.tel2.$error" ng-show="vm.formMain.tel2.$touched">
+                                        &nbsp;&nbsp;
+                                        <span ng-message="md-maxlength">Maksymalna długość to 15 znaków</span>&nbsp;&nbsp;&nbsp;
+                                    </span>
+                                </label>
+                                <input md-maxlength="15" name="tel2" ng-model="vm.dataObj.tel2">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>
+                                    Fax&nbsp;&nbsp;&nbsp;
+                                    <span ng-messages="vm.formMain.fax.$error" ng-show="vm.formMain.fax.$touched">
+                                        &nbsp;&nbsp;
+                                        <span ng-message="md-maxlength">Maksymalna długość to 15 znaków</span>&nbsp;&nbsp;&nbsp;
+                                    </span>
+                                </label>
+                                <input md-maxlength="15" name="fax" ng-model="vm.dataObj.fax">
+                            </md-input-container>
+                            <md-input-container>
+                                <label>
+                                    Adres e-mail&nbsp;&nbsp;&nbsp;
+                                    <span ng-messages="vm.formMain.email.$error" role="alert" ng-show="vm.formMain.email.$touched">
+                                        &nbsp;&nbsp;
+                                        <span ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                                            Email musi zawierać od 10 do 100 znaków  i wyglądać jak adres email !!!
+                                        </span>&nbsp;&nbsp;&nbsp;
+                                    </span>
+                                </label>
+                                <input type="email" name="email" ng-model="vm.dataObj.email"
+                                       minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" />
+                            </md-input-container>
+                            <md-input-container>
+                                <label>
+                                    Adres www (http://nazwadomeny.pl)&nbsp;&nbsp;&nbsp;
+                                    <span ng-messages="vm.formMain.www.$error" ng-show="vm.formMain.www.$touched">
+                                        &nbsp;&nbsp;
+                                        <span ng-message="md-maxlength">xMaksymalna długość to 100 znaków</span>&nbsp;&nbsp;&nbsp;
+                                    </span>
+                                </label>
+                                <input md-maxlength="100" name="www" ng-model="vm.dataObj.www" type="text">
+                            </md-input-container>
+
+                        </div>
+
+                    </md-card-content>
+                </md-card>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+        <div layout="column" layout-padding ng-if="vm.dataObj.czyDealerzy && vm.dataObj.typKontrahenta==1">
+            <md-toolbar class="md-accent" layout layout-align="end center">
+                <div class="md-toolbar-tools md-title">Adresy&nbsp;/&nbsp;Lista dealerów</div>
+                <div flex></div>
+                <md-input-container ng-show="vm.dealersTable.searchShow">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="vm.dealersTable.searchText" type="text" />
+                </md-input-container>
+                <md-button class="md-icon-button" aria-label="dealersSearch" ng-click="vm.dealersTable.search()">
+                    <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="dealersAdd" ng-click="vm.dealerDialog($event, 'new')">
+                    <md-tooltip md-direction="top">Utwórz nowego</md-tooltip>
+                    <md-icon md-svg-icon="add"></md-icon>
+                </md-button>
+            </md-toolbar>
+
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.dealersTable.order">
+                        <tr md-row>
+                            <th style="min-width:250px" md-column md-order-by="nazwa"><span>Nazwa</span></th>
+                            <th md-column md-order-by="kodKraju"><span>Kod Kraju</span></th>
+                            <th md-column md-order-by="kod"><span>Kod pocztowy</span></th>
+                            <th md-column md-order-by="miejscowosc"><span>Miejscowość</span></th>
+                            <th md-column md-order-by="ulica"><span>Ulica</span></th>
+                            <th md-column md-order-by="godzinyOtwarcia"><span>Godziny otwarcia</span></th>
+                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                            <th md-column=""></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in d= (vm.dataObj.dealer | filter: {status: '!usuniety', $:vm.dealersTable.searchText} | orderBy: vm.dealersTable.order | limitTo: vm.dealersTable.limit: (vm.dealersTable.page - 1) * vm.dealersTable.limit )">
+                            <td md-cell>
+                                {{dane.nazwa}}
+                                <span ng-if="dane.czyAdresDostawy">&nbsp;&nbsp;<em><small>(dostawa)</small></em></span>
+                                <span class="podkreslenie" ng-if="dane.czyWjedziePrzyczepa">[P]</span>
+                                <!--<span class="podkreslenie" ng-if="!dane.czyWjedziePrzyczepa && dane.czyAdresDostawy">[A]</span>-->
+                            </td>
+                            <td md-cell>{{dane.kodKraju}}</td>
+                            <td md-cell>{{dane.kod}}</td>
+                            <td md-cell>{{dane.miejscowosc}}</td>
+                            <td md-cell>{{dane.ulica}}&nbsp;{{dane.nr}}</td>
+                            <td md-cell>{{dane.godzinyOtwarcia}}</td>
+                            <td md-cell>{{dane.uwagi}}</td>
+                            <td md-cell>
+                                <md-fab-speed-dial md-direction="left" class="md-fling md-hover-full"
+                                                   md-open="dane.isOptShow"
+                                                   ng-mouseenter="dane.isOptShow=true" ng-mouseleave="dane.isOptShow=false">
+                                    <md-fab-trigger>
+                                        <md-button aria-label="more_vert" class="md-fab md-warn md-mini">
+                                            <md-icon md-svg-src="more_vert" aria-label="dealersMenu{{$index}}"></md-icon>
+                                        </md-button>
+                                    </md-fab-trigger>
+                                    <md-fab-actions md-direction="up" class="md-fling">
+                                        <md-button class="md-fab md-mini" ng-click="vm.dealerDialog($event,'edit', dane)" aria-label="dealersEdit{{$index}}">
+                                            <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                            <md-icon md-svg-icon="edit"></md-icon>
+                                        </md-button>
+                                        <md-button class="md-fab md-mini" ng-click="vm.dealerNewDelete($event, dane)" aria-label="dealersDelete{{$index}}">
+                                            <md-tooltip md-direction="top">Usun</md-tooltip>
+                                            <md-icon md-svg-icon="delete"></md-icon>
+                                        </md-button>
+                                        <md-button class="md-fab md-mini" ng-click="vm.dealerDialog($event, 'clone', dane)" aria-label="dealersClone{{$index}}">
+                                            <md-tooltip md-direction="top">Sklonuj</md-tooltip>
+                                            <md-icon md-svg-icon="clone"></md-icon>
+                                        </md-button>
+                                    </md-fab-actions>
+                                </md-fab-speed-dial>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.dealersTable.limit" md-page="vm.dealersTable.page" md-label="vm.dealersTable.label" md-total="{{vm.dataObj.dealer.length}}"></md-table-pagination>
+
+
+
+            <kontrahent-platnosc dane-pomocnicze="vm.danePomocnicze" ref="vm.dataObj.kontrahentPlatnosc" czy-transport="true"></kontrahent-platnosc>
+
+
+
+            <!--<div layout="row" layout-padding>
+                <div flex>
+                    <md-checkbox ng-model="vm.dataObj.kontrahentPlatnosc.transportWcenie">transport w cenie</md-checkbox>
+                </div>
+                <div flex="5"></div>
+                <div flex ng-show="!vm.dataObj.kontrahentPlatnosc.transportWcenie">
+                    <md-input-container>
+                        <label>
+                            Stawka za km (PLN)&nbsp;&nbsp;&nbsp;
+                        </label>
+                        <input ng-model="vm.dataObj.kontrahentPlatnosc.transportStawka" name="platnosciTransportStawka" ng-required="!vm.dataObj.kontrahentPlatnosc.transportWcenie" type="number" />
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout="row">
+                <div flex>
+                    <single-choice flex selected-item="vm.dataObj.kontrahentPlatnosc.platnoscRodzaj"
+                                   dane-pomocnicze="vm.danePomocnicze.platnoscRodzaj"
+                                   dane-id="jednPlatnoscRodzajId"
+                                   title="sposób płatności"></single-choice>
+                </div>
+                <div flex>
+                    <md-input-container ng-if="vm.dataObj.kontrahentPlatnosc.platnoscRodzaj.czyDni">
+                        <label>Ile dni</label>
+                        <input ng-model="vm.dataObj.kontrahentPlatnosc.ileDni" ng-required="vm.dataObj.kontrahentPlatnosc.platnoscRodzaj.czyDni" name="platnoscRodzajIleDni" type="number" min="1"/>
+                    </md-input-container>
+                    <md-input-container ng-if="vm.dataObj.kontrahentPlatnosc.platnoscRodzaj.czyUwagi">
+                        <label>Uwagi</label>
+                        <input ng-model="vm.dataObj.kontrahentPlatnosc.uwagi" ng-required="vm.dataObj.kontrahentPlatnosc.platnoscRodzaj.czyUwagi" name="platnoscRodzajUwagi" type="text" />
+                    </md-input-container>
+                </div>
+            </div>-->
+        </div>
+    </md-card-content>
+
+</md-card>

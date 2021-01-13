@@ -1,0 +1,24 @@
+﻿<!--<md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="source.isCollapsed=!source.isCollapsed" ng-if="source.isCollapsed">
+    <md-icon md-svg-icon="arrowUp"></md-icon>
+</md-button>
+<md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="source.isCollapsed=!source.isCollapsed" ng-if="!source.isCollapsed">
+    <md-icon md-svg-icon="arrowDown"></md-icon>
+</md-button>-->
+
+<div layout="column" layout-padding>
+    <div layout>
+        <div layout="column" ng-if="subTitle">
+            <div class="md-title">{{title}}</div>&nbsp;
+            <div class="md-caption" ng-if="subTitle">{{subTitle}}</div>
+        </div>
+        <div ng-if="!subTitle" class="md-title">{{title}}</div>&nbsp;
+
+        <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="pos=!pos" ng-show="pos">
+            <md-icon md-svg-icon="arrowUp"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="pos=!pos" ng-show="!pos">
+            <md-icon md-svg-icon="arrowDown"></md-icon>
+        </md-button>
+    </div>
+    <md-divider></md-divider>
+</div>

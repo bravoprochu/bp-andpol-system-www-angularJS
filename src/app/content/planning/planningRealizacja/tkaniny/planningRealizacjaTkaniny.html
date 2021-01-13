@@ -1,0 +1,28 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain" layout="column" layout-padding>
+
+        <dzien-roboczy-date-picker></dzien-roboczy-date-picker>
+        <div ng-if="vm.dataObj.planningInfo.id>0">
+            <div class="md-title">Planning id: <strong>{{vm.dataObj.planningInfo.id}}</strong></div>
+            <div class=md-subhead>Realizacja od <strong>{{vm.dataObj.planningInfo.dateStart | date: 'yyyy-MM-dd'}}</strong> do <strong>{{vm.dataObj.planningInfo.dateEnd | date: 'yyyy-MM-dd'}}</strong></div>
+            <linia-pozioma></linia-pozioma>
+
+            <div ng-repeat="belka in vm.dataObj.obszyciaByBelka" layout layout-padding>
+                <planning-zamowienie-kombi-info dane-pomocnicze="belka.listaObszyc"
+                                                title="{{belka.material.nazwa}}"
+                                                sub-title="Id: {{belka.tkaninaBelkaId}},  ({{belka.zuzycieWartosc|number: 2}} / {{belka.belkaStanAktualny|number: 2}}mb)"
+                                                line1="nazwaKombinacji"
+                                                line2="nazwaObszycia"
+                                                line3="zamowienieInfo"
+                                                parent-form="vm.formMain">
+                </planning-zamowienie-kombi-info>
+            </div>
+        </div>
+        <div ng-if="vm.dataObj.planningInfo.id==0">
+            <div class="md-headline">Nie ma zaplanowanych elementów obszyć do potwierdzenia w dniu {{vm.dataObj.planningInfo.dateStart | date: 'yyyy-MM-dd'}}</div>
+        </div>
+    </md-card-content>
+</md-card>
+

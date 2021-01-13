@@ -1,0 +1,164 @@
+﻿&nbsp;
+<div border>
+    <div layout layout-padding layout-align="start center">
+        <!--<div flex layout="column" layout-padding>
+            <div class="md-subhead">Działy produkcyjne: </div>
+            <select-all dane-pomocnicze="vm.danePomocnicze.produkcjaDzial"
+                        selected-items="vm.planning.produkcjaDzialSelected"
+                        key="produkcjaDzialId"
+                        nazwa="nazwa"
+                        descr="poziom produkcj"></select-all>
+        </div>-->
+        <div class="md-subhead">Produkcja start:</div>
+        <div layout layout-padding layout-align="start center" style="min-height:200px">
+            <md-datepicker ng-model="vm.dataObj.planningStart"></md-datepicker>
+            <div class="md-subhead" ng-if="vm.planning.planningStart">&nbsp;&nbsp;KW: <strong>{{vm.planning.planningStart | date:'ww'}}</strong></div>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <md-button class="md-raised" ng-click="vm.planningKalendarz()" ng-disabled="vm.isLoading">Przelicz planning</md-button>
+            <!--<md-button ng-disabled="false" class="md-raised" ng-click="vm.planningKalendarz()">Wykonaj planning</md-button>-->
+            <div flex></div>
+            <div layout>
+                <div ng-if="vm.dataObj.hasErrors" layout="column" layout-padding>
+                    <div class="md-subhead"><strong>Lista błędów</strong></div>
+                    <div class="md-body-1" ng-repeat="item in vm.dataObj.errors">{{item}}</div>
+                </div>
+                <div layout="column" ng-if="vm.dataObj.planningKalendarzRaportShort.zaplanowane.length>0">
+                    <div class="md-subhead"><strong>Zaplanowane</strong></div>
+                    <div class="md-body-1" ng-repeat="item in vm.dataObj.planningKalendarzRaportShort.zaplanowane">{{item}}</div>
+                </div>
+                <!--<div layout="column" ng-if="vm.dataObj.planningKalendarzRaportShort.zaplanowane.length>0">
+                    <div class="md-subhead"><strong>Strata</strong></div>
+                    <div class="md-body-1" ng-repeat="item in vm.dataObj.planningKalendarzRaportShort.zaplanowane">{{item}}</div>
+                </div>-->
+            </div>
+            <!--raport short zaplanowaneAll-->
+            
+        </div>
+        <div flex>
+
+
+        </div>
+    </div>
+    <planning-kalendarz-zakres></planning-kalendarz-zakres>
+</div>
+    <div ng-if="false">
+
+        <div layout="column" flex="100" layout-padding>
+            <!--dzialy produkcyjne, dostepne sklady grupy roboczej-->
+            <div layout layout-align="start start">
+                <div flex layout="column" layout-padding>
+                    <div>Działy produkcyjne:</div>
+                    <md-radio-group ng-model="vm.planning.produkcjaDzial">
+                        <md-radio-button ng-repeat="k in vm.danePomocnicze.produkcjaDzial" ng-value="k">{{k.nazwa}}</md-radio-button>
+                    </md-radio-group>
+                </div>
+                <div flex layout="column" layout-padding ng-if="vm.planning.produkcjaDzial">
+                    <div>Grupy robocze, dostępny skład:</div>
+                    <div ng-repeat="d in vm.planning.produkcjaDzial.grupaRobocza" style="height:2em;">
+                        <div layout>
+                            <md-input-container flex="66">
+                                <label>{{d.nazwa}}</label>
+                                <input disabled />
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Skład</label>
+                                <input ng-model="d.ilosc" type="number" />
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+                <div flex>
+                    <md-button ng-click="vm.planningGetData()" class="md-raised md-warn" ng-disabled="vm.raport.loading">(pokaż planning)</md-button>
+                </div>
+            </div>
+
+            <div layout="column" flex="20" md-whiteframe="3">
+                <div>Razem czasu: {{vm.planning.etap1.czasRazem}}</div>
+                <div>Ilość: {{vm.planning.etap1.ilosc}}</div>
+                <div flex></div>
+                <div layout ng-repeat="grupa in vm.planning.etap1.grupaRobocza">
+                    {{grupa.nazwa}}&nbsp;&ndash;&nbsp;{{grupa.wartosc}}
+                </div>
+
+            </div>
+            <div flex="20">
+                <md-button ng-click="vm.planningPrzeliczEtap(vm.planning.etap1Dost.zamowienia, vm.planning.etap1Dost.raport, vm.planning.etap1)" class="md-raised md-accent">Przelicz etap 1</md-button>
+            </div>
+        </div>
+        <div class="md-headline">RAPORT</div>
+        <div layout layout-padding layout-align="start start">
+            <div flex layout="column">
+                <div layout layout-padding>
+                    <div>Brak ludzi:</div>
+                    <div flex layout="column">
+                        <div ng-repeat="s in vm.planning.result.result.raport.brakLudzi">{{s}}</div>
+                    </div>
+                </div>
+                <div layout layout-padding>
+                    <div>Brak czasu:</div>
+                    <div flex layout="column">
+                        <div ng-repeat="s in vm.planning.result.result.raport.brakCzasu">{{s}}</div>
+                    </div>
+                </div>
+            </div>
+            <div flex layout="column">
+                <div ng-repeat="r in vm.planning.result.result.etap[vm.planning.result.result.etap.length-1].raport.skladStrata">
+                    {{r.nazwa}}&nbsp;-&nbsp;{{r.strataRh}}&nbsp;//{{r.ilosc | number:0}}m
+                </div>
+
+            </div>
+        </div>
+        <div layout layout-padding>
+            <lista-nazw flex title="Raport dzienny !!!" lista="vm.planning.result.result.raport.elementyDoZaplanowania" color="grey"></lista-nazw>
+            <lista-nazw flex title="Raport two" lista="vm.planning.result.result.raport.elementyDoZaplanowania" color="orange"></lista-nazw>
+        </div>
+
+        <linia-pozioma></linia-pozioma>
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab ng-repeat="etap in vm.planning.result.result.etap" label="Etap {{etap.etapId}}">
+                <md-content>
+                    <div layout="column" layout-padding>
+                        <div class="md-body" ng-if="etap.raport.brakLudzi">Brak ludzi: <strong>{{etap.raport.brakLudzi}}</strong></div>
+                        <div class="md-body" ng-if="etap.raport.brakCzasu">Brak czasu: <strong>{{etap.raport.brakCzasu}}</strong></div>
+                        <div>&nbsp;</div>
+                        <div ng-repeat="str in etap.raport.skladStrata">
+                            <div ng-if="str.ilosc>0">
+                                <span>{{str.nazwa}}</span>&nbsp;||&nbsp;
+                                <span>{{str.strataRh}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>&nbsp;</div>
+                    <div layout="column" layout-padding>
+                        <div ng-repeat="el in etap.result">
+                            <div layout layout-align="start center">
+                                <div flex>{{el.dateStart | date: 'HH:mm'}} - {{el.dateEnd | date: 'HH:mm'}}</div>
+                                <div flex><strong>{{el.element.nazwa}}</strong></div>
+                                <div flex>
+                                    <div layout ng-repeat="s in el.grupaRoboczaStrata | orderBy: 'robociznaId'">
+                                        <div>[{{s.wartosc}}]&nbsp;{{s.nazwa}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <md-divider></md-divider>
+
+                        </div>
+                    </div>
+                </md-content>
+            </md-tab>
+        </md-tabs>
+
+
+
+        <div>
+            <md-button ng-click="vm.tempOutputShow=!vm.tempOutputShow">toJSON</md-button>
+            <div ng-if="vm.tempOutputShow">
+                {{vm.tempOutput}}
+            </div>
+
+
+        </div>
+
+
+    </div>

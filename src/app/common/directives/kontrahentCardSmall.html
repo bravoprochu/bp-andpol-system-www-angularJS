@@ -1,0 +1,31 @@
+﻿<div layout>
+    <div class="md-body-2">
+        <div class="md-title" ng-if="ref.skrot">{{ref.skrot}},&nbsp;</div>
+        <div class="md-headline" ng-if="ref.nazwa"><strong>{{ref.nazwa}}</strong></div>
+        <span ng-if="ref.imie">{{ref.imie}}</span>
+        <span ng-if="ref.nazwisko"><strong>{{ref.nazwisko}}</strong></span>
+        <br />
+        <span ng-if="ref.adres">{{ref.adres}}</span>
+            <span ng-if="ref.kodKraju">
+                {{ref.kodKraju}},&nbsp;
+            </span>
+            <span ng-if="ref.kodPocztowy">
+                {{ref.kodPocztowy}}&nbsp;
+            </span>
+            <span ng-if="ref.miejscowosc">
+                {{ref.miejscowosc}},&nbsp;
+            </span>
+            <span ng-if="ref.ulica">
+                {{ref.ulica}}
+            </span>
+            <span ng-if="ref.ulicaNr">
+                {{ref.ulicaNr}}
+            </span>
+        <br />
+        <span ng-if="ref.nip">NIP:&nbsp;{{ref.nip}}</span>
+        <span ng-if="ref.pesel">PESEL:&nbsp;{{ref.pesel}}</span>
+        <br />
+        <span ng-if="ref.kontoBankowe">Nr konta:&nbsp;<em>{{ref.kontoBankowe}}</em></span>
+        <span ng-if="ref.kontoBankowe2">Nr konta:&nbsp;<em>{{ref.kontoBankowe2}}</em></span>
+    </div>
+</div>

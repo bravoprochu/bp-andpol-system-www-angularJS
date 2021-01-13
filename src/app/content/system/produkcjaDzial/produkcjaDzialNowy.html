@@ -1,0 +1,56 @@
+﻿<div layout ng-form="formMain">
+    <div flex="70" layout>
+        <md-input-container flex="15">
+            <label>Id</label>
+            <input ng-model="dzial.produkcjaDzialId" disabled />
+        </md-input-container>
+        <md-input-container flex="45">
+            <label>Nazwa</label>
+            <input ng-model="dzial.nazwa" required />
+        </md-input-container>
+        <md-input-container flex="15">
+            <md-tooltip md-direction="top">Poziom produkcji</md-tooltip>
+            <label>Poziom produkcji</label>
+            <input ng-model="dzial.poziomProdukcji" type="number" required ng-min="1" min="1" />
+        </md-input-container>
+        <div layout layout-align="center center">
+            <md-tooltip md-direction="top" ng-if="dzial.poziomProdukcji>1">Tylko dla poziomu 1 można określić warunek PozycjaMagazynowa</md-tooltip>
+            <md-tooltip md-direction="top" ng-if="dzial.poziomProdukcji==1">Czy PozycjaMagazynowa ?</md-tooltip>
+            <md-checkbox ng-model="dzial.czyPozycjaMagazynowa" aria-label="czyPozycjaMagazynowa" ng-disabled="dzial.poziomProdukcji>1"></md-checkbox>
+        </div>
+        <div layout layout-align="center center">
+            <md-tooltip md-direction="top" ng-if="dzial.poziomProdukcji>1">Tylko dla poziomu 1 można określić warunek TkaninaBelka</md-tooltip>
+            <md-tooltip md-direction="top" ng-if="dzial.poziomProdukcji==1">Czy TkaninaBelka ?</md-tooltip>
+            <md-checkbox ng-model="dzial.czyTkaninaBelka" aria-label="czyTkaninaBelka" ng-disabled="dzial.poziomProdukcji>1"></md-checkbox>
+        </div>
+        <md-input-container>
+            <label>Uwagi</label>
+            <input ng-model="dzial.uwagi" />
+        </md-input-container>
+    </div>
+    <div flex="15">
+        <div ng-if="dzial.poziomProdukcji>1" layout layout-align="start start">
+            <md-input-container flex="60">
+                <md-tooltip md-direction="top">Edytuj listę zależności - Id's nadrzędnych działów</md-tooltip>
+                <label>Nadrzędne (IDs)</label>
+                <input ng-model="dzial.nadrzednyIds" ng-required="dzial.poziomProdukcji>1" disabled />
+
+            </md-input-container>
+            <md-button class="md-icon-button" style="margin-top:1em" ng-click="dzialNadrzednyEditModal(dzial)" aria-label="dzialNadrzednyEdit">
+                <md-icon md-svg-icon="edit"></md-icon>
+            </md-button>
+        </div>
+    </div>
+    <div flex></div>
+    <div layout layout-align="space-between start" style="margin-top:1em">
+        <md-button class="md-icon-button md-accent" aria-label="updateDzial"  ng-if="formMain.$valid && formMain.$dirty" ng-click="dzialSave()" ng-disabled="inProgress">
+            <md-icon md-svg-icon="save"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-accent" aria-label="cancelData" ng-show="formMain.$dirty" ng-click="dzialCancel()" ng-disabled="inProgress" >
+            <md-icon md-svg-icon="cancel"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-warn" ng-if="dzial.produkcjaDzialId>0" ng-disabled="formMain.$invalid || inProgress" aria-label="deleteDzial" ng-click="dzialDelete()">
+            <md-icon md-svg-icon="delete"></md-icon>
+        </md-button>
+    </div>
+</div>

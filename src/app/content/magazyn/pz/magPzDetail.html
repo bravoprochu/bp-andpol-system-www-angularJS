@@ -1,0 +1,278 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <!--TWORZENIE KOREKTY PZ-->
+        <div ng-if="vm.objId>0 && vm.korektaNew">
+            <md-card>
+                <md-toolbar ng-if="vm.korektaNew">
+                    <div class="md-toolbar-tools">
+                        <div>KOREKTA PRZYJĘCIA ZEWNĘTRZNEGO (PZ)</div>
+                        <div flex></div>
+                        <md-button ng-if="vm.korektaNew" class="md-button md-raised md-warn" ng-click="vm.korektaAnuluj()">Anuluj tworzenie korekty</md-button>
+                    </div>
+                </md-toolbar>
+
+                <md-card-content>
+                    <div layout="column" layout-gt-sm="row" ng-form="vm.formMain">
+                        <kontrahent-select flex="50" selected-item="vm.dataObj.korekta.kontrahent" dane-pomocnicze="vm.danePomocnicze.kontrahenci"></kontrahent-select>
+                        <div layout="column" flex="50">
+                            <single-choice title="Dokument źródłowy"
+                                           selected-item="vm.dataObj.korekta.dokumentTyp"
+                                           dane-id="dokumentTypId"
+                                           dane-pomocnicze="vm.danePomocnicze.dokumentTyp">
+                            </single-choice>
+
+                            <md-input-container>
+                                <label>Dokument źródłowy nr</label>
+                                <input ng-model="vm.dataObj.korekta.dokumentZrodlowyNr" required type="text" maxlength="50" md-maxlength="50" name="korektaDokumentZrodlowy" aria-label="korektaDokumentZrodlowyNr" />
+                            </md-input-container>
+
+                            <md-input-container>
+                                <md-label>Data wpływu: </md-label>
+                            </md-input-container>
+                            <div>
+                                <md-datepicker ng-model="vm.dataObj.korekta.dataWplywu" md-placeholder="Data wpływu"></md-datepicker>
+                            </div>
+
+                            <md-input-container>
+                                <label>Uwagi</label>
+                                <input ng-model="vm.dataObj.korekta.uwagi" type="text" maxlength="100" md-maxlength="100" name="korektaUwagi" />
+                            </md-input-container>
+
+                        </div>
+                    </div>
+                    
+                    <div class="md-display-1">Pozycje magazynowe</div>
+                    <div layout="row" ng-form="vm.formKorektaMagPozDod">
+
+                        <select-pomocnicze flex="70" limit-filter="true"
+                                           dane-pomocnicze="vm.danePomocnicze.pozycjaMagazynowa"
+                                           idz-do="vm.magPozycjaMagazynowaCreate(vm.danePomocnicze)"
+                                           placeholder="Pozycja magazynowa"
+                                           search-text="vm.magPozycjaMagazynowaSearchText"
+                                           selected-item="vm.magazyn.pozycjaMagazynowa"></select-pomocnicze>
+
+
+                        <div>
+                            <md-input-container>
+                                <label>Jedn</label>
+                                <input ng-model="vm.magazyn.pozycjaMagazynowa.jednostka" disabled type="text" />
+                            </md-input-container>
+                        </div>
+                        <div>
+                            <md-input-container>
+                                <label>Ilość</label>
+                                <input ng-model="vm.magazyn.ilosc" name="MagazynIlosc" required type="number" min="0" />
+                            </md-input-container>
+                        </div>
+                        <div flex="10">
+                            <md-button class="md-icon-button md-raised md-warn"
+                                       ng-click="vm.magPZPozycjaDodaj()"
+                                       ng-disabled="!vm.formKorektaMagPozDod.$valid || !vm.magazyn.pozycjaMagazynowa" aria-label="magPZPozycjaKorektaDodajBtn">
+                                <md-icon md-svg-icon="add"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+
+
+
+                    <md-table-container ng-show="vm.dataObj.korekta.pzPozycja.length>0">
+                        <table md-table>
+                            <thead md-head md-order="vm.korektaTable.order">
+                                <tr md-row>
+                                    <th md-column ng-if="vm.objId==0"></th>
+                                    <th md-column md-order-by="pozycjaMagazynowa.nazwa"><span>Nazwa</span></th>
+                                    <th md-column md-order-by="ilosc"><span>Ilość</span></th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="dane in vm.dataObj.korekta.pzPozycja | filter: vm.korektaTable.searchText | orderBy: vm.korektaTable.order | limitTo: vm.korektaTable.limit: (vm.korektaTable.page - 1) * vm.korektaTable.limit">
+
+                                    <td md-cell>
+                                        <md-button ng-if="!dane.editMode" aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.korektaTable.edit(dane)">
+                                            <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                            <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                                        </md-button>
+                                        <div layout ng-if="dane.editMode">
+                                            <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.korektaTable.save(dane)">
+                                                <md-tooltip md-direction="top">Zapisz</md-tooltip>
+                                                <md-icon md-svg-src="save" aria-label="tableEdit{{$index}}"></md-icon>
+                                            </md-button>
+                                            <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.korektaTable.del(dane, vm.dataObj.korekta.pzPozycja)">
+                                                <md-tooltip md-direction="top">Usuń</md-tooltip>
+                                                <md-icon md-svg-src="delete" aria-label="tableDel{{$index}}"></md-icon>
+                                            </md-button>
+                                        </div>
+
+                                    </td>
+                                    <td md-cell style="min-width:250px">({{$index+1}}) {{dane.pozycjaMagazynowa.nazwa}}</td>
+                                    <td md-cell ng-if="!dane.editMode">{{dane.ilosc}}</td>
+                                    <td md-cell ng-if="dane.editMode">
+                                    <div>
+                                        <md-input-container>
+                                            <label>Ilość</label>
+                                            <input ng-model="dane.ilosc" name="pozMagIlosc{{dane.id}}" />
+                                        </md-input-container>
+                                    </div>
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                    <md-table-pagination md-limit="vm.korektaTable.limit" md-options="vm.korektaTable.rowLimitOpt" md-page="vm.korektaTable.page" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.korekta.pzPozycja.length}}"></md-table-pagination>
+                </md-card-content>
+            </md-card>
+        </div>
+
+
+        <!--TWORZENIE NOWEGO - ID==0-->
+        <div ng-if="vm.objId===0">
+
+            <md-card>
+                <md-card-content>
+                    <div layout="column">
+                        <div layout="column" layout-gt-sm="row" layout-padding ng-form="vm.formMain">
+                            <kontrahent-select flex="50" selected-item="vm.dataObj.kontrahent" dane-pomocnicze="vm.danePomocnicze.kontrahenci"></kontrahent-select>
+                            <div flex="60" layout="column">
+                                <single-choice title="Dokument źródłowy"
+                                               selected-item="vm.dataObj.dokumentTyp"
+                                               dane-id="dokumentTypId"
+                                               dane-pomocnicze="vm.danePomocnicze.dokumentTyp">
+                                </single-choice>
+
+                                <md-input-container flex="100">
+                                    <label>{{vm.dataObj.dokumentTyp.uwagi}}</label>
+                                    <input ng-model="vm.dataObj.dokumentZrodlowyNr" required type="text" maxlength="50" md-maxlength="50" name="dokumentZrodlowy" aria-label="dokumentZrodlowyNr" />
+                                </md-input-container>
+
+                                <div layout="column" layout-gt-sm="row" flex="100" layout-align="start center ">
+                                    <label>Data wpływu: </label>
+                                    <md-datepicker ng-model="vm.dataObj.dataWplywu" ng-disabled="vm.platnoscEditMode" md-placeholder="Data wpływu"></md-datepicker>
+                                </div>
+
+
+                                <div layout="column" layout-gt-sm="row" layout-padding>
+                                    <md-input-container flex="100">
+                                        <label>Uwagi</label>
+                                        <input ng-model="vm.dataObj.uwagi" type="text" maxlength="100" md-maxlength="100" name="uwagi" />
+                                    </md-input-container>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <!--POZYCJE MAGAZYNOWE DODAJ-->
+                    <div layout="column" ng-if="vm.objId==0" ng-form="vm.formMagPozDod">
+                        <div class="md-display-1">Pozycje magazynowe</div>
+                        <div style="min-height:1em;"></div>
+                        <div layout="column" layout-gt-sm="row">
+                            <select-pomocnicze flex="70"
+                                               dane-pomocnicze="vm.danePomocnicze.pozycjaMagazynowa"
+                                               idz-do="vm.magPozycjaMagazynowaCreate(vm.danePomocnicze)"
+                                               placeholder="Pozycja magazynowa"
+                                               search-text="vm.magPozycjaMagazynowaSearchText"
+                                               selected-item="vm.magazyn.pozycjaMagazynowa"></select-pomocnicze>
+
+                            <md-input-container>
+                                <label>Jedn</label>
+                                <input ng-model="vm.magazyn.pozycjaMagazynowa.jednostka" disabled type="text" />
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Ilość</label>
+                                <input ng-model="vm.magazyn.ilosc" name="MagazynIlosc" required type="number" min="0" ng-minlength="" />
+                            </md-input-container>
+                            <div>
+                                <md-button class="md-icon-button md-raised md-warn"
+                                           ng-click="vm.magPZPozycjaDodaj()"
+                                           ng-disabled="!vm.formMagPozDod.$valid || !vm.magazyn.pozycjaMagazynowa"
+                                           aria-label="magPZPozycjaDodajBtn">
+                                    <md-icon md-svg-icon="add"></md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--POZYCJE MAGAZYNOWE WYBRANE-->
+                    <md-toolbar class="md-accent" layout layout-align="end center" ng-if="vm.dataObj.pzPozycja.length>0">
+                        <div class="md-toolbar-tools">
+                            Wybrane pozycje magazynowe
+                        </div>
+                        <div flex></div>
+                        <md-input-container ng-show="vm.table.searchShow" style="margin-bottom: -1em">
+                            <label>Wyszukaj w tabeli</label>
+                            <input ng-model="vm.table.searchText" type="text" />
+                        </md-input-container>
+                        <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.table.search()">
+                            <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                            <md-icon md-svg-icon="search"></md-icon>
+                        </md-button>
+                    </md-toolbar>
+
+                    <md-table-container ng-show="vm.dataObj.pzPozycja.length>0">
+                        <table md-table>
+                            <thead md-head md-order="vm.table.order">
+                                <tr md-row>
+                                    <th md-column ng-if="vm.objId==0"></th>
+                                    <th md-column md-order-by="pozycjaMagazynowa.nazwa"><span>Nazwa</span></th>
+                                    <th md-column md-order-by="ilosc"><span>Ilość</span></th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="dane in vm.dataObj.pzPozycja | filter: vm.table.searchText | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit">
+
+                                    <td md-cell ng-if="vm.objId==0">
+                                        <md-button ng-if="!dane.editMode" aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.table.edit(dane)">
+                                            <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                            <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                                        </md-button>
+                                        <div layout ng-if="dane.editMode">
+                                            <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.table.save(dane)">
+                                                <md-tooltip md-direction="top">Zapisz</md-tooltip>
+                                                <md-icon md-svg-src="save" aria-label="tableEdit{{$index}}"></md-icon>
+                                            </md-button>
+                                            <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.table.del(dane, vm.dataObj.pzPozycja)">
+                                                <md-tooltip md-direction="top">Usuń</md-tooltip>
+                                                <md-icon md-svg-src="delete" aria-label="tableDel{{$index}}"></md-icon>
+                                            </md-button>
+                                        </div>
+
+                                    </td>
+                                    <td md-cell style="min-width:250px">({{$index+1}}) {{dane.pozycjaMagazynowa.nazwa}}</td>
+                                    <td md-cell ng-if="!dane.editMode">{{dane.ilosc}}</td>
+                                    <td md-cell ng-if="dane.editMode">
+                                        <input ng-model="dane.ilosc" name="pozMagIlosc{{dane.id}}" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                    <md-table-pagination md-limit="vm.table.limit" md-limit-options="vm.table.rowLimitOpt" md-page="vm.table.page" md-page-select="true" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.pzPozycja.length}}"></md-table-pagination>
+                </md-card-content>
+            </md-card>
+        </div>
+
+        <!--PODGLĄD KOREKT pzKorekta-->
+        <div ng-if="vm.dataObj.pzKorekta && vm.dataObj.pzKorekta.length!==0">
+            <md-card ng-repeat="kor in vm.dataObj.pzKorekta">
+                <md-card-content>
+                    <mag-pz-card obj-ref="kor" korekta-utworz="vm.korektaUtworz()"></mag-pz-card>
+                </md-card-content>
+            </md-card>
+        </div>
+
+        <!--PODGLĄD PZ>0 -->
+        <div ng-if="vm.objId>0">
+            <md-card>
+                <md-card-content>
+                    <mag-pz-card obj-ref="vm.dataObj" korekta-utworz="vm.korektaUtworz()"></mag-pz-card>
+                </md-card-content>
+            </md-card>
+        </div>
+    </md-card-content>
+</md-card>
+

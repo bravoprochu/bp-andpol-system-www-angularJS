@@ -1,0 +1,107 @@
+﻿<md-card>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+        <div layout="column" layout-gt-md="row" layout-padding>
+            <div flex="30">
+                <md-card>
+                    <md-toolbar class="md-primary">
+                        <div class="md-toolbar-tools">
+                            <div class="md-title">Andpol, zaczynamy !!!</div>
+                        </div>
+                    </md-toolbar>
+                    <md-card-content>
+                        <div class="md-headline">Dashboard to tablica informacyjna...</div>
+                        <div class="md-body-1">
+                            Tutaj dodamy najbardziej potrzebne informacje dotyczące systemu.<br />
+                            listy zamówień, informacje dotyczące wylotów samochodów, czy cokolwiek co na dzień dobry przyda się wiedzieć.<br />
+                        </div>
+                        <div class="md-headline">Na teraz...</div>
+                        <div class="md-body-1">
+                            Na tą chwilę, pomyślałem że to się może przydać.. dodam listę Waszych uwag, sugestii; Będzie to praktyczna sprawa bo zamiast maili/ notatek na kartkach czy rzucone hasła przez tel, będziemy mieli taką wspólną bazę rzeczy "do zrobienia"<br />
+                            Działamy !
+                        </div>
+                    </md-card-content>
+                </md-card>
+            </div>
+
+            <div flex="70">
+                <md-card>
+                    <md-toolbar class="md-primary">
+                        <div class="md-toolbar-tools">
+                            <div class="md-title">Do zrobienia</div>
+                            <div flex></div>
+                            <md-input-container ng-show="vm.table.searchShow" style="margin-bottom: -1em">
+                                <label>Wyszukaj w tabeli</label>
+                                <input ng-model="vm.table.searchText" type="text" />
+                            </md-input-container>
+                            <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.table.search()">
+                                <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                                <md-icon md-svg-icon="search"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button md-warn" aria-label="sprawkaAdd" ng-click="vm.dodajSprawe()">
+                                <md-tooltip md-direction="top">Dodaj nową sprawkę</md-tooltip>
+                                <md-icon md-svg-icon="add"></md-icon>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+                    <md-card-content>
+                            <md-table-container>
+                                <table md-table style="width:1600px">
+                                    <thead md-head md-order="vm.table.order">
+                                        <tr md-row>
+                                            <th md-column md-order-by="isDone"><span>isDone</span></th>
+                                            <th md-column md-order-by="priorytet"><span>Priorytet</span></th>
+                                            <th md-column md-order-by="tytul"><span>Tytuł</span></th>
+                                            <th md-column md-order-by="grupa"><span>Grupa</span></th>
+                                            <th md-column md-order-by="opis"><span>Opis</span></th>
+                                            <th md-column md-order-by="respond"><span>Odpowiedź</span></th>
+                                            <th md-column md-order-by="zglaszajacy"><span>Zgłaszający</span></th>
+                                            <th md-column md-order-by="dataZgloszenia"><span>Data zgłoszenia</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row ng-repeat="dane in sprawki=(vm.dataObj.sprawki | filter: vm.table.searchText | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit)">
+                                            <td md-cell><md-checkbox ng-checked="dane.isDone" aria-label="isDone{{$index}}"></md-checkbox>
+                                            <td md-cell>{{dane.priorytet}}</td>
+                                            <td md-cell>{{dane.tytul}}</td>
+                                            <td md-cell>{{dane.grupa}}</td>
+                                            <td md-cell>{{dane.opis}}</td>
+                                            <td md-cell>{{dane.respond}}</td>
+                                            <td md-cell>{{dane.zglaszajacy}}</td>
+                                            <td md-cell>{{dane.dataZgloszenia | date: 'yyyy-MM-dd, H:mm:ss'}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination md-limit="vm.table.limit" md-limit-options="vm.table.rowLimitOpt" md-page="vm.table.page" md-page-select="true" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.sprawki.length}}"></md-table-pagination>
+                            <linia-pozioma></linia-pozioma>
+                            <div class="lineHeightByk">&nbsp;</div>
+                            <div class="md-title">ChangeLog</div>
+                            <div>&nbsp;</div>
+                            <md-content style="height:250px;">
+                                <md-list>
+                                    <md-list-item layout ng-repeat="log in vm.danePomocnicze.changeLog | orderBy: '-data' track by log.changeLogId" class="md-2-line">
+                                        <div class="md-list-item-text" layout="column">
+                                            <span>{{log.data | date: 'yyyy-MM-dd'}}&nbsp;&nbsp;<span ng-if="log.wersja">&nbsp;<strong><i>ver: {{log.wersja}}</i></strong></span> [{{log.grupa}}]</span>
+                                            <span>
+                                                <strong>{{log.nazwa}}</strong>
+                                            </span>
+                                        </div>
+                                    </md-list-item>
+
+                                </md-list>
+                            </md-content>
+                    </md-card-content>
+                </md-card>
+            </div>
+        </div>
+        <div canv layout layout-align="space-between center" ng-if="false">
+            <md-button class="md-button md-raised" ng-click="snapshot()">snapshot</md-button>
+            <video autoplay id="vid1" widht="0" heigh="0"></video>
+            <canvas id="canv2" width="0" height="0"></canvas>
+            <okienka layout layout-wrap></okienka>
+        </div>
+    </md-card-content>
+</md-card>
+

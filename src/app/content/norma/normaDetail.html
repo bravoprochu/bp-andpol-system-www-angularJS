@@ -1,0 +1,224 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <md-switch ng-model="vm.dataObj.czyAktywna">Czy aktywna</md-switch>
+        <div layout layout-align="space-between start">
+            <div layout>
+                <md-input-container>
+                    <label>Id</label>
+                    <input ng-model="vm.dataObj.normaId" disabled>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>
+                        Nazwa
+                    </label>
+                    <input ng-model="vm.dataObj.nazwa" name="nazwa" required md-maxlength="100" />
+                </md-input-container>
+            </div>
+            <div flex></div>
+            <div layout ng-if="vm.objId>0">
+                <md-button class="md-raised md-warn" ng-click="vm.normaClone()">
+                    Sklonuj
+                    <!--<md-icon md-svg-icon="clone" style="color:burlywood; width :128px; height:128px"></md-icon>-->
+                </md-button>
+                <md-button class="md-button md-raised md-warn" ng-click="vm.normaUsun()" aria-label="normaClone" md-ripple-size="auto">
+                    Usuń
+                </md-button>
+            </div>
+        </div>
+
+        <div layout>
+            <md-input-container flex="100">
+                <label>Uwagi</label>
+                <input ng-model="vm.dataObj.uwagi" name="uwagi" />
+            </md-input-container>
+
+        </div>
+
+
+        <md-divider></md-divider>
+        <div class="md-title lineHeightByk">
+            Wybór kombinacji:
+            <!--<span>
+                <md-button ng-click="vm.kombiDodajWszystkie()" ng-if="vm.nazwyKombinacji.length>0" aria-label="kombiDodajWszystkie">dodaj wszystkie</md-button>
+            </span>-->
+        </div>
+        <!--WYBÓR KOMBINACJI-->
+        <div style="height:20px"></div>
+        <md-button ng-repeat="kombi in vm.nazwyKombinacji | orderBy: 'nazwa'" class="md-raised" ng-click="vm.kombiDodaj(kombi)">
+            {{kombi.nazwa}}
+        </md-button>
+        <div style="height:20px"></div>
+        <md-divider></md-divider>
+        <div layout>
+            <md-input-container>
+                <label>Wyszukaj kombinację</label>
+                <input ng-model="vm.dataObj.kombinacjaSearchText" />
+            </md-input-container>
+            <div class="md-caption">Filtr:&nbsp;{{vm.dataObj.kombiFiltered.length}}&nbsp;/&nbsp;{{vm.dataObj.kombinacje.length}}</div>
+        </div>
+        <!--LISTA KOMBINACJI:-->
+        <div ng-repeat="kombi in vm.dataObj.kombiFiltered=(vm.dataObj.kombinacje | filter: {status: '!usuniety', nazwaKombinacji: {nazwa: vm.dataObj.kombinacjaSearchText}})" ng-init="kombiIndex=$index+1" ng-form="formKombi_{{$index}}" status-watch status="kombi">
+            <md-card>
+                <md-card-content>
+                    <md-toolbar class="md-accent md-hue-2">
+                        <div class="md-toolbar-tools">
+                            <div flex><span class="md-body-2">[{{$index+1}}]</span>&nbsp;&nbsp;{{kombi.nazwaKombinacji.nazwa}}</div>
+                            <md-button class="md-icon-button" aria-label="kombiDelete" ng-click="vm.kombiUsun(kombi)">
+                                <md-icon md-svg-icon="delete"></md-icon>
+                            </md-button>
+                            <md-button ng-click="vm.kombiWykonczenieSklonuj(kombi)" class="md-icon-button">
+                                <md-tooltip md-direction="top">Sklonuj wykończenie do pozostałych kombinacji</md-tooltip>
+                                <md-icon md-svg-icon="contentCopy"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="kombi.isCollapsed=!kombi.isCollapsed" ng-if="kombi.isCollapsed">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="kombi.isCollapsed=!kombi.isCollapsed" ng-if="!kombi.isCollapsed">
+                                <md-icon md-svg-icon="arrowDown"></md-icon>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+                    <div ng-show="kombi.isCollapsed">
+                        <div layout="column">
+                            <div layout-gt-md="row">
+
+                                <md-card flex-gt-md="50">
+                                    <md-card-content>
+                                        <md-input-container>
+                                            <label>
+                                                Wartość
+                                            </label>
+                                            <input ng-model="kombi.wartosc" type="number" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_wartosc" />
+                                        </md-input-container>
+                                        <div>
+                                            <div layout="row">
+                                                <md-input-container>
+                                                    <label>
+                                                        Waga
+                                                    </label>
+                                                    <input ng-model="kombi.waga" type="number" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_waga" />
+                                                </md-input-container>
+                                                <md-input-container>
+                                                    <label>
+                                                        Kubatura
+                                                    </label>
+                                                    <input value="{{(kombi.wysokosc*kombi.szerokosc*kombi.glebokosc)/1000000 | number}}" disabled>
+                                                </md-input-container>
+                                            </div>
+                                        </div>
+
+                                        <div layout="row" layout-sm="column" layout-align="space-around center">
+                                            <md-input-container>
+                                                <label>
+                                                    Szerokość
+                                                </label>
+                                                <input ng-model="kombi.szerokosc" type="number" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_szerokosc" />
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>
+                                                    Wysokość
+                                                </label>
+                                                <input ng-model="kombi.wysokosc" type="number" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_wysokosc" />
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>
+                                                    Głębokość
+                                                </label>
+                                                <input ng-model="kombi.glebokosc" type="number" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_glebokosc" />
+                                            </md-input-container>
+                                        </div>
+                                        <div layout="column" layout-gt-sm="row" layout-align="space-around center">
+                                            <md-input-container>
+                                                <label>
+                                                    Ilość poduszek oparciowych
+                                                </label>
+                                                <input ng-model="kombi.iloscPoduszekOparciowych" type="number" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_iloscPoduszekOparciowych" />
+                                            </md-input-container>
+                                            <md-input-container>
+                                                <label>
+                                                    Ilość poduszek siedzeniowych
+                                                </label>
+                                                <input ng-model="kombi.iloscPoduszekSiedzeniowych" type="number" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_iloscPoduszekSiedzeniowych" />
+                                            </md-input-container>
+                                        </div>
+                                        <div layout>
+                                            <md-input-container flex="100">
+                                                <label>
+                                                    Uwagi
+                                                </label>
+                                                <input ng-model="kombi.uwagi" type="text" name="{{kombi.nazwaKombinacji.nazwa | camelCase}}_uwagi" />
+                                            </md-input-container>
+                                        </div>
+                                    </md-card-content>
+                                </md-card>
+                                <!--OPCJE WYKOŃCZENIA-->
+                                <md-card flex-gt-md="50">
+                                    <md-card-content>
+                                        <div layout layout-align="space-between center">
+                                            <div class="md-headline">Pokaż opcje wykończenia:</div>
+                                        </div>
+                                        <md-switch ng-repeat="wyk in kombi.opcjeWykonczenia track by wyk.wykonczenieOpcjaId" ng-model="wyk.wybrane" name="opWyk_{{wyk.nazwa | camelCase}}">{{wyk.nazwa}}</md-switch>
+                                    </md-card-content>
+                                </md-card>
+
+
+                            </div>
+
+                            <!--DOSTĘPNE WYKOŃCZENIE-->
+                            <div ng-repeat="opcja in kombi.opcjeWykonczenia track by opcja.wykonczenieOpcjaId">
+                                <div ng-if="opcja.wybrane">
+                                    <wykonczenie wykonczenie-nazwa="opcja.nazwa"
+                                                 naglowek="Wykończenie - {{opcja.nazwa}}"
+                                                 selected-items="kombi.kombinacjaWykonczenie"
+                                                 dane-porownanie="wykonczenieOpcjaId"
+                                                 dane-pomocnicze="vm.danePomocnicze.wykonczenie"
+                                                 politykacenowa="vm.danePomocnicze.politykaCenowa"
+                                                 dane-pomocnicze-grupa="{{opcja.nazwa}}"></wykonczenie>
+                                </div>
+                            </div>
+
+
+
+                            <md-divider></md-divider>
+                            <div class="lineHeightByk">&nbsp;</div>
+                            <md-divider></md-divider>
+
+                            <div layout-gt-md="row" layout-wrap>
+                                <gotowy flex-gt-md="50"
+                                        parent-index="{{kombiIndex}}"
+                                        dane-id="pozycjaMagazynowaId"
+                                        naglowek="Pozycje Magazynowe"
+                                        dane-pomocnicze="vm.danePomocnicze.magPozycjaMagazynowa"
+                                        form-main="vm.formMain"
+                                        selected-items="kombi.kombinacjaPozycjaMagazynowa"></gotowy>
+
+
+                                <gotowy flex-gt-md="50"
+                                        dane-id="id"
+                                        dane-pomocnicze="vm.danePomocnicze.obszycieElementow"
+                                        druga-wartosc="true"
+                                        form-main="vm.formMain"
+                                        naglowek="Obszycie elementów"
+                                        parent-index="{{kombiIndex}}"
+                                        selected-items="kombi.kombinacjaObszycie"></gotowy>
+
+                                <norma-robocizna flex-gt-md="50" flex="100" selected-items="kombi.kombinacjaRobocizna" items-to-delete="kombi.kombinacjaRobociznaToDelete" produkcja-dzial="vm.danePomocnicze.produkcjaDzial" watch-form="vm.formMain"></norma-robocizna>
+                            </div>
+
+                        </div>
+                        <div layout layout-align="end center">
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="kombi.isCollapsed=!kombi.isCollapsed" ng-if="kombi.isCollapsed">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                        </div>
+
+                    </div>
+
+                </md-card-content>
+            </md-card>
+        </div>
+    </md-card-content>
+</md-card>

@@ -1,0 +1,131 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+
+        <!--TWORZENIE NOWEGO - ID==0-->
+        <div>
+
+            <md-card>
+                <md-card-content>
+                    <div layout="column" ng-form="vm.formMain" flex="100" flex-gt-md="50">
+                            <div layout layout-align="space-between start">
+                                <div layout="column" layout-gt-sm="row" layout-align="start center ">
+                                    <label>Data wystawienia: </label>
+                                    <md-datepicker ng-model="vm.dataObj.dataWplywu" disabled md-placeholder="Data wpływu"></md-datepicker>
+                                </div>
+                               
+                                <md-checkbox ng-model="vm.dataObj.czyPowierzona" ng-disabled="vm.dataObj.czyZaksiegowana">
+                                    Czy powierzona
+                                    <span ng-hide="vm.dataObj.czyPowierzona">&nbsp;(nie)</span>
+                                    <span ng-show="vm.dataObj.czyPowierzona">&nbsp;(tak)</span>
+                                </md-checkbox>
+                            </div>
+                                <md-input-container ng-if="vm.dataObj.czyZaksiegowana">
+                                    <label>Zaksięgowana Faktura Id:</label>
+                                    <input ng-model="vm.dataObj.fakturaRefId" disabled />
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Dokument źródłowy</label>
+                                    <input ng-model="vm.dataObj.dokumentZrodlowyNr" required type="text" maxlength="50" md-maxlength="50" name="dokumentZrodlowy" aria-label="dokumentZrodlowyNr" />
+                                </md-input-container>
+
+
+                            
+                            <md-input-container>
+                                <label>Uwagi</label>
+                                <input ng-model="vm.dataObj.uwagi" type="text" maxlength="100" md-maxlength="100" name="uwagi" />
+                            </md-input-container>
+                    </div>
+
+                        <div class="lineHeightByk">&nbsp;</div>
+                        <div ng-if="vm.dataObj.materialBelka.length>0">
+                            <div class="md-title">Wybrane grupy materiałów</div>
+                            <div class="lineHeightByk">&nbsp;</div>
+
+                            <!--materialBelkaPozycjaGrupa-->
+                            <div flex-gt-md="50" flex="100">
+                                <div layout ng-repeat="belka in vm.dataObj.pzTkaninyPozycjaGrupa" layout-align="space-between start">
+                                    <div>{{belka.materialId}}</div>
+                                    <div class="md-subhead">{{belka.nazwaMaterialu}}</div>
+                                    <div><strong>{{belka.wartosc | number:2}} mb</strong></div>
+                                </div>
+                            </div>
+                            <linia-pozioma></linia-pozioma>
+                            <div class="lineHeightByk">&nbsp;</div>
+
+                            <!--wybrane materialBelka-->
+                            <div class="md-title">Wybrane belki</div>
+                            <md-chips ng-model="vm.dataObj.materialBelka" md-on-remove="vm.materialBelkaRemove()" readonly="vm.dataObj.czyZaksiegowana">
+                                <md-chip-template>
+                                    <span>id:&nbsp;{{$chip.id}},</span>
+                                    <strong>{{$chip.material.nazwa}}</strong>
+                                    &nbsp;<span>{{$chip.stanPoczatkowy | number:2}}mb</span>
+                                    &nbsp;<span><i>{{$chip.fakturaNr}}</i></span>
+                                </md-chip-template>
+                            </md-chips>
+                            <div class="lineHeightByk">&nbsp;</div>
+                         </div>
+
+                    <!--tabela dotepne belki-->
+                        <div ng-if="vm.dataObj.materialBelkaDost.length>0">
+                            <div class="md-title">Dostępne belki</div>
+
+                            <md-input-container ng-show="vm.table.searchShow" style="margin-bottom: -1em">
+                                <label>Wyszukaj w tabeli</label>
+                                <input ng-model="vm.table.searchText" type="text" />
+                            </md-input-container>
+                            <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.table.search()">
+                                <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                                <md-icon md-svg-icon="search"></md-icon>
+                            </md-button>
+                            <md-table-container>
+                                <table md-table>
+                                    <thead md-head md-order="vm.table.order">
+                                        <tr md-row>
+                                            <th md-column></th>
+                                            <th md-column md-order-by="id"><span>Id</span></th>
+                                            <th style="min-width:300px" md-column md-order-by="material.nazwa"><span>Nazwa materiału</span></th>
+                                            <th md-column md-order-by="material.materialGrupaKontrahent.nazwa"><span>Grupa kontrahent</span></th>
+                                            <th md-column md-order-by="dataPrzyjecia"><span>Data przyjęcia</span></th>
+                                            <th md-column md-order-by="fakturaNr"><span>Dokument źródłowy</span></th>
+                                            <th md-column md-numeric md-order-by="stanPoczatkowy"><span>Stan początkowy</span></th>
+                                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                                            <th md-column md-order-by="createdBy"><span>CreatedBy</span></th>
+                                            <th md-column md-order-by="createdDateTime"><span>CreatedDateTime</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row ng-repeat="dane in vm.dataObj.materialBelkaDost | filter: vm.table.searchText | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit">
+                                            <td md-cell>
+                                                <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.table.add(dane)">
+                                                    <md-tooltip md-direction="top">Dodaj</md-tooltip>
+                                                    <md-icon md-svg-src="add" aria-label="add{{$index}}"></md-icon>
+                                                </md-button>
+                                            </td>
+                                            <td md-cell>{{dane.id}}</td>
+                                            <td md-cell>{{dane.material.nazwa}}</td>
+                                            <td md-cell>{{dane.material.materialGrupaKontrahent.nazwa}}</td>
+                                            <td md-cell>{{dane.dataPrzyjecia | date: 'yyyy-MM-dd'}}</td>
+                                            <td md-cell>{{dane.fakturaNr}}</td>
+                                            <td md-cell>{{dane.stanPoczatkowy | number:2}}</td>
+                                            <td md-cell>{{dane.uwagi}}</td>
+                                            <td md-cell>{{dane.createdBy}}</td>
+                                            <td md-cell>{{dane.createdDateTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </md-table-container>
+                            <md-table-pagination md-limit="vm.table.limit" md-limit-options="vm.table.rowLimitOpt" md-page="vm.table.page" md-page-select="true" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.length}}"></md-table-pagination>
+                        </div>
+
+
+
+
+
+
+                    </div>
+      </md-card-content>
+</md-card>
+
+

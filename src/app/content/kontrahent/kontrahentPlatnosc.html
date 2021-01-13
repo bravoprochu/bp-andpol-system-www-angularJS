@@ -1,0 +1,33 @@
+﻿<div layout="row" layout-padding ng-if="czyTransport" ng-form="viewForm">
+    <div flex>
+        <md-checkbox ng-model="ref.transportWcenie">transport w cenie</md-checkbox>
+    </div>
+    <div flex="5"></div>
+    <div flex ng-show="!ref.transportWcenie">
+        <md-input-container>
+            <label>
+                Stawka za km (PLN)&nbsp;&nbsp;&nbsp;
+            </label>
+            <input ng-model="ref.transportStawka" name="platnosciTransportStawka" ng-required="!ref.transportWcenie" type="number" />
+        </md-input-container>
+    </div>
+</div>
+<div layout="row">
+    <div flex>
+        <single-choice is-disabled="isDisabled"
+                       flex selected-item="ref.platnoscRodzaj"
+                       dane-pomocnicze="danePomocnicze.platnoscRodzaj"
+                       dane-id="jednPlatnoscRodzajId"
+                       title="sposób płatności"></single-choice>
+    </div>
+    <div flex>
+        <md-input-container ng-if="ref.platnoscRodzaj.czyDni">
+            <label>Ile dni</label>
+            <input ng-model="ref.ileDni" ng-required="ref.platnoscRodzaj.czyDni" name="platnoscRodzajIleDni" type="number" ng-min="1" ng-disabled="isDisabled" />
+        </md-input-container>
+        <md-input-container ng-if="ref.platnoscRodzaj.czyUwagi">
+            <label>Uwagi</label>
+            <input ng-model="ref.uwagi" ng-required="ref.platnoscRodzaj.czyUwagi" name="platnoscRodzajUwagi" type="text" ng-disabled="isDisabled" />
+        </md-input-container>
+    </div>
+</div>

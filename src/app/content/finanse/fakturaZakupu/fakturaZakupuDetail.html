@@ -1,0 +1,506 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+        <md-card-content>
+
+            <div layout="column" ng-form="vm.formMain" status-watch status="vm.dataObj">
+                <!--podstawowy form-->
+                <div layout="column" layout-gt-sm="row" layout-padding>
+                    <kontrahent-select flex="50" selected-item="vm.dataObj.kontrahent" dane-pomocnicze="vm.danePomocnicze.kontrahenci" name="kontrahent"></kontrahent-select>
+                    <div flex="60">
+                        <div ng-if="vm.objId>0" class="md-body-1">
+                            <span>Utworzony przez:&nbsp;<strong>{{vm.dataObj.createdBy}}</strong>,&nbsp;w dniu:<i>{{vm.dataObj.createdDateTime | date: 'yyyy-MM-dd H:m:s'}}</i></span><br />
+                            <span ng-if="vm.dataObj.lastModifiedBy">Zmodyfikowany przez:&nbsp;<strong>{{vm.dataObj.lastModifiedBy}}</strong>,&nbsp;w dniu:<i>{{vm.dataObj.lastModifiedDateTime | date: 'yyyy-MM-dd H:m:s'}}</i></span>
+                            <span ng-if="vm.dataObj.platnoscPrzypomnienie.isDone">Zaplacone: <strong>{{vm.dataObj.platnoscPrzypomnienie.dataZaplaty | date: 'yyyy-MM-dd'}}</strong></span>
+                        </div>
+                        <!--<md-switch ng-model="vm.dataObj.czyEuro" aria-label="czyEuro">Euro</md-switch>-->
+
+                        <div flex="100" layout>
+                            <md-input-container flex="100">
+                                <label>Nr faktury</label>
+                                <input ng-model="vm.dataObj.fakturaNr" required name="fakturaNr" />
+                            </md-input-container>
+                        </div>
+
+
+                        <single-choice selected-item="vm.dataObj.waluta" dane-pomocnicze="vm.danePomocnicze.waluta" dane-id="nazwa" title="Waluta" is-vertical="false" pole="skrot"></single-choice>
+                        <daty-dokumentu ref="vm.dataObj" pozycje="3"></daty-dokumentu>
+                        <div layout="column" layout-gt-sm="row" layout-padding>
+                            <md-input-container flex="100">
+                                <label>Uwagi</label>
+                                <input ng-model="vm.dataObj.uwagi" type="text" maxlength="100" md-maxlength="100" name="uwagi" />
+                            </md-input-container>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!--Sposób płatności !sm-->
+                <div ng-if="!vm.isSmall">
+                    <div layout layout-padding>
+                        <div flex>
+                            <single-choice flex selected-item="vm.dataObj.platnoscRodzaj" dane-pomocnicze="vm.danePomocnicze.platnoscRodzaj" dane-id="jednPlatnoscRodzajId" title="sposób płatności"></single-choice>
+                        </div>
+                        <div flex layout="column" layout-align="space-between center">
+                            <md-input-container ng-show="vm.dataObj.platnoscRodzaj.czyDni">
+                                <label>Ile dni</label>
+                                <input ng-model="vm.dataObj.platnoscRodzajIleDni" ng-required="vm.dataObj.platnoscRodzaj.czyDni" ng-change="vm.platnoscTerminUstawDpicker()" name="platnoscRodzajIleDni" type="number" />
+                            </md-input-container>
+                            <md-input-container ng-show="vm.dataObj.platnoscRodzaj.czyUwagi">
+                                <label>Uwagi</label>
+                                <input ng-model="vm.dataObj.platnoscRodzajUwagi" ng-required="vm.dataObj.platnoscRodzaj.czyUwagi" name="platnoscRodzajUwagi" type="text" />
+                            </md-input-container>
+
+                            <div layout="column" layout-align="start start" ng-show="vm.dataObj.platnoscRodzaj.czyDni">
+                                <div flex class="md-body-2">Termin płatności:&nbsp;</div>
+                                <md-datepicker flex ng-model="vm.platnoscTerminDpicker" ng-change="vm.platnoscTerminUstawIleDni()" md-placeholder="Termin płatnośći"></md-datepicker>
+                            </div>
+                            <div>&nbsp;</div>
+                            <md-input-container ng-show="vm.dataObj.czyPrzypomnieniePlatnosc && vm.dataObj.platnoscRodzaj.czyDni">
+                                <label>Uwagi przypomnienia płatności</label>
+                                <input ng-model="vm.dataObj.platnoscPrzypomnienieUwagi" name="platnoscPrzypomnienieUwagi" type="text" />
+                            </md-input-container>
+                        </div>
+                        <div flex>
+                            <div layout="column" ng-if="vm.dataObj.platnoscRodzaj.czyDni">
+                                <p>Utwórzyć przypomnienie o płatności ?</p>
+                                <div layout layout-align="space-between center">
+                                    <md-switch ng-model="vm.dataObj.czyPrzypomnieniePlatnosc" aria-label="czyPrzypomnieniePlatnosci"><span ng-if="vm.dataObj.czyPrzypomnieniePlatnosc">Utworzę przypomnienie !</span><span ng-if="!vm.dataObj.czyPrzypomnieniePlatnosc">Nie ! bez przypomnienia</span></md-switch>
+                                </div>
+                                
+                                <md-divider></md-divider>
+                                <p class="md-body-1">Automatycznie zostanie utworzone "Przypomnienie o płatności" Do jego utworzenia domyślnie pobierane są dane: numer faktury, termin płatności (data utworzenia + termin - ile dni), kontrahent, kwota brutto i uwagi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Sposób płatności - sm-->
+                <div ng-if="vm.isSmall">
+                    <div layout="column">
+                        <single-choice flex selected-item="vm.dataObj.platnoscRodzaj" dane-pomocnicze="vm.danePomocnicze.platnoscRodzaj" dane-id="jednPlatnoscRodzajId" title="sposób płatności"></single-choice>
+                        <md-input-container ng-show="vm.dataObj.platnoscRodzaj.czyDni">
+                            <label>Ile dni</label>
+                            <input ng-model="vm.dataObj.platnoscRodzajIleDni" ng-required="vm.dataObj.platnoscRodzaj.czyDni" ng-change="vm.platnoscTerminUstawDpicker()" name="platnoscRodzajIleDni" type="number" />
+                        </md-input-container>
+                        <md-input-container ng-show="vm.dataObj.platnoscRodzaj.czyUwagi">
+                            <label>Uwagi</label>
+                            <input ng-model="vm.dataObj.platnoscRodzajUwagi" ng-required="vm.dataObj.platnoscRodzaj.czyUwagi" name="platnoscRodzajUwagi" type="text" />
+                        </md-input-container>
+
+                        <div layout="column" layout-align="start start" ng-show="vm.dataObj.platnoscRodzaj.czyDni">
+                            <div flex class="md-body-2">Termin płatności:&nbsp;</div>
+                            <md-datepicker flex ng-model="vm.platnoscTerminDpicker" ng-change="vm.platnoscTerminUstawIleDni()" md-placeholder="Termin płatnośći"></md-datepicker>
+                        </div>
+                        <p>&nbsp;</p>
+                        <div layout="column" ng-if="vm.dataObj.platnoscRodzaj.czyDni">
+                            <p>Utwórzyć przypomnienie o płatności ?</p>
+                            <md-switch ng-model="vm.dataObj.czyPrzypomnieniePlatnosc" aria-label="czyPrzypomnieniePlatnosci"><span ng-if="vm.dataObj.czyPrzypomnieniePlatnosc">Utworzę przypomnienie !</span><span ng-if="!vm.dataObj.czyPrzypomnieniePlatnosc">Nie ! bez przypomnienia</span></md-switch>
+                            <p>&nbsp;</p>
+                            <md-divider></md-divider>
+                            <p class="md-body-1">Automatycznie zostanie utworzone "Przypomnienie o płatności" Do jego utworzenia domyślnie pobierane są dane: numer faktury, termin płatności (data utworzenia + termin - ile dni), kontrahent, kwota brutto i uwagi</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Podsumowanie wartosci-->
+                <md-card>
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <div flex class="md-primary">Podsumowanie wartości: </div>
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="vm.dataObj.fakturaPodsumowanieWartosciShow=!vm.dataObj.fakturaPodsumowanieWartosciShow" ng-if="vm.dataObj.fakturaPodsumowanieWartosciShow">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="vm.dataObj.fakturaPodsumowanieWartosciShow=!vm.dataObj.fakturaPodsumowanieWartosciShow" ng-if="!vm.dataObj.fakturaPodsumowanieWartosciShow">
+                                <md-icon md-svg-icon="arrowDown"></md-icon>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+                    <md-card-content ng-show="vm.dataObj.fakturaPodsumowanieWartosciShow" ng-form="formPodsumowanieWartosci">
+                        <div layout layout-align="center center">
+                            <div flex="30">
+                                <div flex="30" class="md-headline">Razem:</div>
+                            </div>
+                            <div flex="66">
+                                <div layout="column">
+                                    <div layout class="md-body-2" layout-align="center center">
+                                        <div flex="30">Netto</div>
+                                        <div flex="30">VAT</div>
+                                        <div flex="40">Brutto</div>
+                                    </div>
+                                    <div style="line-height:0.5em;">&nbsp;</div>
+                                    <div layout class="md-title" layout-align="center center">
+                                        <div flex="30">{{vm.dataObj.razemNetto | number:2}}</div>
+                                        <div flex="30">{{vm.dataObj.razemVat | number:2}}</div>
+                                        <div flex><strong>{{vm.dataObj.razemBrutto |number: 2}}</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div style="line-height:1em;">&nbsp;</div>
+                        <md-divider></md-divider>
+                        <div style="line-height:0.3em;">&nbsp;</div>
+                        <md-divider></md-divider>
+                        <div style="line-height:1em;">&nbsp;</div>
+                        <div layout ng-repeat="stawka in vm.dataObj.fakturaPodsumowanieWartosci" style="margin-bottom:-3em;">
+
+                            <md-input-container flex="30">
+                                <label>Stawka</label>
+                                <input ng-model="stawka.podatekStawka.nazwa" disabled />
+                            </md-input-container>
+                            <md-input-container flex="20">
+                                <label>Wartość Netto</label>
+                                <input ng-model="stawka.wartoscNetto" type="number" name="netto{{$index}}" ng-change="vm.pzPrzeliczWartoscRazem()" />
+                            </md-input-container>
+                            <md-input-container flex="20">
+                                <md-tooltip md-direction="top" ng-if="stawka.vatAlertError">
+                                    właściwa wartość VAT: {{stawka.realVat | number: 2}}
+                                </md-tooltip>
+                                <label>Wartość VAT</label>
+                                <input ng-model="stawka.wartoscVat" type="number" ng-change="vm.pzPrzeliczWartoscRazem()" ng-style="stawka.vatAlert" ng-disabled="stawka.podatekStawka.wartosc<=0" />
+                            </md-input-container>
+                            <md-input-container flex="20">
+                                <md-tooltip md-direction="top" ng-if="stawka.bruttoAlertError">
+                                    właściwa wartość brutto: {{stawka.realBrutto | number:2}}
+                                </md-tooltip>
+                                <label>Wartość Brutto</label>
+                                <input ng-model="stawka.wartoscBrutto" ng-change="vm.pzPrzeliczWartoscRazem()" ng-style="stawka.bruttoAlert" type="number" />
+                            </md-input-container>
+                        </div>
+
+                    </md-card-content>
+                </md-card>
+
+
+
+                <!--faktura pozycje magazynowe-->
+                <md-card ng-show="vm.dataObj.fakturaPozycjeMag.length>0">
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <div flex class="md-primary">Faktura: pozycje magazynowe</div>
+
+                            <md-input-container layout layout-align="end end">
+                                <label>Wyszukaj...</label>
+                                <input ng-model="vm.dataObj.fakturaPozycjeMagSearchText" />
+                            </md-input-container>
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="vm.dataObj.fakturaPozycjeMagShow=!vm.dataObj.fakturaPozycjeMagShow" ng-if="vm.dataObj.fakturaPozycjeMagShow">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="vm.dataObj.fakturaPozycjeMagShow=!vm.dataObj.fakturaPozycjeMagShow" ng-if="!vm.dataObj.fakturaPozycjeMagShow">
+                                <md-icon md-svg-icon="arrowDown"></md-icon>
+                            </md-button>
+                        </div>
+
+                    </md-toolbar>
+                    <md-card-content ng-if="vm.dataObj.fakturaPozycjeMagShow">
+                        <div layout="column" ng-repeat="pozMag in vm.dataObj.fakturaPozycjeMag | filter: vm.dataObj.fakturaPozycjeMagSearchText | orderBy: 'magPzPozycjaId'">
+                            <div layout layout-wrap>
+                                <md-input-container flex-gt-md="40" flex="100">
+                                    <label>Nazwa</label>
+                                    <input ng-model="pozMag.nazwa" disabled />
+                                </md-input-container>
+
+                                <md-input-container flex-gt-md="10" flex="20">
+                                    <label>Ilosc</label>
+                                    <input ng-model="pozMag.ilosc" disabled />
+                                </md-input-container>
+                                <md-autocomplete required flex-gt-md="15" flex="20"
+                                                 md-search-text="pozMag.searchText"
+                                                 md-input-name="vatZakupu {{pozMag.nazwa | camelCase}}"
+                                                 md-items="item in vm.danePomocnicze.podatekStawka | filter: pozMag.searchText"
+                                                 md-selected-item="pozMag.podatekStawka"
+                                                 md-item-text="item.nazwa"
+                                                 md-floating-label="VAT zakupu"
+                                                 md-min-length="0"
+                                                 md-selected-item-change="vm.pzPrzeliczWartosc(pozMag)">
+                                    <md-item-template>
+                                        <span md-highlight-text="pozMag.searchText">{{item.nazwa}}</span>
+                                    </md-item-template>
+                                </md-autocomplete>
+
+                                <md-input-container flex-gt-md="10" flex="15">
+                                    <label>Jedn.</label>
+                                    <input ng-model="pozMag.jednostka" disabled />
+                                </md-input-container>
+                                <md-input-container flex-gt-md="10" flex="20">
+                                    <label>Cena</label>
+                                    <input ng-model="pozMag.cena" type="number" ng-change="vm.pzPrzeliczWartosc(pozMag)" name="MagCena: {{pozMag.nazwa}}" required min="0" />
+                                </md-input-container>
+                                <md-input-container flex-gt-md="10" flex="20">
+                                    <label>Wartość</label>
+                                    <input disabled ng-model="pozMag.wartosc" type="number" />
+                                </md-input-container>
+                            </div>
+
+                            <div layout style="margin-top:-40px">
+                                <div flex="100" layout="column">
+                                    <div ng-if="pozMag.statystyki.count>0">
+                                        <span class="md-body-1">Min:&nbsp;<strong>{{pozMag.statystyki.min | number:2}}</strong>&nbsp;</span>
+                                        <span class="md-body-1">Avg:&nbsp;<strong>{{pozMag.statystyki.avg | number:2}}</strong>&nbsp;</span>
+                                        <span class="md-body-1">Max:&nbsp;<strong>{{pozMag.statystyki.max | number:2}}</strong>&nbsp;</span>
+                                        <span class="md-body-1">Ilość:&nbsp;<strong>{{pozMag.statystyki.count}}</strong>&nbsp;</span>
+                                        <em>
+                                            <span class="md-body-1">|| Ostatni:&nbsp;<strong>{{pozMag.statystyki.ostatni.dataOstatniegoZakupu | date: YYYY-MM-dd}}</strong>&nbsp;</span>
+                                            <span class="md-body-1">Cena:&nbsp;<strong>{{pozMag.statystyki.ostatni.cena | number:2}}</strong>&nbsp;</span>
+                                            <span class="md-body-1">Kontrahent:&nbsp;<strong>{{pozMag.statystyki.ostatni.kontrahent}}</strong>&nbsp;</span>
+                                        </em>
+                                    </div>
+                                    <div ng-if="pozMag.statystyki.count==0">
+                                        <span class="md-body-1"><i>(pierwszy zakup)</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <md-divider ng-hide="pozMag.$last"></md-divider>
+                            <div>&nbsp;</div>
+                            <md-divider ng-hide="pozMag.$last"></md-divider>
+                            <md-divider ng-hide="pozMag.$last"></md-divider>
+
+                        </div>
+                    </md-card-content>
+                </md-card>
+
+                <!--Dostepne mag-->
+                <md-card ng-if="vm.objId==0 && vm.dataObj.pz.pzMagDost.length>0">
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <div flex class="md-primary">Dostępne PZ Pozycje magazynowe: <span>({{vm.dataObj.pz.pzMagDost.length}})</span></div>
+
+                            <md-input-container layout layout-align="end end">
+                                <label>Wyszukaj...</label>
+                                <input ng-model="vm.dataObj.pz.pzMagSearchText" />
+                            </md-input-container>
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="vm.dataObj.pz.pzMagShow=!vm.dataObj.pz.pzMagShow" ng-if="vm.dataObj.pz.pzMagShow">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="vm.dataObj.pz.pzMagShow=!vm.dataObj.pz.pzMagShow" ng-if="!vm.dataObj.pz.pzMagShow">
+                                <md-icon md-svg-icon="arrowDown"></md-icon>
+                            </md-button>
+                        </div>
+
+                    </md-toolbar>
+                    <md-card-content ng-if="vm.dataObj.pz.pzMagShow">
+                        <div layout="column" layout-padding>
+                            <md-card ng-repeat="pzMag in vm.dataObj.pz.pzMagDost | filter: vm.dataObj.pz.pzMagSearchText">
+                                <md-card-container>
+                                    <div layout layout-padding layout-align="space-between center">
+                                            <div layout="column" layout-align="center center">
+                                                <div>
+                                                    <strong>{{pzMag.dokumentZrodlowyNr}}</strong>
+                                                    <span ng-if="pzMag.czyKorekta">&nbsp;[K]&nbsp;</span>
+                                                    &nbsp;&nbsp;
+                                                </div>
+                                                <div>
+                                                    <span><em>Wyst.:&nbsp;</em></span><strong>{{pzMag.dataWystawienia | date:'yyyy-MM-dd'}}</strong>
+                                                    <span><em>Wpływ:&nbsp;</em></span><strong>{{pzMag.dataWplywu | date:'yyyy-MM-dd'}}</strong>
+                                                </div>
+                                                <span><small>&nbsp;[{{pzMag.createdBy}}]</small></span>
+                                            </div>
+                                            <div ng-if="pzMag.uwagi">
+                                                Uwagi: {{pzMag.uwagi}}
+                                            </div>
+                                            <div layout="column" layout-align="center center">
+                                                <div class="md-title">{{pzMag.kontrahent.nazwa}}</div>
+                                                <div class="md-body-1">{{pzMag.kontrahent.adres}}</div>
+
+                                            </div>
+
+
+                                                <md-button ng-click="vm.pzMagDodaj(pzMag)" class="md-icon-button md-raised md-accent" aria-label="nierozliczonyPzAdd{{$index}}">
+                                                    <md-icon md-svg-icon="add"></md-icon>
+                                                </md-button>
+
+
+                                    </div>
+                                </md-card-container>
+                            </md-card>
+                        </div>
+                    </md-card-content>
+                </md-card>
+
+
+
+                <!--Wybrane PZ mag-->
+                <div ng-if="vm.dataObj.pzRozliczoneMag.length>0" layout="column" layout-padding>
+                    <div class="md-subhead">Wybrane PZ Pozycje magazynowe</div>
+                    <md-chips ng-model="vm.dataObj.pzRozliczoneMag" md-on-remove="vm.pzMagUsun()" readonly="vm.objId>0" ng-disabled="vm.objId>0">
+                        <md-chip-template>
+                            <span>id:&nbsp;{{$chip.pzId}},</span>
+                            <strong>{{$chip.dataWplywu | date: "yyyy-MM-dd"}}</strong>
+                            <span ng-if="$chip.uwagi">Uwagi: {{$chip.uwagi}}</span>
+                        </md-chip-template>
+                    </md-chips>
+                    <div class="lineHeightByk">&nbsp;</div>
+                </div>
+
+
+
+                <!--Faktura Pozycje tkaniny-->
+                <md-card ng-show="vm.dataObj.fakturaPozycjeTkaniny.length>0">
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <div flex class="md-primary">Faktura: pozycje tkanin</div>
+
+                            <md-input-container layout layout-align="end end">
+                                <label>Wyszukaj...</label>
+                                <input ng-model="vm.dataObj.fakturaPozycjeTkaninySearchText" />
+                            </md-input-container>
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="vm.dataObj.fakturaPozycjeTkaninyShow=!vm.dataObj.fakturaPozycjeTkaninyShow" ng-if="vm.dataObj.fakturaPozycjeTkaninyShow">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="vm.dataObj.fakturaPozycjeTkaninyShow=!vm.dataObj.fakturaPozycjeTkaninyShow" ng-if="!vm.dataObj.fakturaPozycjeTkaninyShow">
+                                <md-icon md-svg-icon="arrowDown"></md-icon>
+                            </md-button>
+                        </div>
+
+                    </md-toolbar>
+                    <md-card-content ng-init="vm.dataObj.fakturaPozycjeTkaninyShow=true" ng-if="vm.dataObj.fakturaPozycjeTkaninyShow">
+                        <div layout="column" ng-repeat="pozMag in vm.dataObj.fakturaPozycjeTkaniny | filter: vm.dataObj.fakturaPozycjeTkaninySearchText">
+                            <div layout layout-wrap>
+                                <md-input-container flex-gt-md="40" flex="100">
+                                    <label>Nazwa</label>
+                                    <input ng-model="pozMag.nazwa" disabled />
+                                </md-input-container>
+
+
+                                <md-input-container flex-gt-md="10" flex="15">
+                                    <label>Ilosc</label>
+                                    <input ng-model="pozMag.ilosc" disabled />
+                                </md-input-container>
+
+                                <md-autocomplete required flex-gt-md="15" flex="30"
+                                                 md-search-text="pozMag.searchText"
+                                                 md-input-name="vatZakupu {{pozMag.nazwa | camelCase}}"
+                                                 md-items="item in vm.danePomocnicze.podatekStawka | filter: pozMag.searchText"
+                                                 md-selected-item="pozMag.podatekStawka"
+                                                 md-item-text="item.nazwa"
+                                                 md-floating-label="VAT zakupu"
+                                                 md-min-length="0"
+                                                 md-selected-item-change="vm.pzPrzeliczWartosc(pozMag)">
+                                    <md-item-template>
+                                        <span md-highlight-text="pozMag.searchText">{{item.nazwa}}</span>
+                                    </md-item-template>
+                                </md-autocomplete>
+
+                                <md-input-container flex-gt-md="10" flex="15">
+                                    <label>Jedn.</label>
+                                    <input ng-model="pozMag.jednostka" disabled />
+                                </md-input-container>
+
+                                <md-input-container flex-gt-md="10" flex="20">
+                                    <label>Cena</label>
+                                    <input ng-model="pozMag.cena" type="number" ng-change="vm.pzPrzeliczWartosc(pozMag)" name="TkaninaCena: {{pozMag.nazwa}}" required min="0" />
+                                </md-input-container>
+
+                                <md-input-container flex-gt-md="10" flex="20">
+                                    <label>Wartość</label>
+                                    <input disabled ng-model="pozMag.wartosc" type="number" />
+                                </md-input-container>
+                            </div>
+
+                            <div layout style="margin-top:-40px">
+                                <div flex="100" layout="column">
+                                    <div>
+                                        <span class="md-body-1" ng-if="pozMag.statystyki.min">Min:&nbsp;<strong>{{pozMag.statystyki.min | number:2}}</strong>&nbsp;</span>
+                                        <span class="md-body-1" ng-if="pozMag.statystyki.avg">Avg:&nbsp;<strong>{{pozMag.statystyki.avg | number:2}}</strong>&nbsp;</span>
+                                        <span class="md-body-1" ng-if="pozMag.statystyki.max">Max:&nbsp;<strong>{{pozMag.statystyki.max | number:2}}</strong>&nbsp;</span>
+                                        <span class="md-body-1" ng-if="pozMag.statystyki.count">Ilość:&nbsp;<strong>{{pozMag.statystyki.count}}</strong>&nbsp;</span>
+                                        <em>
+                                            <span class="md-body-1" ng-if="pozMag.statystyki.ostatni.dataOstatniegoZakupu">|| Ostatni:&nbsp;<strong>{{pozMag.statystyki.ostatni.dataOstatniegoZakupu | date: YYYY-MM-dd}}</strong>&nbsp;</span>
+                                            <span class="md-body-1" ng-if="pozMag.statystyki.ostatni.cena">Cena:&nbsp;<strong>{{pozMag.statystyki.ostatni.cena | number:2}}</strong>&nbsp;</span>
+                                            <span class="md-body-1" ng-if="pozMag.statystyki.ostatni.kontrahent">Kontrahent:&nbsp;<strong>{{pozMag.statystyki.ostatni.kontrahent}}</strong>&nbsp;</span>
+                                        </em>
+                                    </div>
+                                </div>
+                            </div>
+                            <md-divider ng-hide="pozMag.$last"></md-divider>
+                            <div>&nbsp;</div>
+                            <md-divider ng-hide="pozMag.$last"></md-divider>
+                            <md-divider ng-hide="pozMag.$last"></md-divider>
+                        </div>
+                    </md-card-content>
+                </md-card>
+
+
+
+                <!--Wybrane PZ tkaniny-->
+                <div ng-if="vm.dataObj.pzRozliczoneTkaniny.length>0" layout="column" layout-padding>
+                    <div class="md-subhead">Wybrane PZ Tkaniny</div>
+                    <md-chips ng-model="vm.dataObj.pzRozliczoneTkaniny" md-on-remove="vm.pzTkaninyUsun()" readonly="vm.objId>0">
+                        <md-chip-template>
+                            <span>id:&nbsp;{{$chip.pzTkaninyId}},</span>
+                            <span>{{$chip.dokumentZrodlowyNr}}</span>
+                            <strong>{{$chip.dataWystawienia | date: "yyyy-MM-dd"}}</strong>
+                            <span ng-if="$chip.uwagi">Uwagi: {{$chip.uwagi}}</span>
+                        </md-chip-template>
+                    </md-chips>
+                    <div class="lineHeightByk">&nbsp;</div>
+                </div>
+
+
+                <!--Dostepne tkaniny-->
+                <md-card ng-if="vm.objId==0 && vm.dataObj.pz.pzTkaninyDost.length>0">
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <div flex class="md-primary">Dostępne PZ Tkaniny: <span>({{vm.dataObj.pz.pzTkaninyDost.length}})</span></div>
+
+                            <md-input-container layout layout-align="end end">
+                                <label>Wyszukaj...</label>
+                                <input ng-model="vm.dataObj.pz.pzTkaninySearchText" />
+                            </md-input-container>
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="vm.dataObj.pz.pzTkaninyShow=!vm.dataObj.pz.pzTkaninyShow" ng-if="vm.dataObj.pz.pzTkaninyShow">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="vm.dataObj.pz.pzTkaninyShow=!vm.dataObj.pz.pzTkaninyShow" ng-if="!vm.dataObj.pz.pzTkaninyShow">
+                                <md-icon md-svg-icon="arrowDown"></md-icon>
+                            </md-button>
+                        </div>
+
+                    </md-toolbar>
+                    <md-card-content ng-if="vm.dataObj.pz.pzTkaninyShow">
+                        <div layout="column" layout-padding>
+                            <md-card ng-repeat="pzMag in vm.dataObj.pz.pzTkaninyDost | filter: vm.dataObj.pz.pzTkaninySearchText">
+                                <md-card-container>
+                                    <div layout layout-padding layout-align="space-between center">
+
+                                            <div layout="column" layout-align="center center">
+                                                <div>
+                                                    <strong>{{pzMag.dokumentZrodlowyNr}}</strong>
+                                                    <span ng-if="pzMag.czyKorekta">&nbsp;[K]&nbsp;</span>
+                                                    &nbsp;&nbsp;
+                                                </div>
+                                                <div>
+                                                    <span><em>Wyst.:&nbsp;</em></span><strong>{{pzMag.dataWystawienia | date:'yyyy-MM-dd'}}</strong>
+                                                </div>
+                                                <span><small>&nbsp;[{{pzMag.createdBy}}]</small></span>
+                                            </div>
+
+                                        <div ng-if="pzMag.uwagi" class="md-label">
+                                            Uwagi:&nbsp;<em>{{pzMag.uwagi}}</em>
+                                        </div>
+                                        <div layout layout-align="end center">
+                                            <div>
+                                                <md-button ng-click="vm.pzTkaninyDodaj(pzMag)" class="md-icon-button md-raised md-accent" aria-label="nierozliczonyPzTkaninyAdd{{$index}}">
+                                                    <md-icon md-svg-icon="add"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </md-card-container>
+                            </md-card>
+                        </div>
+                    </md-card-content>
+                </md-card>
+
+
+
+                </div>
+
+        </md-card-content>
+</md-card>

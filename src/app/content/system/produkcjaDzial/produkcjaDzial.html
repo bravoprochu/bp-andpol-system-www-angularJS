@@ -1,0 +1,26 @@
+﻿<md-card>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <md-button class="md-icon-button md-raised" ng-click="vm.nowyShow=!vm.nowyShow">
+            <md-tooltip>Utwórz nowy dział</md-tooltip>
+            <md-icon md-svg-icon="add" ng-if="!vm.nowyShow"></md-icon>
+            <md-icon md-svg-icon="remove" ng-if="vm.nowyShow"></md-icon>
+        </md-button>
+        <produkcja-dzial-nowy 
+                              dzial="vm.nowyDzial" 
+                              in-progress="vm.inProgress"
+                              produkcja-dzial="vm.danePomocnicze.produkcjaDzial"
+                              save-fn="vm.dzialSave"
+                              ng-if="vm.nowyShow"></produkcja-dzial-nowy>
+        <linia-pozioma></linia-pozioma>
+        <div ng-repeat="dzial in vm.dataObj | orderBy: 'nazwa'" ng-form="form_{{dzial.produkcjaDzialId}}">
+            <produkcja-dzial-nowy 
+                                  dzial="dzial" 
+                                  form-wewn="form_{{dzial.produkcjaDzialId}}"
+                                  in-progress="vm.inProgress"
+                                  produkcja-dzial="vm.danePomocnicze.produkcjaDzial"
+                                  save-fn="vm.dzialSave"
+                                  delete-fn="vm.dzialDelete"></produkcja-dzial-nowy>
+        </div>
+    </md-card-content>
+</md-card>

@@ -1,0 +1,10 @@
+﻿<div layout>
+    <md-datepicker ng-model="vm.dataObj.dzienRoboczy"></md-datepicker>
+    <md-button class="md-icon-button" ng-click="vm.getData(vm.dataObj.dzienRoboczy)" ng-disabled="vm.isLoading">
+        <md-tooltip md-direction="top">Pobierz zaplanowane zamówienia</md-tooltip>
+        <md-icon md-svg-icon="download"></md-icon>
+    </md-button>
+    <div flex></div>
+   
+    <div ng-hide="isSmall" class="md-headline" ng-if="vm.dataObj.dzienRoboczy">{{vm.dataObj.dzienRoboczy | date: 'yyyy-MM-dd'}}&nbsp;({{vm.dataObj.dzienRoboczy | date: 'EEE'}})</div>
+</div>

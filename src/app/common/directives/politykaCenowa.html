@@ -1,0 +1,22 @@
+﻿<md-autocomplete md-selected-item="vm.dataObj.politykaCenowa"
+                 md-search-text-change="vm.politykaCenowaSearchTextChange()"
+                 md-search-text="vm.politykaCenowaSearchText"
+                 md-items="item in vm.politykaCenowaSearch()"
+                 md-item-text="item.nazwa"
+                 md-min-length="0"
+                 placeholder="Wybierz politykę cenową"
+                 md-input-name="politykaCenowa"
+                 ng-disabled="!vm.dataObj.czyPolitykaCenowa"
+                 ng-required="vm.dataObj.czyPolitykaCenowa">
+    <md-item-template>
+        <span md-highlight-text="vm.politykaCenowaSearchText">{{item.nazwa}}</span>
+        <span>&nbsp;</span>
+        <small ng-if="item.uwagi">({{item.uwagi}})</small>
+    </md-item-template>
+</md-autocomplete>
+
+<div ng-if="vm.dataObj.politykaCenowa">
+    <linia-pozioma></linia-pozioma>
+    <div class="md-subhead"><strong>{{vm.dataObj.politykaCenowa.nazwa}}</strong></div>
+    <div class="md-body-1">{{vm.dataObj.politykaCenowa.uwagi}}</div>
+</div>

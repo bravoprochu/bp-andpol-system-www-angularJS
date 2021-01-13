@@ -1,0 +1,37 @@
+﻿<div>
+    <md-autocomplete required 
+                     ng-disabled="isDiss"
+                     md-search-text="kontrahentSearchText"
+                     md-selected-item="kontrahentSelected"
+                     md-selected-item-change="kontrahentWybierz(kontrahent)"
+                     md-items="kontrahent in kontrahentSearch()"
+                     md-item-text="kontrahent.nazwa"
+                     md-min-length="0"
+                     placeholder="{{title}} (zawęża do max 5 pozycji)"
+                     md-input-name="{{name}}"
+                     md-menu-class="autocomplete-custom-template">
+        <md-item-template>
+
+                    <span class="autocomplete-title">
+                        <strong>{{kontrahent.nazwa}}</strong>
+                    </span>
+                    <span class="autocomplete-subTitle">{{kontrahent.adres}}</span>
+        </md-item-template>
+        <md-not-found>
+            Nie znaleziono "{{kontrahentSearchText}}".
+        </md-not-found>
+    </md-autocomplete>
+    <md-card ng-if="kontrahentSelected">
+        <md-card-content>
+                <div class="md-title">
+                    {{selectedItem.nazwa}}<br />
+                </div>
+                <div layout="column" layout-margin>
+                    <div class="md-body-2">{{selectedItem.adres}}&nbsp</div>
+                    <div class="md-body-1">NIP:&nbsp<strong>{{selectedItem.nip}}</strong></div>
+                    <div class="md-body-1" ng-if="selectedItem.kontoBankowe">Nr konta:&nbsp;<span ng-if="selectedItem.kontoBankoweSwift">SWIFT:<strong>{{selectedItem.kontoBankoweSwift}}</strong>,&nbsp;</span><i>{{selectedItem.kontoBankowe | separator:4}}</i></div>
+                    <div ng-if="selectedItem.kontoBankowe2">Nr konta 2:&nbsp;<i><bold>{{selectedItem.kontoBankowe | separator:4}}</bold></i></div>
+                </div>
+        </md-card-content>
+    </md-card>
+</div>

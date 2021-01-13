@@ -1,0 +1,33 @@
+﻿<md-dialog aria-label="qrCodeBasket" flex="60">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            qrCodeBasket - generowanie etykiet QR
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="column" layout-padding ng-form="vm.formMain">
+            <md-input-container flex="60">
+                <label>nazwa</label>
+                <input ng-model="vm.data.nazwa" required />
+            </md-input-container>
+            <md-input-container flex="60">
+                <label>grupa</label>
+                <input md-maxlength="30" ng-model="vm.data.grupa" required />
+            </md-input-container>
+            <md-input-container flex="60">
+                <label>link</label>
+                <input ng-model="vm.data.link" required />
+            </md-input-container>
+            <md-input-container flex="100">
+                <label>uwagi</label>
+                <input md-maxlength="100" ng-model="vm.data.uwagi" required />
+            </md-input-container>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button aria-label="qrCodeBasketAddZapisz" ng-click="vm.navZapisz()" ng-if="vm.formMain.$valid" class="md-warn md-raised">Zapisz</md-button>
+        <md-button aria-label="qrCodeBasketAddAnuluj" ng-click="vm.navAnuluj()" class="md-primary md-raised">Anuluj</md-button>
+    </md-dialog-actions>
+
+</md-dialog>

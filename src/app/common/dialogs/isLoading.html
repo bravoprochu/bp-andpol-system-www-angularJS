@@ -1,0 +1,23 @@
+﻿<div role="dialog" aria-label="Eat me!" layout="column" layout-align="center center">
+    <div layout="column" layout-align="center center" ng-if="!vm.screenSmall">
+        <div>&nbsp;</div>
+        <div class="md-body-1">Trwa komunikacja z serwerem</div>
+        <div class="md-body-2">{{vm.info}}</div>
+    </div>
+    <div class="lineHeightByk">&nbsp;</div>
+    <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate" md-diameter="{{vm.diameter()}}"></md-progress-circular>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!--<div role="dialog" aria-label="Eat me!" layout="column" layout-align="center center">
+    <div class="md-display-1" style="min-height:500px">Trwa wczytywanie</div>
+</div>-->

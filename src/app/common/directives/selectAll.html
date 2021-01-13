@@ -1,0 +1,8 @@
+﻿<md-checkbox ng-checked="toggleAllChecked()" ng-click="toggleAll()">
+    <span ng-if="isChecked()">Un-</span>Wybierz wszystko
+</md-checkbox>
+<div layout="column">
+    <md-checkbox ng-checked="exists(p)" ng-repeat="p in danePomocnicze track by p[key]" style="left:1.5em;" ng-click="toggle(p)" aria-label="wybierzWszystko">
+        {{p[nazwa]}}<span>{{descr}}</span>
+    </md-checkbox>
+</div>

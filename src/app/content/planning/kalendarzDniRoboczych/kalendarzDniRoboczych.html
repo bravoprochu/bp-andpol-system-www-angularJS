@@ -1,0 +1,35 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <naglowek></naglowek>
+    <div layout layout-align="start center" ng-if="vm.startMode">
+        <!--<div class="md-title">
+            {{vm.title}},
+            <span ng-if="vm.dataObj.kalendarz">[zakres danych: {{vm.dataObj.kalendarz.dateStart | date: 'yyyy-MM-dd'}}&nbsp;&ndash;&nbsp;{{vm.dataObj.kalendarz.dateEnd | date: 'yyyy-MM-dd'}}]</span>
+        </div>-->
+        <div flex></div>
+        <div>
+            <md-button ng-click="vm.miechPrev()" aria-label="miechPrev" class="md-icon-button">
+                <md-tooltip>
+                    Poprzedni miesiąc
+                </md-tooltip>
+                <md-icon md-svg-icon="chevLeft"></md-icon>
+            </md-button>
+            <md-button ng-click="vm.miechNext()" aria-label="miechPrev" class="md-icon-button">
+                <md-tooltip>
+                    Następny miesiąc
+                </md-tooltip>
+                <md-icon md-svg-icon="chevRight"></md-icon>
+            </md-button>
+        </div>
+        <md-button class="md-icon-button" aria-label="dateRange" ng-click="vm.dateRange()">
+            <md-tooltip md-direction="zakres dat">Zakres dat</md-tooltip>
+            <md-icon md-svg-icon="dateRange"></md-icon>
+        </md-button>
+
+    </div>
+
+    <md-card-content ng-form="vm.formMain">
+        <kalendarz  
+                   data="vm.dataObj.kalendarz"
+                   przejdz-do="vm.idzDo(id, day)"></kalendarz>
+    </md-card-content>
+</md-card>

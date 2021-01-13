@@ -1,0 +1,29 @@
+﻿<div layout-gt-sm="row" layout="column" layout-align="space-between center">
+    <md-switch ng-if="!isDisabled"
+               ng-model="datyRazem" aria-label="datyRazem">
+        Te same daty ?&nbsp;&nbsp;&nbsp;&nbsp;
+    </md-switch>
+    <div layout-gt-sm="row" layout-wrap layout="column" layout-padding>
+        <div layout="column" layout-align="center center" ng-if="pozycje>0">
+            <div class="md-body-2">Data wystawienia:&nbsp;</div>
+            <md-datepicker ng-disabled="isDisabled"
+                           ng-model="ref.dataWystawienia" 
+                           ng-change="datyTeSame('wystawienia')" 
+                           md-placeholder="Data wystawienia"></md-datepicker>
+        </div>
+        <div layout="column" layout-align="center center" ng-if="pozycje>1">
+            <div class="md-body-2">Data sprzedaży:&nbsp;</div>
+            <md-datepicker ng-disabled="isDisabled"
+                           ng-model="ref.dataSprzedazy" 
+                           ng-change="datyTeSame('sprzedazy')" 
+                           md-placeholder="Data sprzedaży"></md-datepicker>
+        </div>
+        <div layout="column" layout-align="center center" ng-if="pozycje>2">
+            <div class="md-body-2">Data wpływu:&nbsp;</div>
+            <md-datepicker ng-disabled="isDisabled"
+                           ng-model="ref.dataWplywu" 
+                           ng-change="datyTeSame('wplywu')" 
+                           md-placeholder="Data wpływu"></md-datepicker>
+        </div>
+    </div>
+</div>

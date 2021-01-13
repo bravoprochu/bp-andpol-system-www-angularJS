@@ -1,0 +1,32 @@
+﻿    <md-content>
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="vm.tablePozycjaMagazynowa.order">
+                    <tr md-row>
+                        <th md-column md-order-by="czyStanOk"><span>Status magazynowy</span></th>
+                        <th md-column md-order-by="pozycjaMagazynowaId"><span>Id</span></th>
+                        <th md-column md-order-by="nazwa"><span>Nazwa</span></th>
+                        <th md-column md-order-by="wartosc"><span>Zapotrzebowanie</span></th>
+                        <th md-column md-order-by="stanAktualny"><span>Stan magazynowy</span></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row md-select="dane" md-row-select-id="id" ng-repeat="dane in vm.dataObj.planningPozycjeMagazynowe | filter: vm.tablePozycjaMagazynowa.searchText | orderBy: vm.tablePozycjaMagazynowa.order | limitTo: vm.tablePozycjaMagazynowa.limit: (vm.tablePozycjaMagazynowa.page - 1) * vm.tablePozycjaMagazynowa.limit">
+                        <td md-cell>
+                            <md-icon ng-if="!dane.czyStanOk" md-svg-icon="thumbDown" style="font-size:larger"></md-icon>
+                            <md-icon ng-if="dane.czyStanOk" md-svg-icon="thumbUp" style="font-size:smaller"></md-icon>
+                        </td>
+                        <td md-cell>{{dane.pozycjaMagazynowaId}}</td>
+                        <td md-cell ng-class="{'podkreslenie': !dane.stanAktualny}">{{dane.nazwa}}</td>
+                        <td md-cell>{{dane.wartosc | number: 2}}</td>
+                        <td md-cell>
+                            <span ng-if="dane.stanAktualny">{{dane.stanAktualny | number: 2}}</span>
+                            <span ng-if="!dane.stanAktualny">brak</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </md-table-container>
+        <md-table-pagination md-limit="vm.tablePozycjaMagazynowa.limit" md-limit-options="vm.tablePozycjaMagazynowa.rowLimitOpt" md-page-select="true" md-page="vm.tablePozycjaMagazynowa.page" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.planningPozycjeMagazynowe.length}}"></md-table-pagination>
+    </md-content>

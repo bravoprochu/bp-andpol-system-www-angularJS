@@ -1,0 +1,43 @@
+﻿<md-dialog aria-label="Autocomplete Dialog Example">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Polityka cenowa</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="vm.anuluj()">
+                <md-icon md-svg-icon="cancel" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content ng-cloak>
+        <div class="md-dialog-content">
+            <form ng-submit="$event.preventDefault()">
+                <p>Wybierz dostępną politykę cenową dla wykończenia</p>
+                <md-autocomplete md-selected-item="vm.selectedItem"
+                                 md-search-text="vm.searchText"
+                                 md-items="item in vm.dost"
+                                 md-item-text="item.nazwa"
+                                 md-min-length="0"
+                                 placeholder="Wybierz politykę cenową"
+                                 md-autofocus>
+                    <md-item-template>
+                        <span md-highlight-text="vm.searchText" md-highlight-flags="^i">{{item.nazwa}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        Nie znaleziono  "{{vm.searchText}}"
+                    </md-not-found>
+                </md-autocomplete>
+                <md-input-container>
+                    <label>Ilość wystąpień</label>
+                    <input type="number" min="0" ng-model="vm.ilosc" ng-init="vm.ilosc=4"/>
+                </md-input-container>
+                <div class="md-body-1">*&nbsp;Jeżeli w regule występuje opcja "multi", określ wartość mnożnika</div>
+            </form>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions>
+        <md-button aria-label="Finished" ng-click="vm.zapisz($event)">Wybierz</md-button>
+    </md-dialog-actions>
+</md-dialog>

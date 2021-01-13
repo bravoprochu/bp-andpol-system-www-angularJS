@@ -1,0 +1,44 @@
+﻿<div ng-if="vm.startMode" md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <ng-form name="vm.formMain">
+        <md-card>
+            <naglowek></naglowek>
+            <md-card-content>
+                <div layout="column" layout-gt-sm="row">
+                    <div layout="column" flex-gt-sm="40" layout-padding>
+                        <md-input-container ng-if="vm.dataObj.id">
+                            <label>Id</label>
+                            <input ng-model="vm.dataObj.id" disabled>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>
+                                Nazwa&nbsp;&nbsp;&nbsp;
+                                <span ng-messages="vm.formMain.nazwa.$error" ng-if="vm.formMain.nazwa.$touched">
+                                    &nbsp;&nbsp;
+                                    <span ng-message="required">Pole jest wymagane</span>&nbsp;&nbsp;
+                                    <span ng-message="md-maxlength">Maksymalna długość to 100 znaków</span>&nbsp;&nbsp;&nbsp;
+                                </span>
+                            </label>
+                            <input ng-model="vm.dataObj.nazwa" name="nazwa" required md-maxlength="100" />
+                        </md-input-container>
+                        <select-pomocnicze required="true"
+                                           input-name="dzialProdukcyjny"
+                                           dane-pomocnicze="vm.danePomocnicze.produkcjaDzial"
+                                           selected-item="vm.dataObj.produkcjaDzial"
+                                           placeholder="dział produkcyjny"
+                                           >
+
+                        </select-pomocnicze>
+                        <md-input-container>
+                            <label>Uwagi</label>
+                            <input ng-model="vm.dataObj.uwagi" name="uwagi" />
+                        </md-input-container>
+                    </div>
+                    <div layout="column" flex-gt-sm="60" layout-padding>
+
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
+    </ng-form>
+</div>

@@ -1,0 +1,72 @@
+﻿<div aria-label="platnoscCard" role="dialog" layout="column" layout-align="center center" style="background-color:white;">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            Płatności
+        </div>
+    </md-toolbar>
+
+    <div layout="column" layout-padding layout-gt-sm="row" ng-form="vm.formMain" style="min-width:800px;">
+
+        <div layout="column" flex="50">
+            <div>Termin płatności:&nbsp;</div><md-datepicker ng-model="vm.data.terminPlatnosci" ng-disabled="vm.platnoscEditMode" md-placeholder="Termin płatności"></md-datepicker>
+            <kontrahent-select selected-item="vm.data.kontrahent" dane-pomocnicze="vm.kontrahenci" flex="100"></kontrahent-select>
+            <!--card - hide - xs-->
+            <div hide-gt-xs>
+                <div>
+                    <h4 class="md-title">
+                        {{vm.data.kontrahent.nazwa}}<br />
+                        <i><small>{{vm.data.kontrahent.skrot}}</small></i>
+                    </h4>
+                    <h5 class="md-subhead">
+                        NIP:&nbsp<b>{{vm.data.kontrahent.nip}}</b><br />
+                        <span ng-if="vm.data.kontrahent.kontoBankowe">Pierwsze konto bankowe: {{vm.data.kontrahent.kontoBankowe | separator: 4}}</span><br />
+                        <span ng-if="vm.data.kontrahent.kontoBankowe2">Drugie konto bankowe: {{vm.data.kontrahent.kontoBankowe2 | separator: 4}}</span>
+                    </h5>
+                </div>
+                <div>
+                    <h5>
+                        {{vm.data.kontrahent.adres}}&nbsp
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <div layout="column" flex="50">
+            <div ng-if="vm.editMode">
+                <md-checkbox ng-model="vm.data.isDone" aria-label="czyWykonany">
+                    Wykonane
+                </md-checkbox>
+                <div layout="row" layout-align="start center" ng-show="vm.data.isDone">
+                    <span>Zapłacono dnia:</span><md-datepicker ng-model="vm.data.dataZaplaty" ng-required="vm.dataIsDone" md-placeholder="Data zaplaty"></md-datepicker>
+                </div>
+                <md-divider></md-divider>
+            </div>
+
+            <single-choice selected-item="vm.data.waluta" dane-pomocnicze="vm.waluta" dane-id="nazwa" title="Waluta" is-vertical="false" pole="skrot"></single-choice>
+
+            <div layout="column">
+                <md-input-container>
+                    <label>Faktura nr</label>
+                    <input ng-model="vm.data.fakturaNr" required type="text" md-maxlength="50" name="fakturaNr" />
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Kwota</label>
+                    <input ng-model="vm.data.kwota" required type="number" />
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Uwagi</label>
+                    <input ng-model="vm.data.uwagi" name="uwagi" md-maxlength="150" />
+                </md-input-container>
+            </div>
+        </div>
+    </div>
+
+
+    <div layout="row" layout-align="center end">
+        <md-button aria-label="platnoscUsun" ng-click="vm.navUsun()" ng-show="vm.editMode" class="md-warn md-raised">Usuń</md-button>
+        <md-button aria-label="platnoscAddZapisz" ng-click="vm.navZapisz()" ng-show="vm.formMain.$valid && vm.formMain.$dirty" class="md-access md-raised">Zapisz</md-button>
+        <md-button aria-label="platnoscAddAnuluj" ng-click="vm.navAnuluj()" class="md-primary md-raised">Anuluj</md-button>
+    </div>
+
+</div>

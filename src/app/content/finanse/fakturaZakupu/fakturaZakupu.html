@@ -1,0 +1,129 @@
+﻿<md-card>
+    <md-card-content>
+        <naglowek></naglowek>
+        <div ng-if="vm.startMode">
+            <md-toolbar class="md-accent" layout layout-padding layout-align="start center">
+                <md-button class="md-icon-button" aria-label="dateRange" ng-click="vm.dateRange()">
+                    <md-tooltip md-direction="zakres dat">Zakres dat</md-tooltip>
+                    <md-icon md-svg-icon="dateRange"></md-icon>
+                </md-button>
+                <div class="md-title">{{vm.info}}</div>
+                <preferencje-warning></preferencje-warning>
+                <div flex></div>
+                <md-button class="md-icon-button" aria-label="dealersAdd" ng-click="vm.table.edit(0)">
+                    <md-tooltip md-direction="top">Utwórz nowego</md-tooltip>
+                    <md-icon md-svg-icon="add"></md-icon>
+                </md-button>
+            </md-toolbar>
+
+
+
+                <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab ng-repeat="raport in vm.raport" label="{{raport.nazwa}}">
+                            <md-content layout layout-margin layout-wrap>
+                                <div flex-gt-md="70" flex="100">
+                                    <div ng-repeat="pod in raport.szczegoly | orderBy: 'podatekStawkaId'" layout layout-align="center center" flex="100">
+                                        <div flex="20" class="md-body-2"><strong>{{pod.stawka}} </strong><small>(ilość: {{pod.ilosc}})</small></div>
+                                        <div flex="25" class="md-body-1">{{pod.wartoscNetto | number:2}} <small>(netto)</small></div>
+                                        <div flex="20" class="md-body-1">{{pod.wartoscVat | number:2}} <small ng-show="pod.wartoscVat">(vat)</small></div>
+                                        <div flex="35" class="md-body-1">
+                                            {{pod.wartoscBrutto | number:2}} <small>(brutto)</small>
+                                            <md-tooltip md-direction="top" ng-if="pod.stawkaWartosc>0">
+                                                <span>{{pod.wartoscNetto | number:2}} * {{pod.stawkaWartosc+1}} = {{pod.wartoscNetto*(pod.stawkaWartosc+1) | number:2}}</span>
+                                                <span>Różnica: {{pod.wartoscBrutto-(pod.wartoscNetto*(pod.stawkaWartosc+1)) | number:2}}</span>
+                                            </md-tooltip>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div flex-gt-md="25" flex="100" layout="column" layout-padding layout-align="center center">
+                                    <div class="md-subhead">Razem netto: {{raport.razemNetto | number:2}}</div>
+                                    <div class="md-subhead">Razem podatek: {{raport.razemPodatek | number:2}}</div>
+                                    <div class="md-subhead">Razem brutto: {{raport.razemBrutto | number:2}}</div>
+
+                                </div>
+                                <div flex="100" class="md-body-1">* Raport dotyczy danych z zakresu "<i>{{vm.info}}</i>"</div>                 
+                            </md-content>
+                    </md-tab>
+                </md-tabs>
+            <linia-pozioma></linia-pozioma>
+            <div layout>
+                <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.table.search()">
+                    <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+                <md-input-container ng-show="vm.table.searchShow" style="margin-bottom:-2em">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="vm.table.searchText" type="text" />
+                </md-input-container>
+            </div>
+
+
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.table.order">
+                        <tr md-row>
+                            <th md-column></th>
+                            <th md-column md-order-by="fakturaZakupuId"><span>Id</span></th>
+                            <th style="min-width:350px" md-column md-order-by="kontrahent.nazwa"><span>Nazwa</span></th>
+                            <th style="min-width:100px" md-column md-order-by="fakturaNr"><span>Nr faktury</span></th>
+                            <th md-column md-order-by="dataWystawienia"><span>Data wystawienia</span></th>
+                            <th md-column md-order-by="razemBrutto"><span>Brutto</span></th>
+                            <th md-column md-order-by="razemVat"><span>VAT</span></th>
+                            <th md-column md-order-by="razemNetto"><span>Netto</span></th>
+                            <th md-column md-order-by="waluta.skrot"><span>Waluta</span></th>
+                            <th md-column md-order-by="kontrahent.nip"><span>NIP/PESEL</span></th>
+                            <th md-column md-order-by="platnoscRodzaj.nazwa"><span>Sposób płatności</span></th>
+                            <th style="min-width:150px" md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                            <th md-column md-order-by="createdBy"><span>CreatedBy</span></th>
+                            <th md-column md-order-by="createdDateTime"><span>CreatedDateTime</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in d=(vm.dataObj | filter: vm.table.searchText | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit)">
+                            <td md-cell>
+                                <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.table.edit(dane.fakturaZakupuId)">
+                                    <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                    <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                                </md-button>
+                            </td>
+                            <td md-cell>{{dane.fakturaZakupuId}}</td>
+                            <td md-cell>{{dane.kontrahent.nazwa}}</td>
+                            <td md-cell>{{dane.fakturaNr}}</td>
+                            <td md-cell>{{dane.dataWystawienia | date: "yyyy-MM-dd"}}</td>
+                            <td md-cell><strong>{{dane.razemBrutto | number:2}}</strong></td>
+                            <td md-cell><em>{{dane.razemVat | number:2}}</em></td>
+                            <td md-cell>{{dane.razemNetto | number:2}}</td>
+                            <td md-cell>{{dane.waluta.skrot}}</td>
+                            <td md-cell>{{dane.kontrahent.nip}}</td>
+                            <td md-cell>
+                                {{dane.platnoscRodzaj.nazwa}}&nbsp;
+                                <span ng-if="dane.platnoscRodzajIleDni">&nbsp;({{dane.platnoscRodzajIleDni}} d)</span>
+                                <span ng-if="dane.platnoscPrzypomnienie.isDone">&nbsp;ZAPŁ: {{dane.platnoscPrzypomnienie.dataZaplaty | date: 'yyyy:MM:dd'}}</span>
+                            </td>
+                            <td md-cell>{{dane.uwagi}}</td>
+                            <td md-cell>{{dane.createdBy}}</td>
+                            <td md-cell>{{dane.createdDateTime | date: 'yyyy-MM-dd HH:m:s'}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot md-foot>
+                        <tr md-row>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell><strong>Suma:</strong></td>
+                            <td md-cell><strong>{{d | sumOfValue: 'razemBrutto' | number:2 }}</strong></td>
+                            <td md-cell><strong>{{d | sumOfValue: 'razemVat' | number:2 }}</strong></td>
+                            <td md-cell><strong>{{d | sumOfValue: 'razemNetto' | number:2 }}</strong></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                            <td md-cell></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.table.limit" md-limit-options="vm.table.rowLimitOpt" md-page="vm.table.page" md-page-select="true" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.length}}"></md-table-pagination>
+        </div>
+    </md-card-content>
+
+</md-card>

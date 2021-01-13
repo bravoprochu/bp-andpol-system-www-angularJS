@@ -1,0 +1,32 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <md-card-content>
+            <div layout="column" layout-gt-sm="row">
+                <div layout="column" flex-gt-sm="40" layout-padding>
+                    <md-input-container ng-if="vm.dataObj.id">
+                        <label>Id</label>
+                        <input ng-model="vm.dataObj.id" disabled>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>
+                            Nazwa
+                        </label>
+                        <input ng-model="vm.dataObj.nazwa" name="nazwa" required md-maxlength="100" />
+                    </md-input-container>
+                    <select-pomocnicze dane-pomocnicze="vm.danePomocnicze.wykonczenieGrupa"
+                                       selected-item="vm.dataObj.wykonczenieGrupa"
+                                       required
+                                       input-name="wykonczenieGrupa"
+                                       placeholder="Rodzaj grupy wykończenia"></select-pomocnicze>
+
+
+                    <md-input-container>
+                        <label>Uwagi</label>
+                        <input ng-model="vm.dataObj.uwagi" name="uwagi" />
+                    </md-input-container>
+                </div>
+            </div>
+        </md-card-content>
+</md-card>

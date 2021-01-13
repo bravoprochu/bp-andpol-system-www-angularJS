@@ -1,0 +1,20 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+
+        <dzien-roboczy-date-picker></dzien-roboczy-date-picker>
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab ng-repeat="d in vm.dataObj.planningZamowienieKombi" label="{{d.produkcjaDzial.nazwa}}" ng-if="d.planningZamowienieKombiInfo.length>0 && !d.produkcjaDzial.czyTkaninaBelka">
+                <planning-zamowienie-kombi-info dane-pomocnicze="d.planningZamowienieKombiInfo"
+                                                line1="nazwa"
+                                                line2=""
+                                                line3="zamowienieInfo"
+                                                title="Elementy zaplanowane"
+                                                is-open="true">
+                </planning-zamowienie-kombi-info>
+            </md-tab>
+        </md-tabs>
+    </md-card-content>
+</md-card>
+

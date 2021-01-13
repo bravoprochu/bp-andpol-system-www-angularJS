@@ -1,0 +1,181 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <div layout="column">
+            <div layout="column" layout-gt-md="row">
+                <div flex="100" flex-gt-md="50">
+                    <div layout layout-align="space-between start" layout-padding>
+                        <md-input-container flex="30" ng-if="vm.objId>0">
+                            <label>Id</label>
+                            <input ng-model="vm.dataObj.id" disabled />
+                        </md-input-container>
+                        <md-checkbox ng-model="vm.dataObj.czyAktywna">Aktywna</md-checkbox>
+                        <md-checkbox disabled ng-model="vm.dataObj.czyPotwierdzona">Potwierdzona</md-checkbox>
+                        <md-checkbox disabled ng-model="vm.dataObj.czyPowierzona">Powierzona</md-checkbox>
+
+                    </div>
+                    <div layout="row" layout-align="space-around start" layout-padding>
+                        <md-autocomplete flex="60" required
+                                         ng-disabled="vm.objId>0"
+                                         md-selected-item="vm.dataObj.material"
+                                         md-search-text="vm.materialySearchText"
+                                         md-items="mat in vm.materialyFiltered(vm.materialySearchText) | limitTo: 10"
+                                         md-input-name="material"
+                                         md-min-length="0"
+                                         placeholder="Nazwy tkanin (wynik zawężony do max 10)"
+                                         md-item-text="mat.nazwa">
+                            <md-template>
+                                <span>{{mat.nazwa}}</span>
+                                <span><em>&nbsp;&ndash;&nbsp;{{mat.materialGrupaKontrahent.nazwa}}</em></span>
+                            </md-template>
+                        </md-autocomplete>
+                        <md-input-container flex="20">
+                            <label>Grupa</label>
+                            <input ng-model="vm.dataObj.material.materialGrupaKontrahent.nazwa" disabled />
+                        </md-input-container>
+
+
+                    </div>
+
+                    <div layout layout-align="start center">
+
+                        <label>Data przyjęcia (<strong>{{vm.dataObj.dataPrzyjecia | date: 'ww'}}KW/{{vm.dataObj.dataPrzyjecia | date: 'yyyy'}}</strong>)</label>
+                        <md-datepicker required
+                                       ng-change="vm.dataPrzyjeciaChanged()"
+                                       ng-model="vm.dataObj.dataPrzyjecia">
+                        </md-datepicker>
+                    </div>
+
+
+                    <div layout="column" layout-gt-sm="row">
+                        <md-input-container>
+                            <label>Dokument źródłowy nr</label>
+                            <input ng-model="vm.dataObj.fakturaNr" required name="DokumentZrodlowyNr" />
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Stan początkowy</label>
+                            <input ng-model="vm.dataObj.stanPoczatkowy" required name="stanPoczatkowy" ng-disabled="vm.objId>0" type="number" />
+                        </md-input-container>
+                    </div>
+                    <div layout="column" layout-gt-sm="row">
+                        <md-input-container flex="30">
+                            <label>Oznaczenie wewnętrzne</label>
+                            <input ng-model="vm.dataObj.oznaczenieWewnetrzne" name="oznaczenieWewnetrzne" />
+                        </md-input-container>
+                        <md-input-container flex="70">
+                            <label>Uwagi</label>
+                            <input ng-model="vm.dataObj.uwagi" name="uwagi" />
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <!--Stany przed zapisem do bazy-->
+                <div flex="40">
+                    <div ng-if="vm.objId>0" class="md-body-1">
+                        Utworzony przez:&nbsp;<strong>{{vm.dataObj.createdBy}}</strong>,&nbsp;w dniu:<i>{{vm.dataObj.createdDateTime | date: 'yyyy-MM-dd H:m:s'}}</i>
+                    </div>
+                    <div class="lineHeightByk">&nbsp;</div>
+                    <md-card ng-if="vm.objId>0">
+                        <md-card-title>
+                            <md-card-title-text>
+                                <div class="md-title">Stany magazynowe (baza):</div>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content>
+                            <md-list>
+                                <md-list-item>
+                                    <p>Stan rzeczywisty:</p>
+                                    <div class="md-secondary"><strong>{{vm.dataObj.stanRzeczywisty | number:2}}</strong></div>
+                                </md-list-item>
+                                <md-list-item>
+                                    <p>Stan aktualny <small><em>(uwzględnione rezerwacje)</em></small>:</p>
+                                    <div class="md-secondary"><strong>{{vm.dataObj.stanAktualny | number:2}}</strong></div>
+                                </md-list-item>
+                                <md-list-item>
+                                    <p>Planning <small><em>(wartość rezerwacji)</em></small>:</p>
+                                    <div class="md-secondary"><strong>{{vm.dataObj.stanPlanning | number:2}}</strong></div>
+                                </md-list-item>
+                            </md-list>
+
+                            <md-list ng-if="vm.dataObj.stan.rozchodInneTemp.length>0">
+                                <linia-pozioma></linia-pozioma>
+                                <md-list-item>
+                                    <p>Stan aktualny <small><em>(przed zapisem do bazy):</em></small></p>
+                                    <div class="md-secondary"><strong>{{vm.dataObj.stan.stanAktualnyTemp | number:2}}</strong></div>
+                                </md-list-item>
+                            </md-list>
+
+
+
+
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </div>
+
+            <md-divider></md-divider>
+            <div>
+                <!--Rozchod inne-->
+                <div ng-if="vm.objId>0 && vm.dataObj.czyPotwierdzona">
+                    <md-toolbar class="md-accent" layout layout-align="end center">
+                        <div class="md-toolbar-tools">Rozchód inne</div>
+                        <md-input-container ng-show="vm.table.searchShow" style="margin-bottom: -1em">
+                            <label>Wyszukaj w tabeli</label>
+                            <input ng-model="vm.table.searchText" type="text" />
+                        </md-input-container>
+                        <md-button class="md-icon-button" aria-label="rozchodInneSearch" ng-click="vm.table.searchShow=!vm.table.searchShow">
+                            <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                            <md-icon md-svg-icon="search"></md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="dealersAdd" ng-click="vm.rozchodInneAktualizuj('add',$event)">
+                            <md-tooltip md-direction="top">Utwórz nowego</md-tooltip>
+                            <md-icon md-svg-icon="add"></md-icon>
+                        </md-button>
+                    </md-toolbar>
+
+                    <md-table-container>
+                        <table md-table>
+                            <thead md-head md-order="vm.table.order">
+                                <tr md-row>
+                                    <th md-column></th>
+                                    <th md-column md-order-by="id">Id</th>
+                                    <th md-column md-order-by="dataRozchodu">Data Rozchodu</th>
+                                    <th md-column md-order-by="rozchodMagRodzaj.nazwa">Rodzaj</th>
+                                    <th md-column md-order-by="wartosc">Wartość</th>
+                                    <th md-column md-order-by="uwagi">Uwagi</th>
+                                    <th md-column md-order-by="createdBy">CreatedBy</th>
+                                    <th md-column md-order-by="createdDateTime">CreatedDateTime</th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="rozchod in vm.dataObj.rozchodInne | orderBy: vm.table.order | filter: {$: vm.table.searchText, status: '!usuniety' }">
+                                    <td md-cell>
+                                        <div layout="row">
+
+                                            <md-button aria-label="edit" class="md-fab md-warn md-mini" ng-click="vm.rozchodInneAktualizuj('mod', $event, rozchod)" ng-if="rozchod.status!='baza'">
+                                                <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                                <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                                            </md-button>
+                                            <md-button aria-label="del" class="md-fab md-warn md-mini" ng-click="vm.rozchodInneDel(rozchod)" ng-if="rozchod.status!='baza' ">
+                                                <md-tooltip md-direction="top">Usuń</md-tooltip>
+                                                <md-icon md-svg-src="delete" aria-label="tableEdit{{$index}}"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </td>
+                                    <td md-cell>{{rozchod.id}}</td>
+                                    <td md-cell>{{rozchod.dataRozchodu | date: 'dd-MM-yyyy'}}</td>
+                                    <td md-cell>{{rozchod.rozchodMagRodzaj.nazwa}}</td>
+                                    <td md-cell>{{rozchod.wartosc |number: 2}}</td>
+                                    <td md-cell>{{rozchod.uwagi}}</td>
+                                    <td md-cell>{{rozchod.createdBy}}</td>
+                                    <td md-cell>{{rozchod.createdDateTime | date: 'dd-MM-yyyy, HH:m:s'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </div>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>

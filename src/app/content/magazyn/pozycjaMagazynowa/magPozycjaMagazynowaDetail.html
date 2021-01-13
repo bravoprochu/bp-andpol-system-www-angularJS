@@ -1,0 +1,283 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <div layout="column" layout-padding layout-gt-sm="row">
+            <div flex-gt-sm="65">
+                <pozycja-magazynowa></pozycja-magazynowa>
+            </div>
+            <div flex-gt-sm="45">
+                <!--STANY MAGAZYNOWE-->
+                <md-card ng-if="vm.dataObj.stan.razemPz>0">
+                    <md-card-title>
+                        <md-card-title-text>
+                            <div class="md-title">Stany magazynowe (baza):</div>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
+                        <md-list>
+                            <md-list-item>
+                                <p>Stan rzeczywisty:</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.stan.stanRzeczywisty | number:2}}</strong></div>
+                            </md-list-item>
+                            <md-list-item>
+                                <p>Stan aktualny <small><em>(uwzględnione rezerwacje)</em></small>:</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.stan.stanAktualny | number:2}}</strong></div>
+                            </md-list-item>
+                            <md-list-item>
+                                <p>Razem przyjęć:</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.stan.razemPz | number:2}}</strong></div>
+                            </md-list-item>
+                            <md-list-item>
+                                <p>Razem rozchodów wewn:</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.stan.razemRozchodInne | number:2}}</strong></div>
+                            </md-list-item>
+                            <md-list-item>
+                                <p>Razem WZ:</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.stan.razemWz | number:2}}</strong></div>
+                            </md-list-item>
+                        </md-list>
+
+                        <md-list ng-if="vm.dataObj.stanTempShow">
+                            <linia-pozioma></linia-pozioma>
+                            <md-list-item>
+                                <p>Stan aktualny <small><em>(przed zapisem do bazy):</em></small></p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.stan.stanAktualnyTemp | number:2}}</strong></div>
+                            </md-list-item>
+                            <md-list-item>
+                                <p>Rozchód inne <small><em>(przed zapisem do bazy):</em></small></p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.stan.razemRozchodInneTemp | number:2}}</strong></div>
+                            </md-list-item>
+                        </md-list>
+
+
+
+
+                    </md-card-content>
+                </md-card>
+                <!--STATYSTYKI CEN-->
+                <md-card ng-if="vm.dataObj.statystyki.min">
+                    <md-card-title>
+                        <md-card-title-text>
+                            <div class="md-title">Statystyki, cena:</div>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
+                        <md-list>
+                            <md-list-item>
+                                <p>Minimalna (min):</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.statystyki.min | number:2}}</strong></div>
+                            </md-list-item>
+                            <md-list-item>
+                                <p>Średnia (avg):</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.statystyki.avg | number:2}}</strong></div>
+                            </md-list-item>
+                            <md-list-item>
+                                <p>Maksymalna (max):</p>
+                                <div class="md-secondary"><strong>{{vm.dataObj.statystyki.max | number:2}}</strong></div>
+                            </md-list-item>
+                        </md-list>
+                    </md-card-content>
+                </md-card>
+            </div>
+        </div>
+
+
+        <!--PRZYJECIE ZEWNETRZNE-->
+        <div ng-if="vm.dataObj.przyjecieZewnetrzne.length>0">
+            <md-toolbar class="md-accent" layout layout-align="end center">
+                <div class="md-toolbar-tools">Przyjęcie zewnętrzne (PZ)</div>
+                <md-input-container ng-show="vm.tablePrzyjecieZewnetrzne.searchShow">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="vm.tablePrzyjecieZewnetrzne.searchText" type="text" />
+                </md-input-container>
+                <md-button class="md-icon-button" aria-label="przychodSearch" ng-click="vm.tablePrzyjecieZewnetrzne.search()">
+                    <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+            </md-toolbar>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.tablePrzyjecieZewnetrzne.order">
+                        <tr md-row>
+                            <th md-column md-order-by="dataWplywu"><span>Data wpływu</span></th>
+                            <th md-column md-order-by="dokumentZrodlowyNr"><span>Dokument</span></th>
+                            <th style="min-width:250px" md-column md-order-by="kontrahent.nazwa"><span>Kontrahent</span></th>
+                            <th md-column md-order-by="ilosc"><span>Ilość</span></th>
+                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                            <th md-column md-order-by="createdBy"><span>Utworzony przez:</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in vm.dataObj.przyjecieZewnetrzne | filter: vm.tablePrzyjecieZewnetrzne.searchText | orderBy: vm.tablePrzyjecieZewnetrzne.order | limitTo: vm.tablePrzyjecieZewnetrzne.limit: (vm.tablePrzyjecieZewnetrzne.page - 1) * vm.tablePrzyjecieZewnetrzne.limit">
+                            <td md-cell>{{dane.dataWplywu | date: 'yyyy-MM-dd'}}</td>
+                            <td md-cell ng-click="vm.przyjecieZewnetrzneIdzDo(dane.pzId)"><span>{{dane.dokumentZrodlowyNr}}&nbsp;</span><span ng-if="dane.czyKorekta">(K)</span></td>
+                            <td md-cell>{{dane.kontrahent.nazwa}}</td>
+                            <td md-cell>{{dane.ilosc | number: 2}}</td>
+                            <td md-cell>{{dane.uwagi}}</td>
+                            <td md-cell>{{dane.createdBy}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.tablePrzyjecieZewnetrzne.limit" md-page="vm.tablePrzyjecieZewnetrzne.page" md-page-select="true" md-limit-options="vm.tablePrzyjecieZewnetrzne.rowLimitOpt" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.przyjecieZewnetrzne.length}}"></md-table-pagination>
+        </div>
+
+
+        <!--LISTA ZAKUPÓW-->
+        <div ng-if="vm.dataObj.zakupy.length>0">
+            <md-toolbar class="md-accent" layout layout-align="end center">
+                <div class="md-toolbar-tools">Zakupy</div>
+                <md-input-container ng-show="vm.tableZakupy.searchShow">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="vm.tableZakupy.searchText" type="text" />
+                </md-input-container>
+                <md-button class="md-icon-button" aria-label="zakupySearch" ng-click="vm.tableZakupy.search()">
+                    <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+            </md-toolbar>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.tableZakupy.order">
+                        <tr md-row>
+                            <th md-column md-order-by="dataSprzedazy"><span>Data sprzedaży</span></th>
+                            <th md-column md-order-by="fakturaNr"><span>Dokument</span></th>
+                            <th md-column md-order-by="ilosc"><span>Ilość</span></th>
+                            <th md-column md-order-by="cena"><span>Cena</span></th>
+                            <th md-column md-order-by="wartosc"><span>Wartość</span></th>
+                            <th md-column md-order-by="kontrahent" style="min-width:300px"><span>Kontrahent</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in vm.dataObj.zakupy | filter: vm.tableZakupy.searchText | orderBy: vm.tableZakupy.order | limitTo: vm.tableZakupy.limit: (vm.tableZakupy.page - 1) * vm.tableZakupy.limit">
+                            <td md-cell>{{dane.dataSprzedazy | date: "yyyy-MM-dd"}}</td>
+                            <td md-cell ng-click="vm.zakupyIdzDo(dane.finFakturaZakupuId)">{{dane.fakturaNr}}</td>
+                            <td md-cell>{{dane.ilosc}}</td>
+                            <td md-cell>{{dane.cena | number:2}}</td>
+                            <td md-cell>{{dane.wartosc |number:2}}</td>
+                            <td md-cell>{{dane.kontrahent}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.tableZakupy.limit" md-page="vm.tableZakupy.page" md-page-select="true" md-limit-options="vm.tableZakupy.rowLimitOpt" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.zakupy.length}}"></md-table-pagination>
+        </div>
+
+
+
+        <!--ROZCHOD INNE-->
+        <div ng-if="vm.dataObj.stan.razemPz>0">
+            <md-toolbar>
+                <md-toolbar class="md-accent" layout layout-align="end center">
+                    <div class="md-toolbar-tools">Rozchód Wewnętrzny</div>
+                    <md-input-container ng-show="vm.tableRozchod.searchShow">
+                        <label>Wyszukaj w tabeli</label>
+                        <input ng-model="vm.tableRozchod.searchText" type="text" />
+                    </md-input-container>
+                    <md-button class="md-icon-button" aria-label="platnoscSearch" ng-click="vm.tableRozchod.search()">
+                        <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                        <md-icon md-svg-icon="search"></md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button md-warn" aria-label="platnoscDodaj" ng-click="vm.rozchodInneAdd()">
+                        <md-tooltip md-direction="top">Dodaj nowy</md-tooltip>
+                        <md-icon md-svg-icon="add"></md-icon>
+                    </md-button>
+                </md-toolbar>
+            </md-toolbar>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.tableRozchod.order">
+                        <tr md-row>
+                            <th md-column></th>
+                            <th md-column md-order-by="dataRozchodu"><span>Data rozchodu</span></th>
+                            <th md-column md-order-by="rozchodMagRodzaj.nazwa"><span>Typ rozchodu</span></th>
+                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                            <th md-column md-order-by="wartosc"><span>Wartość</span></th>
+                            <th md-column md-order-by="createdBy"><span>Utworzony przez:</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in vm.dataObj.rozchodInne | filter: vm.tableRozchod.searchText | orderBy: vm.tableRozchod.order | limitTo: vm.tableRozchod.limit: (vm.tableRozchod.page - 1) * vm.tableRozchod.limit">
+                            <td md-cell>
+                                <div ng-if="dane.status=='nowy'">
+                                    <md-button ng-if="!dane.editMode" aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.tableRozchod.edit(dane, 'edit')">
+                                        <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                        <md-icon md-svg-src="edit" aria-label="tableRozchodEdit{{$index}}"></md-icon>
+                                    </md-button>
+
+                                    <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.tableRozchod.del(dane)">
+                                        <md-tooltip md-direction="top">Usuń</md-tooltip>
+                                        <md-icon md-svg-src="delete" aria-label="tableRozchodDel{{$index}}"></md-icon>
+                                    </md-button>
+
+                                </div>
+                            </td>
+                            <td md-cell>{{dane.dataRozchodu | date: 'yyyy-MM-dd'}}</td>
+                            <td md-cell>{{dane.rozchodMagRodzaj.nazwa}}</td>
+                            <td md-cell>{{dane.uwagi}}</td>
+                            <td md-cell>{{dane.wartosc}}</td>
+                            <td md-cell>{{dane.createdBy}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.tableRozchod.limit" md-page="vm.tableRozchod.page" md-options="vm.tableRozchod.rowLimitOpt" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.rozchodInne.length}}"></md-table-pagination>
+        </div>
+
+        <!--Wydanie zewnetrzne -->
+        <div ng-if="vm.dataObj.wydanieZewnetrzne.length >0">
+            <md-toolbar>
+                <md-toolbar class="md-accent" layout layout-align="end center">
+                    <div class="md-toolbar-tools">Wydanie Zewnętrzne (WZ)</div>
+                    <md-input-container ng-show="vm.tableWz.searchShow">
+                        <label>Wyszukaj w tabeli</label>
+                        <input ng-model="vm.tableWz.searchText" type="text" />
+                    </md-input-container>
+                    <md-button class="md-icon-button" aria-label="platnoscSearch" ng-click="vm.tableWz.search()">
+                        <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                        <md-icon md-svg-icon="search"></md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button md-warn" aria-label="platnoscDodaj" ng-click="vm.rozchodInneAdd()">
+                        <md-tooltip md-direction="top">Dodaj nowy</md-tooltip>
+                        <md-icon md-svg-icon="add"></md-icon>
+                    </md-button>
+                </md-toolbar>
+            </md-toolbar>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.tableWz.order">
+                        <tr md-row>
+                            <th md-column md-order-by="magWzId">Id</th>
+                            <th md-column md-order-by="numerDokumentu">Nr dokumentu</th>
+                            <th md-column md-order-by="dataWystawienia"><span>Data wystawienia</span></th>
+                            <th md-column md-order-by="kontrahent.nazwa" style="min-width:250px"><span>Kontrahent</span></th>
+                            <th md-column md-order-by="ilosc"><span>Ilosc</span></th>
+                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                            <th md-column md-order-by="createdBy"><span>Utworzony przez</span></th>
+                            <th md-column md-order-by="createdDateTime"><span>Data utworzenia</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in vm.dataObj.wydanieZewnetrzne | filter: vm.tableWz.searchText | orderBy: vm.tableWz.order | limitTo: vm.tableWz.limit: (vm.tableWz.page - 1) * vm.tableWz.limit">
+                            <td md-cell>{{dane.magWzId}}</td>
+                            <td md-cell><span ui-sref="magWzDetail({id:dane.magWzId})" style="cursor:pointer">{{dane.numerDokumentu}}</span></td>
+                            <td md-cell>{{dane.dataWystawienia | date: 'yyyy-MM-dd'}}</td>
+                            <td md-cell>{{dane.kontrahent.nazwa}}</td>
+                            <td md-cell>{{dane.ilosc | number:2}}</td>
+                            <td md-cell>{{dane.uwagi}}</td>
+                            <td md-cell>{{dane.createdBy}}</td>
+                            <td md-cell>{{dane.createdDateTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.tableWz.limit" md-page="vm.tableWz.page" md-options="vm.tableWz.rowLimitOpt" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.rozchodInne.length}}"></md-table-pagination>
+        </div>
+
+    </md-card-content>
+</md-card>

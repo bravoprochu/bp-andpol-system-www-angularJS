@@ -1,0 +1,53 @@
+﻿<div>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <div class="md-title">Lista planningu</div>
+            <div flex></div>
+            <md-input-container ng-show="vm.tablePlanning.searchShow">
+                <label>Wyszukaj w tabeli</label>
+                <input ng-model="vm.tablePlanning.searchText" type="text" />
+            </md-input-container>
+            <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.tablePlanning.search()">
+                <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                <md-icon md-svg-icon="search"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="planningCreateNew" ng-click="vm.tablePlanning.edit(0)">
+                <md-tooltip md-direction="top">Utwórz nowy planning</md-tooltip>
+                <md-icon md-svg-icon="add"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <!--planning zapisane-->
+    <md-table-container>
+        <table md-table>
+            <thead md-head md-order="vm.tablePlanning.order">
+                <tr md-row>
+                    <th md-column style="max-width:5px"></th>
+                    <th md-column md-order-by="planningId" style="max-width:5px"><span>Id</span></th>
+                    <th md-column md-order-by="produkcjaDzial.nazwa"><span>Dział</span></th>
+                    <th md-column md-order-by="planningDuration.dateStart"><span>Prod START</span></th>
+                    <th md-column md-order-by="planningDuration.dateEnd"><span>Prod END</span></th>
+                    <th md-column md-order-by="elementyZaplanowane"><span>Zaplanowane</span></th>
+                    <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr md-row md-select="dane" md-row-select-id="id" ng-repeat="dane in vm.dataObj.planning | filter: vm.tablePlanning.searchText | orderBy: vm.tablePlanning.order | limitTo: vm.tablePlanning.limit: (vm.tablePlanning.page - 1) * vm.tablePlanning.limit">
+                    <td md-cell>
+                        <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.idzDo(dane.planningId)">
+                            <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                            <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                        </md-button>
+                    </td>
+                    <td md-cell>{{dane.planningId}}</td>
+                    <td md-cell>{{dane.produkcjaDzial.nazwa}}</td>
+                    <td md-cell>{{dane.planningDuration.dateStart | date: 'yyyy-MM-dd, (EEE)'}}</td>
+                    <td md-cell>{{dane.planningDuration.dateEnd  | date: 'yyyy-MM-dd, (EEE)'}}</td>
+                    <td md-cell>{{dane.elementyZaplanowane}}</td>
+                    <td md-cell>{{dane.uwagi}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-table-pagination md-limit="vm.tablePlanning.limit" md-limit-options="vm.tablePlanning.rowLimitOpt" md-page-select="true" md-page="vm.tablePlanning.page" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.planning.length}}"></md-table-pagination>
+</div>

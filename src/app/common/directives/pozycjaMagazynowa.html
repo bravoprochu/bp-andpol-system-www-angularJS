@@ -1,0 +1,108 @@
+﻿<div layout="column" ng-if="!screenSmall">
+    <md-input-container>
+        <label>Nazwa</label>
+        <input ng-model="vm.dataObj.nazwa" required name="nazwa" md-maxlength="150" maxlength="150" aria-label="pozMagNazwa" />
+    </md-input-container>
+    <div layout>
+
+    </div>
+    <div layout>
+        <div flex="60" layout layout-align="center center">
+            <md-radio-group ng-model="vm.dataObj.typTowaru">
+                <md-radio-button value="1">Opakowanie</md-radio-button>
+                <md-radio-button value="2">Towar</md-radio-button>
+                <md-radio-button value="3">Usługa</md-radio-button>
+            </md-radio-group>
+        </div>
+        <div flex="40" layout="column">
+            <select-pomocnicze dane-pomocnicze="vm.danePomocnicze.jednostkaMiary" form-name="vm.formMain" required="true" placeholder="Jednostka" selected-item="vm.dataObj.jednostkaMiary"></select-pomocnicze>
+            <md-input-container>
+                <label>Kod kreskowy</label>
+                <input ng-model="vm.dataObj.kodKreskowy" name="kodKreskowy" md-maxlength="48" maxlength="48" aria-label="pozMagKodKreskowy" />
+            </md-input-container>
+        </div>
+    </div>
+
+    <div layout>
+        <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.grupaZakladowa" form-name="vm.formMain" required="true" placeholder="Wybierz grupę" selected-item="vm.dataObj.grupaZakladowa"></select-pomocnicze>
+        <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.marzaZakladowa" form-name="vm.formMain" required="true" placeholder="Domyślna marża" selected-item="vm.dataObj.marzaZakladowa"></select-pomocnicze>
+    </div>
+    <div layout>
+        <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.podatekStawka" form-name="vm.formMain" required="true" placeholder="VAT zakupu" selected-item="vm.dataObj.vatZakupu"></select-pomocnicze>
+        <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.podatekStawka" form-name="vm.formMain" required="true" placeholder="VAT sprzedaży" selected-item="vm.dataObj.vatSprzedazy"></select-pomocnicze>
+    </div>
+    <div layout>
+        <md-input-container flex>
+            <md-label>Alarm, minimalny stan przy:</md-label>
+            <input ng-model="vm.dataObj.stanMinAlarm" name="stanMinAlarm" aria-label="stanMinAlarm" type="number"/>
+        </md-input-container>
+        <div flex="66">&nbsp;</div>
+
+    </div>
+
+    <md-input-container>
+        <md-label>Uwagi</md-label>
+        <input ng-model="vm.dataObj.uwagi" name="uwagi" aria-label="pozMagUwagi"/>
+    </md-input-container>
+    <md-switch ng-model="vm.dataObj.czyPotwierdzone" aria-label="confirmed?">
+        Potwierdzone dane ? (podatek, marża, grupa)
+    </md-switch>
+ </div>
+
+
+
+<div layout ng-if="screenSmall" layout-align="space-between start" layout-padding>
+    <div>
+        <div layout="column">
+            <md-input-container>
+                <label>Nazwa</label>
+                <input ng-model="vm.dataObj.nazwa" required name="nazwa" md-maxlength="150" maxlength="150" aria-label="pozMagNazwa" />
+            </md-input-container>
+            <div layout>
+                <div flex="60" layout layout-align="center center">
+                    <md-radio-group ng-model="vm.dataObj.typTowaru">
+                        <md-radio-button value="1">Opakowanie</md-radio-button>
+                        <md-radio-button value="2">Towar</md-radio-button>
+                        <md-radio-button value="3">Usługa</md-radio-button>
+                    </md-radio-group>
+                </div>
+                <div flex="40" layout="column">
+
+                    <md-input-container>
+                        <label>Kod kreskowy</label>
+                        <input ng-model="vm.dataObj.kodKreskowy" name="kodKreskowy" md-maxlength="48" maxlength="48" aria-label="pozMagKodKreskowy" />
+                    </md-input-container>
+                </div>
+            </div>
+            <div layout>
+                <md-input-container>
+                    <label>Uwagi</label>
+                    <input ng-model="vm.dataObj.uwagi" name="uwagi" aria-label="pozMagUwagi" />
+                </md-input-container>
+                <md-input-container>
+                    <label>Alarm, minimalny stan przy:</label>
+                    <input ng-model="vm.dataObj.stanMinAlarm" name="stanMinAlarm" aria-label="stanMinAlarm" type="number" />
+                </md-input-container>
+            </div>
+            <md-switch ng-model="vm.dataObj.czyPotwierdzone" aria-label="confirmed?">
+                Potwierdzone dane ? (podatek, marża, grupa)
+            </md-switch>
+        </div>
+    </div>
+    <div>
+        <div layout="column">
+            <div layout>
+                <select-pomocnicze dane-pomocnicze="vm.danePomocnicze.jednostkaMiary" form-name="vm.formMain" required="true" placeholder="Jednostka" selected-item="vm.dataObj.jednostkaMiary"></select-pomocnicze>
+            </div>
+            <div layout>
+                <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.grupaZakladowa" form-name="vm.formMain" required="true" placeholder="Wybierz grupę" selected-item="vm.dataObj.grupaZakladowa"></select-pomocnicze>
+                <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.marzaZakladowa" form-name="vm.formMain" required="true" placeholder="Domyślna marża" selected-item="vm.dataObj.marzaZakladowa"></select-pomocnicze>
+            </div>
+            <div layout>
+                <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.podatekStawka" form-name="vm.formMain" required="true" placeholder="VAT zakupu" selected-item="vm.dataObj.vatZakupu"></select-pomocnicze>
+                <select-pomocnicze flex dane-pomocnicze="vm.danePomocnicze.podatekStawka" form-name="vm.formMain" required="true" placeholder="VAT sprzedaży" selected-item="vm.dataObj.vatSprzedazy"></select-pomocnicze>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,337 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+
+        <niezafakturowane-wz dost="vm.danePomocnicze.magWzBaza" table-obj="vm.tableMagWzDost" 
+                             ng-if="vm.danePomocnicze.magWzBaza.length>0">
+        </niezafakturowane-wz>
+
+
+        <div layout="column" layout-padding ng-form="vm.formMain" status-watch status="vm.dataObj">
+            <div layout layout-align="center center">
+                    <div layout="column" layout-align="center center">
+                        <div class="md-display-2" ng-if="!vm.dataObj.czyEng">
+                            Faktura<span ng-if="vm.dataObj.baseFakturaId>0">&nbsp;korygująca</span><span>&nbsp;nr: {{vm.dataObj.numerDokumentu}}</span>
+                        </div>
+                        <div class="md-display-2" ng-if="vm.dataObj.czyEng">
+                            <span ng-if="!vm.dataObj.baseFakturaId">VAT Invoice</span>
+                            <span ng-if="vm.dataObj.baseFakturaId>0">Correction Invoice</span>
+                            {{vm.dataObj.numerDokumentu}}
+                        </div>
+                        <div class="md-title" ng-if="vm.dataObj.baseFakturaId>0 && !vm.dataObj.czyEng">
+                            dotyczy dokumentu nr {{vm.dataObj.baseFakturaNumerDokumentu}} z dnia {{vm.dataObj.baseFakturaDataWystawienia | date: 'yyyy-MM-dd'}}
+                        </div>
+                        <div class="md-title" ng-if="vm.dataObj.baseFakturaId>0 && vm.dataObj.czyEng">
+                            to document {{vm.dataObj.baseFakturaNumerDokumentu}}, ({{vm.dataObj.baseFakturaDataWystawienia | date: 'yyyy-MM-dd'}})
+                        </div>
+                    </div>
+                    <md-button class="md-raised md-warn" ng-click="vm.korektaUtworz()"
+                               ng-if="!vm.dataObj.czyKorekta && vm.dataObj.stateId>0 && !vm.dataObj.baseFakturaId">Utówrz korektę</md-button>
+
+            </div>
+            <linia-pozioma></linia-pozioma>
+
+            <div layout layout-align="space-between center">
+                <div layout="column" layout-align="start start">
+                    <div layout ng-if="vm.dataObj.stateId>0">
+                        <div layout layout-align="center center">
+                            <md-button class="md-icon-button md-raised md-warn"
+                                       ng-click="vm.pdfGen()" ng-disabled="vm.dataObj.korektaInProgress">
+                                <md-tooltip>Generuj PDF</md-tooltip>
+                                <md-icon md-svg-icon="print"></md-icon>
+                            </md-button>
+                        </div>
+                        <md-switch ng-model="vm.dataObj.czyEng" ng-disabled="vm.dataObj.korektaInProgress">
+                            &nbsp;&nbsp;
+                            Wersja językowa:&nbsp;
+                            <span ng-if="vm.dataObj.czyEng">ENG</span>
+                            <span ng-if="!vm.dataObj.czyEng">PL</span>
+                        </md-switch>
+                    </div>
+                    <single-choice selected-item="vm.dataObj.waluta"
+                                   dane-pomocnicze="vm.danePomocnicze.waluta"
+                                   dane-id="walutaId"
+                                   title="Waluta"
+                                   is-vertical="false"
+                                   pole="skrot"></single-choice>
+                </div>
+                <div layout layout-align="start center">
+                    <label>Data wystawienia</label>
+                    <md-datepicker ng-model="vm.dataObj.dataWystawienia" md-placeholder="Data wystawienia"></md-datepicker>
+                </div>
+            </div>
+
+            <div layout layout-align="space-between start">
+                <div layout="column" layout-fill>
+                    <div class="md-title">
+                        <span ng-if="!vm.dataObj.czyEng">Sprzedawca</span>
+                        <span ng-if="vm.dataObj.czyEng">Seller</span>
+                    </div>
+                    <div class="lineHeightByk">&nbsp;</div>
+                    <kontrahent-select flex="95"
+                                       selected-item="vm.dataObj.sprzedawca"
+                                       dane-pomocnicze="vm.danePomocnicze.kontrahenci"
+                                       name="sprzedawca"
+                                       title="Wybierz nabywcę"></kontrahent-select>
+
+
+                </div>
+                <div layout="column" layout-fill>
+                    <div class="md-title">
+                        <span ng-if="!vm.dataObj.czyEng">Nabywca</span>
+                        <span ng-if="vm.dataObj.czyEng">Buyer</span>
+                    </div>
+                    <div class="lineHeightByk">&nbsp;</div>
+                    <kontrahent-select flex="95"
+                                       selected-item="vm.dataObj.nabywca"
+                                       dane-pomocnicze="vm.danePomocnicze.kontrahenci"
+                                       name="nabywca"
+                                       title="Wybierz sprzedawcę"></kontrahent-select>
+                </div>
+            </div>
+
+            <!--platnosc-->
+            <kontrahent-platnosc view-form="vm.formMain"
+                                 dane-pomocnicze="vm.danePomocnicze"
+                                 ref="vm.dataObj.platnosc"></kontrahent-platnosc>
+
+
+            <div class="lineHeightByk">&nbsp;</div>
+            <!--przed-->
+            <div ng-if="vm.dataObj.fakturaPozycjePrzed.length>0">
+                <div>
+                    <div class="md-title" style="margin-bottom:0.5em">Przed korektą</div>
+                    <md-divider></md-divider>
+                    &nbsp;
+                </div>
+                <faktura-sprzedazy-pozycja czy-korekta="vm.dataObj.czyKorekta"
+                                           state-id="vm.dataObj.stateId"
+                                           ref="pozFak"
+                                           poz-remove="vm.fakturaPozycjaRemove"
+                                           dane-pomocnicze="vm.danePomocnicze.podatekStawka"
+                                           fak-poz-przelicz="vm.fakturaPozycjePrzelicz"
+                                           ng-repeat="pozFak in vm.dataObj.fakturaPozycjePrzed"
+                                           read-only="true"
+                                           ng-init="pozFak.fakturaPozycjePrzelicz=vm.fakturaPozycjePrzelicz; pozFak.pozycjaId=$index+1"
+                                           typ="przed">
+                </faktura-sprzedazy-pozycja>
+            </div>
+
+            <!--zmiana-->
+            <div ng-if="vm.dataObj.fakturaPozycjeZmiany.length>0">
+                <div>
+                    <div class="md-title" style="margin-bottom:0.5em">Zmiany</div>
+                    <md-divider></md-divider>
+                    &nbsp;
+                </div>
+                <faktura-sprzedazy-pozycja czy-korekta="vm.dataObj.czyKorekta"
+                                           state-id="vm.dataObj.stateId"
+                                           ref="pozFak"
+                                           poz-remove="vm.fakturaPozycjaRemove"
+                                           dane-pomocnicze="vm.danePomocnicze.podatekStawka"
+                                           fak-poz-przelicz="vm.fakturaPozycjePrzelicz"
+                                           ng-repeat="pozFak in vm.dataObj.fakturaPozycjeZmiany"
+                                           read-only="true"
+                                           ng-init="pozFak.fakturaPozycjePrzelicz=vm.fakturaPozycjePrzelicz; pozFak.pozycjaId=$index+1"
+                                           typ="zmiana">
+                </faktura-sprzedazy-pozycja>
+            </div>
+
+
+            <!--po-->
+            <div ng-if="vm.dataObj.fakturaPozycje.length>0">
+                <div ng-if="vm.dataObj.czyKorekta">
+                    <div class="md-title" style="margin-bottom:0.5em">Po korekcie</div>
+                    <md-divider></md-divider>
+                    &nbsp;
+                </div>
+                <faktura-sprzedazy-pozycja czy-korekta="vm.dataObj.czyKorekta"
+                                           state-id="vm.dataObj.stateId"
+                                           ref="pozFak"
+                                           poz-remove="vm.fakturaPozycjaRemove"
+                                           dane-pomocnicze="vm.danePomocnicze.podatekStawka"
+                                           fak-poz-przelicz="vm.fakturaPozycjePrzelicz"
+                                           ng-repeat="pozFak in vm.dataObj.fakturaPozycje | filter: {status: '!usuniety'}"
+                                           ng-init="pozFak.fakturaPozycjePrzelicz=vm.fakturaPozycjePrzelicz; pozFak.pozycjaId=$index+1"
+                                           typ="po">
+                </faktura-sprzedazy-pozycja>
+            </div>
+            <div style="line-height:2em">&nbsp;</div>
+            <md-button class="md-icon-button md-raised md-warn" ng-click="vm.fakturaPozycjaAdd()">
+                <md-tooltip>Dodaj pozycje faktury</md-tooltip>
+                <md-icon md-svg-icon="add"></md-icon>
+            </md-button>
+
+
+
+
+
+
+
+            <!--podsumowanie wartosci-->
+            <div layout layout-align="space-between start" ng-if="vm.dataObj.fakturaPodsumowanieWartosci.length>0">
+                <div flex>&nbsp;</div>
+                <div layout="column" flex="55">
+                    <!--<div style="margin-bottom:5em;">&nbsp;</div>-->
+                    <div layout layout-align="start center">
+                        <div class="md-title">Podsumowanie wartości</div><span ng-if="vm.dataObj.czyKorekta || vm.dataObj.baseFakturaId">&nbsp;(po korekcie)</span>
+                    </div>
+
+                    <div>&nbsp;</div>
+                    <div ng-repeat="stawka in vm.dataObj.fakturaPodsumowanieWartosci | orderBy: '-podatekStawka.wartosc'">
+                        <div layout layout-align="space-between center">
+                            <div class="md-body-2">{{stawka.wartoscNetto | number: 2}}</div>
+                            <div class="md-body-1">
+                                {{stawka.podatekStawka.nazwa}} <span ng-if="stawka.podatekStawka.wartosc>0">
+                                    <small>&nbsp;[{{stawka.wartoscBrutto-stawka.wartoscNetto | number:2}}]</small>
+                                </span>
+                            </div>
+                            <div class="md-subhead">{{stawka.wartoscBrutto | number:2}}</div>
+                        </div>
+                        <!--<hr />-->
+                    </div>
+                    <md-divider></md-divider>
+                    <div class="lineHeightByk">&nbsp;</div>
+                    <div>
+                        <div layout layout-align="start center">
+                            <div class="md-display-1">Razem</div>
+                        </div>
+                        <div ng-if="vm.dataObj.czyKorekta || vm.dataObj.baseFakturaId">
+                            <div layout layout-align="center center">
+                                <div class="md-caption" style="margin:1em"><strong>Przed korektą</strong></div>
+                            </div>
+                            <div layout layout-align="space-between center">
+                                <div class="md-body-2">{{vm.dataObjCopy.razemNetto | number:2}}</div>
+                                <div class="md-body-1">{{vm.dataObjCopy.razemPodatek | number:2}}</div>
+                                <div class="md-subhead">{{vm.dataObjCopy.razemBrutto | number:2}}&nbsp;{{vm.dataObjCopy.waluta.skrot}}</div>
+                            </div>
+                            <md-divider></md-divider>
+                        </div>
+                        <div>
+                            <div layout layout-align="center center">
+                                <div class="md-caption" style="margin:1em">
+                                    <strong>
+                                        <span ng-if="vm.dataObj.czyKorekta || vm.dataObj.baseFakturaId">Po korekcie</span>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div layout layout-align="space-between center">
+                                <div class="md-body-2">{{vm.dataObj.razemNetto | number:2}}</div>
+                                <div class="md-body-1">{{vm.dataObj.razemPodatek | number:2}}</div>
+                                <div class="md-subhead">{{vm.dataObj.razemBrutto | number:2}}&nbsp;{{vm.dataObj.waluta.skrot}}</div>
+                            </div>
+                        </div>
+                        <div ng-if="vm.dataObj.czyKorekta || vm.dataObj.baseFakturaId">
+                            <linia-pozioma></linia-pozioma>
+                            <div layout layout-padding layout-align="space-between center" md-colors="::{background: 'warn-100'}">
+                                <div>
+                                    <span ng-if="vm.dataObj.razemRoznica<0">Do zapłaty</span>
+                                    <span ng-if="vm.dataObj.razemRoznica>0">Do zwrotu</span>
+                                </div>
+                                <div class="md-subhead">{{vm.dataObj.razemRoznica=vm.dataObjCopy.razemBrutto-vm.dataObj.razemBrutto; vm.dataObj.razemRoznica | number:2}}&nbsp;{{vm.dataObj.waluta.skrot}}</div>
+                            </div>
+                        </div>
+                        <linia-pozioma></linia-pozioma>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!--DODATKOWE INFO; WAGA WARUNKI DOSTAWY itp..-->
+            <div style="line-height:5em">&nbsp;</div>
+            <md-input-container>
+                <label>Uwagi</label>
+                <textarea ng-model="vm.dataObj.uwagi" rows="1"></textarea>
+            </md-input-container>
+
+            <div ng-if="vm.dataObj.fakturaPozycje.length>0">
+                <md-switch ng-model="vm.dataObj.czyDodatkoweInfo">Dodatkowe informacje - dołącz do faktury</md-switch>
+                <linia-pozioma></linia-pozioma>
+
+
+                <div layout="column" ng-if="vm.dataObj.czyDodatkoweInfo">
+                    <!--waga-->
+                    <div layout layout-align="space-between start">
+                        <md-switch ng-model="vm.dataObj.dodatkoweInfo.czyWaga">Waga</md-switch>
+                        <div layout ng-if="vm.dataObj.dodatkoweInfo.czyWaga">
+                            <md-input-container>
+                                <label>Waga netto (Kg)</label>
+                                <input ng-model="vm.dataObj.dodatkoweInfo.wagaNetto" name="wagaNetto"
+                                       ng-required="vm.dataObj.dodatkoweInfo.czyWaga" />
+                            </md-input-container>
+                            <md-input-container>
+                                <md-tooltip>Domyślnie +3% do netto</md-tooltip>
+                                <label>Waga brutto (Kg)</label>
+                                <input ng-model="vm.dataObj.dodatkoweInfo.wagaBrutto" name="wagaBrutto"
+                                       ng-min="vm.dataObj.dodatkoweInfo.wagaNetto"
+                                       ng-required="vm.dataObj.dodatkoweInfo.czyWaga" />
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <!--colli-->
+                    <div layout layout-align="space-between start">
+                        <md-switch ng-model="vm.dataObj.dodatkoweInfo.czyColli">Colli</md-switch>
+                        <div layout ng-if="vm.dataObj.dodatkoweInfo.czyColli">
+                            <md-input-container>
+                                <md-tooltip>Łączna Ilość pozycji kombinacji lub łączna ilość pozycji magazynowych</md-tooltip>
+                                <label>Colli</label>
+                                <input ng-model="vm.dataObj.dodatkoweInfo.colli"
+                                       ng-required="vm.dataObj.dodatkoweInfo.czyColli" name="colli" />
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <!--Dealer dostawa-->
+                    <div layout layout-align="space-between start">
+                        <md-switch ng-model="vm.dataObj.dodatkoweInfo.czyAdresDostawy">Adres dostawy</md-switch>
+                        <div flex="80" layout="column" ng-if="vm.dataObj.dodatkoweInfo.czyAdresDostawy">
+                            <md-autocomplete md-selected-item="vm.dataObj.dodatkoweInfo.adresDostawy"
+                                             ng-required="vm.dataObj.dodatkoweInfo.czyAdresDostawy"
+                                             md-items="item in vm.danePomocnicze.dealerzy | filter: {$: vm.dataObj.dodatkoweInfo.dealerzySearchText, kontrahentRefId: vm.dataObj.nabywca.kontrahentId}"
+                                             md-search-text="vm.dataObj.dodatkoweInfo.dealerzySearchText"
+                                             md-item-text="item.nazwa"
+                                             placeholder="Adres dostawy"
+                                             md-input-name="adresDostawy"
+                                             md-min-length="0">
+                                <md-item-template>
+                                    <span md-highlight-text="vm.dataObj.czyDodatkoweInfo.dealerzySearchText">{{item.nazwa}}</span>
+                                </md-item-template>
+
+                            </md-autocomplete>
+                            <div>&nbsp;</div>
+                            <div layout="column">
+                                <div class="md-subhead">{{vm.dataObj.dodatkoweInfo.adresDostawy.nazwa}}</div>
+                                <div class="md-body-1">{{vm.dataObj.dodatkoweInfo.adresDostawy.adres}}</div>
+                                <div class="md-body-1"><span ng-if="vm.dataObj.dodatkoweInfo.adresDostawy.czyWjedziePrzyczepa">[P]&nbsp;</span></div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+            
+        
+        <!--lista wz'etek-->
+
+            <div style="line-height:15em">&nbsp;</div>
+            <md-chips ng-model="vm.dataObj.magWzWybrane" name="magWzWybrane"
+                      md-on-remove="vm.magWzRemove($chip)"
+                      >
+                <md-chip-template>
+                    <strong>{{$chip.basicInfo.numerDokumentu}}</strong>
+                </md-chip-template>
+            </md-chips>
+            
+
+
+    </md-card-content>
+</md-card>

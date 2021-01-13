@@ -1,0 +1,42 @@
+﻿<md-dialog aria-label="issuesTmpl" flex="80">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            Sprawy i sprawki
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="column" layout-padding ng-form="vm.formMain">
+            <md-input-container flex="60">
+                <label>Tytuł</label>
+                <input ng-model="vm.data.tytul" required />
+            </md-input-container>
+            <md-input-container flex="60">
+                <label>Grupa</label>
+                <input ng-model="vm.data.grupa" required />
+            </md-input-container>
+            <div layout="column" layout-align="start center">
+                <div layout layout-fill>
+                    <div flex="20" layout layout-align="center center">
+                        <span class="md-body-1">Powaga sprawy</span>
+                    </div>
+                    <md-slider flex class="md-warn" md-discrete ng-model="vm.data.priorytet" step="1" min="1" max="10" aria-label="rating">
+                    </md-slider>
+                </div>
+                <div class="md-caption">
+                    1 - pierdoła ale może kiedyś się przydać,<br />
+                    <b>10 - na wczoraj !!! Nie da się bez tego pracować !!!</b>
+                </div>
+            </div>
+            <md-input-container flex="60">
+                <label>Opis</label>
+                <input ng-model="vm.data.opis" required />
+            </md-input-container>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button aria-label="sprawyAddZapisz" ng-click="vm.navZapisz()" ng-show="vm.formMain.$valid" class="md-warn md-raised">Zapisz</md-button>
+        <md-button aria-label="sprawyAddAnuluj" ng-click="vm.navAnuluj()" class="md-primary md-raised">Anuluj</md-button>
+    </md-dialog-actions>
+
+</md-dialog>

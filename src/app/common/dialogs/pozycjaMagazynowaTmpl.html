@@ -1,0 +1,26 @@
+﻿<md-dialog aria-label="dealerNew" flex="60">
+    <md-toolbar>
+        <div class="md-toolbar-tools md-primary">
+            <h2>{{vm.title}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content layout-padding>
+        <ng-form name="vm.formPozMag">
+            <pozycja-magazynowa></pozycja-magazynowa>
+        </ng-form>
+        <md-dialog-actions>
+            <span flex></span>
+            <md-button ng-click="vm.navSave()" class="md-button" aria-label="newDealerSave" ng-show="vm.formPozMag.$valid && !vm.pozMagIsSaving">
+                &nbsp;Zapisz&nbsp;
+                <md-icon md-svg-icon="save"></md-icon>
+            </md-button>
+            <md-button ng-click="vm.navCancel()" ng-hide="vm.pozMagIsSaving" class="md-button" aria-label="newDealerCancel">
+                &nbsp;Anuluj&nbsp;
+                <md-icon md-svg-icon="cancel"></md-icon>
+            </md-button>
+        </md-dialog-actions>
+
+    </md-dialog-content>
+
+
+</md-dialog>

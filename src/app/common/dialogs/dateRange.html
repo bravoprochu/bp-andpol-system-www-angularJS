@@ -1,0 +1,53 @@
+﻿<md-dialog aria-label="dealerNew" flex-gt-md="40" flex-md="60" flex-sm="80" flex-xs="80">
+    <ng-form name="vm.formDateRange">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <div class="md-title">Zakres dat dla pola:&nbsp;<strong>{{vm.nazwaPola}}</strong></div>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <md-content layout-padding layout>
+                <div layout="column">
+                    <div class="md-subhead">Data Start</div>
+                    <md-datepicker required
+                                   ng-model="vm.dateStart" md-max-date="vm.dateEnd" md-min-date="vm.minDate">
+                    </md-datepicker>
+                </div>
+                <div layout="column">
+                    <div class="md-subhead">Data End</div>
+                    <md-datepicker required
+                                   ng-model="vm.dateEnd" md-min-date="vm.dateStart" md-max-date="vm.maxDate">
+                    </md-datepicker>
+                </div>
+                <md-content layout-padding layout-wrap>
+                    <span ng-click="vm.dateStart=vm.minDate;vm.dateEnd=vm.maxDate" class="md-body-1"><u>Wszystko</u></span>
+                    <span ng-click="vm.getThisMonth()" class="md-body-2"><u>Poprzedni miesiąc</u></span>
+                </md-content>
+
+            </md-content>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="vm.prefPut()" class="md-icon-button">
+                <md-tooltip md-direction="top">Zapisz aktualny zakres data jako preferowany</md-tooltip>
+                <md-icon md-svg-icon="backUp"></md-icon>
+            </md-button>
+            <md-button ng-click="vm.prefGet()" class="md-icon-button" ng-if="vm.prefActive">
+                <md-tooltip md-direction="top">Wczytaj preferowany zakres dat z pamięci przeglądarki</md-tooltip>
+                <md-icon md-svg-icon="backUpRestore"></md-icon>
+            </md-button>
+            <md-button ng-click="vm.prefDel()" class="md-icon-button" ng-if="vm.prefActive">
+                <md-tooltip md-direction="top">Usuń klucz z pamięci preferencji</md-tooltip>
+                <md-icon md-svg-icon="delete"></md-icon>
+            </md-button>
+            <span flex></span>
+            <md-button ng-click="vm.navSave()" class="md-button" aria-label="navSave" ng-show="vm.formDateRange.$valid ">
+                &nbsp;Wybierz
+                <md-icon md-svg-icon="save"></md-icon>
+            </md-button>
+            <md-button ng-click="vm.navCancel()" class="md-button" aria-label="navCancel">
+                &nbsp;Anuluj
+                <md-icon md-svg-icon="cancel"></md-icon>
+            </md-button>
+        </md-dialog-actions>
+    </ng-form>
+</md-dialog>

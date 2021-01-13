@@ -1,0 +1,41 @@
+{
+  "name": "AndpolSystemMD",
+  "version": "1.4.2",
+  "private": true,
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-animate": "^1.6.4",
+    "angular-aria": "^1.6.4",
+    "angular-material": "^1.1.4",
+    "angular-material-data-table": "^0.10.9",
+    "angular-messages": "^1.6.4",
+    "angular-qr": "^0.2.0",
+    "angular-qr-scanner": "^0.1.0",
+    "angular-resource": "^1.6.4",
+    "angular-sanitize": "^1.6.4",
+    "angular-ui-router": "^0.4.2",
+    "moment": "^2.13.0",
+    "moment-duration-format": "1.3.0",
+    "qrcode": "^1.0.2",
+    "angular-toastr": "^2.1.1",
+    "angular-i18n": "^1.6.4",
+    "angular-chart.js": "^1.0.3"
+  },
+  "resolutions": {
+    "angular": "^1.6.4",
+    "Chart.js": "2.x",
+    "moment": "^2.13.0",
+    "angular-material": "^1.1.1"
+  },
+  "overrides": {
+    "angular-i18n": {
+      "main": "angular-locale_pl.js"
+    },
+    "moment": {
+      "main": [
+        "moment.js",
+        "locale/pl.js"
+      ]
+    }
+  }
+}

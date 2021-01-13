@@ -1,0 +1,51 @@
+﻿<md-button ng-click="vm.dataObj.validMaterialowka=!vm.dataObj.validMaterialowka">toggle {{vm.dataObj.validMaterialowka}}</md-button>
+<div>
+    <div layout>
+        <md-content flex-gt-md="80" flex="100">
+            <canvas id="bar" class="chart chart-bar"
+                    chart-options="vm.chartPozMag.options"
+                    chart-data="vm.chartPozMag.data"
+                    chart-labels="vm.chartPozMag.labels"
+                    chart-series="vm.chartPozMag.series"
+                    chart-legend="true"></canvas>
+        </md-content>
+    </div>
+    <md-card ng-if="vm.raport.materialyPrzypisane || true" ng-form="vm.formMain">
+        <md-card-content>
+            <div layout="column">
+                <div layout="column" layout-gt-sm="row">
+                    <div layout="column">
+                        <h4>Rozpoczęcie produkcji</h4>
+                        <md-datepicker ng-model="vm.raport.produkcjaStart" required name="produkcjaStart" md-min-date="vm.raport.minDate"></md-datepicker>
+                    </div>
+                    <div>&nbsp;</div>
+                    <div layout="column">
+                        <h4>Zakończenie produkcji</h4>
+                        <md-datepicker ng-model="vm.raport.produkcjaEnd" required name="produkcjaEnd" md-min-date="vm.raport.produkcjaStart"></md-datepicker>
+                    </div>
+
+                </div>
+                <md-input-container>
+                    <label>Uwagi</label>
+                    <input ng-model="vm.raport.uwagi" />
+                </md-input-container>
+            </div>
+            <div layout>
+                <div flex></div>
+                <md-button class="md-accent md-raised" ng-click="vm.raport.zapisz()" ng-disabled="!vm.formMain.$valid">Zapisz</md-button>
+                <md-button class="md-accent md-raised" ng-click="vm.raport.anuluj()">Anuluj zmiany</md-button>
+            </div>
+        </md-card-content>
+    </md-card>
+
+    <md-tabs md-dynamic-height="true">
+        <md-tab label="Tkaniny">
+            <materialowka-raport-tkaniny></materialowka-raport-tkaniny>
+        </md-tab>
+        <md-tab label="Pozycje magazynowe">
+            <materialowka-raport-pozycjemagazynowe></materialowka-raport-pozycjemagazynowe>
+        </md-tab>
+            
+    </md-tabs>
+
+</div>

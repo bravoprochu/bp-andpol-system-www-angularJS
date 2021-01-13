@@ -1,0 +1,60 @@
+﻿<md-card>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode">
+        <div ng-if="vm.startMode">
+            <md-toolbar class="md-accent" layout layout-align="end center">
+                <md-input-container ng-show="vm.table.searchShow" style="margin-bottom: -1em">
+                    <label>Wyszukaj w tabeli</label>
+                    <input ng-model="vm.table.searchText" type="text" />
+                </md-input-container>
+                <md-button class="md-icon-button" aria-label="tableSearch" ng-click="vm.table.search()">
+                    <md-tooltip md-direction="top">Wyszukaj</md-tooltip>
+                    <md-icon md-svg-icon="search"></md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="dealersAdd" ng-click="vm.table.edit(0)">
+                    <md-tooltip md-direction="top">Utwórz nowego</md-tooltip>
+                    <md-icon md-svg-icon="add"></md-icon>
+                </md-button>
+            </md-toolbar>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head md-order="vm.table.order">
+                        <tr md-row>
+                            <th md-column><span></span></th>
+                            <th md-column md-order-by="pozycjaMagazynowaId"><span>Id</span></th>
+                            <th style="min-width:300px" md-column md-order-by="nazwa"><span>Nazwa</span></th>
+                            <th md-column md-order-by="jednostka"><span>Jedn.</span></th>
+                            <th md-column md-order-by="grupaZakladowa"><span>Grupa zakładowa</span></th>
+                            <th md-column md-order-by="razemRozchodInne"><span>Razem rozchód</span></th>
+                            <th md-column md-order-by="stanAktualny"><span>Stan aktualny</span></th>
+                            <th md-column md-order-by="stanRzeczywisty"><span>Stan rzeczywisty</span></th>
+                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                        </tr>
+                    </thead>
+                    <tbody md-body>
+                        <tr md-row ng-repeat="dane in vm.dataObj | filter: vm.table.searchText | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit">
+                            <td md-cell>
+                                <md-button aria-label="more_vert" class="md-fab md-warn md-mini" ng-click="vm.table.edit(dane.pozycjaMagazynowaId)">
+                                    <md-tooltip md-direction="top">Edytuj</md-tooltip>
+                                    <md-icon md-svg-src="edit" aria-label="tableEdit{{$index}}"></md-icon>
+                                </md-button>
+                            </td>
+                            <td md-cell>{{dane.pozycjaMagazynowaId}}</td>
+                            <td md-cell>{{dane.nazwa}}</td>
+                            <td md-cell>{{dane.jednostka}}</td>
+                            <td md-cell>{{dane.grupaZakladowa}}</td>
+                            <td md-cell>{{dane.razemRozchodInne | number:2}}</td>
+                            <td md-cell>{{dane.stanAktualny | number:2}}</td>
+                            <td md-cell><strong>{{dane.stanRzeczywisty | number:2}}</strong></td>
+                            <td md-cell>{{dane.uwagi}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot md-foot>
+
+                    </tfoot>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.table.limit" md-limit-options="vm.table.rowLimitOpt" md-page="vm.table.page" md-page-select="true" md-label="{page:'strona', rowsPerPage: 'wierszy na stronę', of:'z'}" md-total="{{vm.dataObj.length}}"></md-table-pagination>
+        </div>
+    </md-card-content>
+</md-card>

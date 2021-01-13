@@ -1,0 +1,30 @@
+﻿<div layout="column" layout-padding">
+    <toggle source="elementyZaplanowaneShow" title="{{title}}" sub-title="{{subTitle}}" is-open="{{isOpen}}"></toggle>
+    <div ng-if="elementyZaplanowaneShow">
+        <div>
+            <md-button aria-label="odznacz" class="md-fab md-raised md-mini" ng-click="doneAll(filtered, false)">
+                <md-tooltip md-direction="top">Oznacz wszystkie jako NIEwykonane</md-tooltip>
+                <md-icon md-svg-src="selectAll" aria-label="Twitter"></md-icon>
+            </md-button>
+            <md-button aria-label="zaznacz" class="md-fab md-raised md-mini" ng-click="doneAll(filtered, true)">
+                <md-tooltip md-direction="top">Oznacz wszystkie jako wykonane</md-tooltip>
+                <md-icon md-svg-src="doneAll" aria-label="doneAll"></md-icon>
+            </md-button>
+            <md-input-container ng-click="isOver($event)" style="top:1em;">
+                <label>wyszukaj</label>
+                <input ng-model="search" />
+            </md-input-container>
+        </div>
+
+        <linia-pozioma></linia-pozioma>
+        <span ng-if="filtered.length>0" class="md-body-1">Elementów: {{filtered.length}} z {{danePomocnicze.length}}</span>
+        <md-list-item ng-repeat="zam in filtered = (danePomocnicze | filter: search) track by $index" class="md-2-line">
+            <div class="md-list-item-text" layout="column">
+                <div class="md-title"><strong>{{zam[line1]}}</strong></div>
+                <div class="md-subhead">{{zam[line2] }}</div>
+                <div class="md-caption">{{zam[line3]}}</div>
+            </div>
+            <md-checkbox class="md-secondary" ng-model="zam.isDone" ng-change="dataChange(zam)" aria-label="isDone" ng-disabled="isDisabled"></md-checkbox>
+        </md-list-item>
+    </div>
+</div>

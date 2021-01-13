@@ -1,0 +1,23 @@
+﻿<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">{{produkcjaDzial.nazwa}}</span>
+            <span class="md-subhead">Poziom produkcji: <strong>{{produkcjaDzial.poziomProdukcji}}</strong></span>
+        </md-card-title-text>
+    </md-card-title>
+
+    <div layout="column" layout-padding>
+        <div layout="column" ng-if="produkcjaDzial.poziomProdukcji==1">
+            <md-checkbox ng-model="produkcjaDzial.czyTkaninaBelka" disabled>Tkanina belka</md-checkbox>
+            <md-checkbox ng-model="produkcjaDzial.czyPozycjaMagazynowa" disabled>Pozycja Magazynowa</md-checkbox>
+        </div>
+        <div layout="column" ng-if="produkcjaDzial.poziomProdukcji>1">
+            <span class="md-subhead">Nadrzędne działy:</span>
+            <span class="md-body-1" ng-repeat="nadrz in produkcjaDzial.nadrzednyNazwaLista"><strong>{{nadrz}}</strong></span>
+        </div>
+        <md-input-container>
+            <label>Uwagi</label>
+            <input ng-model="produkcjaDzial.uwagi" disabled />
+        </md-input-container>
+    </div>
+</md-card>

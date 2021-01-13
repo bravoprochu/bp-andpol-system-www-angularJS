@@ -1,0 +1,89 @@
+﻿<div ng-if="vm.startMode" style="width:100%" md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <div ng-hide="vm.drukMode">
+        <nawigacja-szczegoly></nawigacja-szczegoly>
+        <md-card>
+            <md-card-content>
+                <naglowek></naglowek>
+                <md-button class="md-raised md-accent" ui-sref="dashboard" aria-label="printing">wróć do dashboard</md-button>
+                <div layout>
+                    <div layout="column" layout-padding>
+                        <div class="md-subhead">
+                            Wybierz maksymalnie 6 qrCodów&nbsp;
+                        </div>
+                        <div class="md-caption">Pozostało: {{6-vm.qrListSelected.length }}</div>
+                    </div>
+
+                    <div>
+                        <md-button class="md-primary md-raised" ng-show="vm.qrListSelected.length>0" ng-click="vm.drukMode=!vm.drukMode">Drukuj</md-button>
+                        <md-button class="md-warn md-raised" ng-show="vm.qrListSelected.length>0" ng-click="vm.qrUsunWszystkie()" ng-disabled="vm.inProgress">&nbsp;Usuń zaznaczone&nbsp;</md-button>
+                    </div>
+                </div>
+
+                <div ng-repeat="code in vm.qrList" flex-gt-md="50">
+                    <md-card>
+                        <md-toolbar layout layout-align="start center">
+                            <div class="md-toolbar-tools">
+                                {{code.nazwa}}
+                            </div>
+                            <div flex></div>
+                            <md-button aria-label="qrLabelDel{{$index}}" ng-click="vm.qrUsun(code)" class="md-icon-button">
+                                <md-icon md-svg-icon="delete"></md-icon>
+                            </md-button>
+                        </md-toolbar>
+                        <md-card-content>
+                            <md-checkbox ng-checked="vm.qrExists(code, vm.qrListSelected)"
+                                         ng-click="vm.qrToggle(code, vm.qrListSelected)"
+                                         aria-label="wybrany{{$index}}">
+
+                                <b>{{code.nazwa}}</b>&nbsp;<i>{{code.grupa}}</i>&nbsp;
+
+                                <div style="font-size:x-small">
+                                    {{code.uwagi}}
+                                </div>
+                            </md-checkbox>
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+
+    <div ng-show="vm.drukMode">
+        <md-button ng-click="vm.drukMode=!vm.drukMode" class="hide-print md-warn md-raised">Wróć</md-button>
+            <div layout="row" layout-padding layout-align="center start">
+
+                <div layout="column">
+                    <div ng-repeat="qr in vm.qrListSelected" ng-if="$odd" style="height:{{vm.qrBoxHeight}}px">
+                        <div layout layout-fill layout-align="center center" style="border-bottom:dotted; border-top:dotted; border-color:#bababa; border-width:thin;">
+                            <qr text="qr.link" size="vm.qrSize"></qr>
+                            <div style="width:{{vm.qrBoxTextWidth}}px">
+                                <div layout="column" layout-align="center center">
+                                    <div style="font-size:x-small; text-align:center;"><b>{{qr.nazwa}}</b></div>
+                                    <div style="font-size:xx-small; text-align:center;">{{qr.grupa}}</div>
+                                </div>
+                            </div>
+                            <qr text="qr.nazwa + '\n'+ qr.uwagi+'\n'" size="vm.qrSize" image="image" mode="alpha_num"></qr>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:30px"></div>
+                <div layout="column">
+                    <div ng-repeat="qr in vm.qrListSelected" ng-if="$even" style="height:{{vm.qrBoxHeight}}px">
+                        <div layout layout-fill layout-align="center center" style="border-bottom:dotted; border-top:dotted; border-color:#bababa; border-width:thin;">
+                            <qr text="qr.link" size="vm.qrSize"></qr>
+                            <div style="width:{{vm.qrBoxTextWidth}}px">
+                                <div layout="column" layout-align="center center">
+                                    <div style="font-size:x-small; text-align:center;"><b>{{qr.nazwa}}</b></div>
+                                    <div style="font-size:xx-small; text-align:center;">{{qr.grupa}}</div>
+                                </div>
+                            </div>
+                            <qr text="qr.nazwa +'\n'+ qr.uwagi" size="vm.qrSize"></qr>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+</div>
+
+

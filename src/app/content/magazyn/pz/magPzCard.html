@@ -1,0 +1,94 @@
+﻿<md-toolbar ng-class="{'md-hue-2': $parent.$first, 'md-hue-1': !objRef.pzKorektaId>0}">
+    <div class="md-toolbar-tools" ng-if="screenSmall">
+        <span>
+            <strong>{{objRef.dokumentZrodlowyNr}}</strong>
+            <em>&nbsp;[{{objRef.dokumentTyp.nazwa}}]&nbsp;</em>
+        </span>
+        <div flex></div>
+        <div ng-if="objRef.pzKorektaId>0" class="md-body-2">
+            [K]
+        </div>
+    </div>
+    <div class="md-toolbar-tools" ng-if="!screenSmall">
+        <span>
+            DOKUMENT ŹRÓDŁOWY:&nbsp;
+            <strong>{{objRef.dokumentZrodlowyNr}}</strong>
+            <em>&nbsp;[{{objRef.dokumentTyp.uwagi}}]&nbsp;</em>
+        </span>
+        <div flex></div>
+        <div ng-if="objRef.pzKorektaId>0" class="md-body-2">
+            [Korekta]
+        </div>
+        <md-button ng-if="!objRef.czyZaksiegowana && !objRef.korektaNew && !objRef.pzKorekta.length>0"
+                   class="md-button md-raised md-warn" 
+                   ng-click="korektaUtworz()">Utwórz korektę</md-button>
+    </div>
+</md-toolbar>
+<div layout="column">
+    <div layout="column" layout-gt-sm="row" layout-padding>
+        <!--PRAWA STRONA CARD-->
+        <div flex="30" flex-order-gt-sm="2">
+            <md-card>
+                <md-card-container>
+                    <md-list>
+                        <md-list-item>
+                            <span>Data wystawienia:&nbsp;</span>
+                            <div class="md-secondary"><strong>{{objRef.dataWystawienia | date: "yyyy-MM-dd"}}</strong></div>
+                        </md-list-item>
+                        <md-list-item>
+                            <span>Data wpływu:&nbsp;</span>
+                            <div class="md-secondary"><strong>{{objRef.dataWplywu | date: "yyyy-MM-dd"}}</strong></div>
+                        </md-list-item>
+                        <md-list-item ng-if="objRef.fakturaZakupu.fakturaNr">
+                            <span>Faktura zakupuuu:&nbsp;</span>
+                            <div ui-sref="fakturaZakupuDetail({id:{{objRef.fakturaZakupuRefId}}})" class="md-secondary" style="cursor:pointer">
+                                <md-tooltip md-direction="top">
+                                    Przejdź do faktury Id: {{objRef.fakturaZakupuRefId}}
+                                </md-tooltip>
+                                <strong>{{objRef.fakturaZakupu.fakturaNr}}</strong>
+                            </div>
+                        </md-list-item>
+                        <md-list-item ng-if="objRef.uwagi">
+                            <span>Uwagi:&nbsp;</span>
+                            <div class="md-secondary">{{objRef.uwagi}}</div>
+                        </md-list-item>
+                        <md-list-item>
+                            <span>Utworzony przez:&nbsp;</span>
+                            <div class="md-secondary"><em>{{objRef.createdBy}}</em></div>
+                        </md-list-item>
+                    </md-list>
+
+                </md-card-container>
+            </md-card>
+
+        </div>
+        <!--LEWA STRONA CARD-->
+        <div flex="70" flex-order-gt-sm="1">
+            <md-card>
+                <md-data-container layout layout-padding>
+                    <kontrahent-card-small ref="objRef.kontrahent"></kontrahent-card-small>
+                </md-data-container>
+            </md-card>
+        </div>
+    </div>
+    <div>
+        <md-table-container>
+            <table md-table md-progress="vm.promise">
+                <thead md-head md-order="vm.table.order">
+                    <tr md-row>
+                        <th md-column md-order-by="pozycjaMagazynowa.nazwa"><span>Nazwa</span></th>
+                        <th md-column md-order-by="ilosc"><span>Ilość</span></th>
+                        <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="dane in objRef.pzPozycja | filter: vm.table.searchText | orderBy: vm.table.order | limitTo: vm.table.limit: (vm.table.page - 1) * vm.table.limit">
+                        <td md-cell>({{$index+1}}) {{dane.pozycjaMagazynowa.nazwa}}</td>
+                        <td md-cell>{{dane.ilosc}}<span>&nbsp;<em>[{{dane.pozycjaMagazynowa.jednostka}}]</em></span></td>
+                        <td md-cell>{{dane.uwagi}}</td>
+                </tbody>
+
+            </table>
+        </md-table-container>
+    </div>
+</div>

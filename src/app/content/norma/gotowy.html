@@ -1,0 +1,84 @@
+﻿<div ng-if="start">
+    <md-card>
+       <md-card-content>
+            <h2>
+                {{naglowek}}
+            </h2>
+            <div layout="row">
+                <div flex>
+                    <md-autocomplete flex
+                                     md-no-cache="true"
+                                     md-search-text="gotowySearchText"
+                                     md-selected-item="gotowySelectedItem"
+                                     md-selected-item-change="gotowyChange(gotowy)"
+                                     md-items="gotowy in dostepne() | filter: {$: gotowySearchText} | limitTo: 10"
+                                     md-item-text="gotowy.nazwa"
+                                     md-min-length="0"
+                                     placeholder="Wyszukaj {{naglowek}}, wynik zawężony do max 10 pozycji">
+                        <md-item-template>
+                            <span md-highlight-text="gotowySearchText" md-highlight-flags="^i">{{gotowy.nazwa}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Nie znaleziono "{{gotowySearch}}".
+                            <a ng-click="gotowyUtworzNowy()">Uwórz nowy..</a>
+                        </md-not-found>
+                    </md-autocomplete>
+
+
+                    <div>
+                        <div ng-repeat="gotowy in selectedItems | filter: {status: '!usuniety'}" style="margin-bottom:-3em">
+                            <dirty-bag status="gotowy.status">
+                                <div layout ng-if="!drugaWartosc">
+                                    <md-input-container flex="60">
+                                        <label>Nazwa</label>
+                                        <input ng-model="gotowy.nazwa" disabled />
+                                    </md-input-container>
+                                    <md-input-container flex="10">
+                                        <label>Jedn.</label>
+                                        <input ng-model="gotowy.jednostka" disabled />
+                                    </md-input-container>
+                                    <md-input-container flex="10">
+                                        <label>Wartość</label>
+                                        <input ng-model="gotowy.wartosc" name="[{{parentIndex}}]_{{naglowek | camelCase}}_{{gotowy.nazwa | camelCase}}" required type="number" ng-change="wartoscChange(gotowy)" />
+                                    </md-input-container>
+                                    <div flex="10" layout style="cursor:pointer">
+                                        <div flex></div>
+                                        <md-input-container>
+                                            <md-icon md-svg-icon="delete" ng-click="gotowyUsun(gotowy)"></md-icon>
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                                <div layout ng-if="drugaWartosc">
+                                    <md-input-container flex="40">
+                                        <md-tooltip>Figurą obmiaru jest prostokąt. Wartość brutto, uwzględnia margines</md-tooltip>
+                                        <label>Nazwa</label>
+                                        <input ng-model="gotowy.nazwa" disabled />
+                                    </md-input-container>
+                                    <md-input-container flex="10">
+                                        <label>{{gotowy.jednostka}}</label>
+                                        <input disabled />
+                                    </md-input-container>
+                                    <md-input-container flex="15">
+                                        <label>Długość</label>
+                                        <input ng-model="gotowy.wartosc" name="[{{parentIndex}}]_{{naglowek | camelCase}}_{{gotowy.nazwa | camelCase}}_dl" required type="number" dirty-check ng-change="wartoscChange(gotowy)" />
+                                    </md-input-container>
+                                    <md-input-container flex="15">
+                                        <label>Szerokość</label>
+                                        <input ng-model="gotowy.wartosc2" name="[{{parentIndex}}]_{{naglowek | camelCase}}_{{gotowy.nazwa | camelCase}}_sz" required type="number" dirty-check ng-change="wartoscChange(gotowy)" />
+                                    </md-input-container>
+                                    <div flex="15" layout style="cursor:pointer">
+                                        <div flex></div>
+                                        <md-input-container>
+                                            <md-icon md-svg-icon="delete" ng-click="gotowyUsun(gotowy)"></md-icon>
+                                        </md-input-container>
+                                    </div>
+
+                                </div>
+                            </dirty-bag>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-card-content>
+    </md-card>
+</div>

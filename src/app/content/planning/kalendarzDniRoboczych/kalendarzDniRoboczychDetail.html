@@ -1,0 +1,233 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <!--kalendarz i uwagi-->
+        <md-checkbox ng-model="vm.dataObj.workingDayCloned" disabled ng-if="vm.dataObj.workingDayCloned" aria-label="cloned">
+            Cloned !
+        </md-checkbox>
+        <div layout-gt-md="row" layout="column" layout-align="center center">
+            <div layout>
+                <md-input-container>
+                    <label>Dzień roboczy</label>
+                    <md-datepicker ng-model="vm.dataObj.dzienRoboczy" md-placeholder="Enter date" ng-change="vm.zakresUstawDaty()" ng-disabled="true"></md-datepicker>
+                </md-input-container>
+                <md-input-container>
+                    <label>Uwagi</label>
+                    <input ng-model="vm.dataObj.uwagi" />
+                </md-input-container>
+                <div flex></div>
+                <md-button ng-click="vm.usun()" ng-if="vm.objId>0" class="md-raised md-icon-button" md-colors="::{background: 'red-500'}" aria-label="usunDzienRoboczy" style="top:1em;">
+                    <md-tooltip md-direction="top">Usuń dzień roboczy</md-tooltip>
+                    <md-icon md-svg-icon="deleteForever"></md-icon>
+                </md-button>
+            </div>
+            <div flex></div>
+            <div layout>
+                <md-input-container>
+                    <label>WorkingDayToClone</label>
+                    <md-datepicker ng-model="vm.workingDayToClone.day" md-placeholder="Enter date"></md-datepicker>
+                </md-input-container>
+
+                <md-button ng-click="vm.workingDayToClone.loadData()" class="md-raised md-icon-button" aria-label="usunDzienRoboczy" style="top:1em;">
+                    <md-tooltip md-direction="top">Sklonuj dzień roboczy z dnia {{vm.workingDayToClone.day | date: 'yyyy-MM-dd'}}</md-tooltip>
+                    <md-icon md-svg-icon="contentCopy"></md-icon>
+                </md-button>
+            </div>
+            <div flex></div>
+            <div class="md-display-2" layout="column" layout-align="center center">
+                <span>{{vm.dataObj.dzienRoboczy | date: "yyyy-MM-dd"}}</span>
+                <span class="md-title">({{vm.dataObj.dzienRoboczy | date: "EEEE"}})</span>
+            </div>
+
+
+
+        </div>
+
+        <!--widok główny-->
+        <div layout layout-wrap layout-padding>
+            <!--info-->
+            <div flex-order-gt-md="2" flex-gt-md="20" flex="100" class="md-subhead">
+                Dzień roboczy może składać się z wielu zakresów czasu. Zakresy te oznaczają realny czas przeznaczony na wykonywanie pracy. Stanowi to podstawę do wypełniania "robocizny" planningu<br />
+                <strong>Dh</strong>&nbsp;oznacza dniówkę, łączny czas do dyspozycji pracodawcy (łącznie z przerwami),<br />
+                <strong>Rh</strong>&nbsp;oznacza roboczogodziny - łączny czas przeznaczony na wykonywanie planningu,<br />
+                <strong>Ph</strong>&nbsp;oznacza przerwy, łączny czas przerw pracownika w czasie dnia pracy,<br />
+            </div>
+
+            <!--produkcjaDzialy-->
+            <md-tabs flex-order-gt-md="1" flex-gt-md="80" flex="100" md-dynamic-height md-border-bottom>
+                <md-tab ng-repeat="dzial in vm.dataObj.produkcjaDzial | orderBy: 'produkcjaDzial.nazwa'" label="{{dzial.produkcjaDzial.nazwa}}" ng-init="dzial.czasPracyZakresVis=false">
+
+                    <!--info o łącznym czasie pracy-->
+                    <div ng-if="dzial.czasPracyStart" layout layout-padding>
+                        <span class="md-display-2 podkreslenie">{{dzial.czasPracyStart | date: 'HH:mm'}} - {{dzial.czasPracyEnd | date: "HH:mm"}}</span>
+                        <span class="md-body-1">{{dzial.czasPracyDuration}}Dh</span>
+                        <span class="md-body-1 podkreslenie">{{dzial.czasPracyZakresDuration | date: "HH:mm"}}Rh</span>
+                        <span class="md-body-1">{{dzial.czasPrzerwy | date: "HH:mm"}}Ph</span>
+                    </div>
+
+                    <!--przycisk zakres czasu i szablony-->
+                    <div layout="column" layout-padding>
+                        <toggle class="md-headline" source="dzial.zakresPracyIsCollapsed" title="Utwórz nowy zakres czasu pracy"></toggle>
+                         <div layout-gt-md="row" layout="column"  ng-if="dzial.zakresPracyIsCollapsed">
+                             <!--zakres czasu dodaj-->
+                             <div layout ng-init="vm.czasPracyZakresUtworz(dzial); vm.czasDurationChange(dzial)">
+                                 <md-input-container>
+                                     <label>Czas START</label>
+                                     <input ng-model="dzial.zakres.czasStart" type="time" ng-change="vm.czasDurationChange(dzial)" />
+                                 </md-input-container>
+                                 <md-input-container>
+                                     <label>Czas END</label>
+                                     <input ng-model="dzial.zakres.czasEnd" type="time" ng-change="vm.czasDurationChange(dzial)" ng-min="dzial.zakres.czasStart" />
+                                 </md-input-container>
+                                 <md-input-container>
+                                     <label>Czas trwania</label>
+                                     <input disabled ng-model="dzial.zakres.czasDuration" />
+                                 </md-input-container>
+                                 <md-input-container>
+                                     <label>Uwagi</label>
+                                     <input ng-model="dzial.zakres.uwagi" md-maxlength="100" />
+                                 </md-input-container>
+
+                                <md-button ng-click="vm.czasPracyZakresDodaj(dzial)" class="md-raised md-icon-button" aria-label="czasPracyZakresDodaj" style="top:1em;">
+                                    <md-tooltip md-directon="top">Dodaj zakres czasu pracy</md-tooltip>
+                                    <md-icon md-svg-icon="add"></md-icon>
+                                </md-button>
+
+                             </div>
+                             <div flex></div>
+                             <!--szablony:-->
+                             <div layout>
+                                 <!--nowy szablon-->
+                                 <md-input-container ng-if="dzial.czasPracyZakresSzablonNazwaShow">
+                                     <label>Nazwa szablonu</label>
+                                     <input ng-model="dzial.czasPracyZakresSzablonNazwa" />
+                                 </md-input-container>
+
+                                 <!--wczytaj szablon-->
+                                 <md-input-container>
+                                     <label>Szablon </label>
+                                     <md-select ng-model="dzial.szablonWybrany" placeholder="Wybierz i wczytaj szablon">
+                                         <md-option ng-repeat="szablon in vm.danePomocnicze.szablon" ng-value="szablon" ng-model-options="{trackBy: '$value.kalendarzDniRoboczychSzablonId'}">{{szablon.nazwa}}</md-option>
+                                     </md-select>
+                                 </md-input-container>
+                                 <div layout layout-align="center center" ng-if="dzial.szablonWybrany">
+                                     <md-button class="md-raised md-icon-button" ng-click="vm.czasPracyZakresSzablonWczytaj(dzial, dzial.szablonWybrany)" style="top:1em;">
+                                         <md-tooltip md-direction="left">
+                                             Wczytaj szablon
+                                         </md-tooltip>
+                                         <md-icon md-svg-icon="download"></md-icon>
+                                     </md-button>
+                                     <md-button class="md-raised md-icon-button" ng-click="vm.czasPracyZakresSzablonUsun(dzial.szablonWybrany)" style="top:1em;">
+                                         <md-tooltip md-direction="left">
+                                             Usuń szablon
+                                         </md-tooltip>
+                                         <md-icon md-svg-icon="deleteForever"></md-icon>
+                                     </md-button>
+                                 </div>
+
+                                 <md-button class="md-raised md-icon-button" ng-click="vm.czasPracyZakresSzablonUtworz(dzial)" aria-label="utworzSzablon" style="top:1em;">
+                                     <div ng-if="dzial.czasPracyZakresSzablonNazwa==undefined">
+                                         <md-tooltip md-direction="left">
+                                             Utwórz nowy szablon na bazie aktualnie wprowadzonego zakresu
+                                         </md-tooltip>
+                                         <md-icon md-svg-icon="create"></md-icon>
+                                     </div>
+                                     <div ng-if="dzial.czasPracyZakresSzablonNazwa.length>0">
+                                         <md-tooltip md-direction="left">
+                                             Zapisz nowy szablon na bazie aktualnie wprowadzonego zakresu
+                                         </md-tooltip>
+                                         <md-icon md-svg-icon="save"></md-icon>
+                                     </div>
+                                     <div ng-if="dzial.czasPracyZakresSzablonNazwa.length==0">
+                                         <md-tooltip md-direction="left">
+                                             Anuluj
+                                         </md-tooltip>
+                                         <md-icon md-svg-icon="cancel"></md-icon>
+                                     </div>
+                                 </md-button>
+
+                             </div>
+                         </div>
+                    </div>
+
+
+
+                    <!--zakres czasu tabela-->
+                    <div layout="column" layout-padding ng-if="dzial.czasPracyZakres.length>0">
+                        <toggle source="dzial.tabelaZakresowShow" title="Zakresy pracy" class="md-headline"></toggle>
+                        <div flex-gt-md="100" flex="100" ng-if="dzial.czasPracyZakres.length>0 && dzial.tabelaZakresowShow">
+                            <md-table-container>
+                                <table md-table>
+                                    <thead md-head md-order="dzial.table.order">
+                                        <tr md-row>
+                                            <th md-column></th>
+                                            <th md-column md-order-by="czasStart"><span>Czas Start</span></th>
+                                            <th md-column md-order-by="czasEnd"><span>Czas End</span></th>
+                                            <th md-column md-order-by="czasDuration"><span>Czas trwania</span></th>
+                                            <th md-column md-order-by="uwagi"><span>Uwagi</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody md-body>
+                                        <tr md-row ng-repeat="dane in dzial.czasPracyZakres | filter: {status: '!usuniety'} | orderBy: dzial.table.order">
+                                            <td md-cell>
+                                                <md-button aria-label="delete" class="md-fab md-warn md-mini" ng-click="vm.czasPracyZakresUsun(dzial, dane)">
+                                                    <md-tooltip md-direction="top">Usuń</md-tooltip>
+                                                    <md-icon md-svg-src="delete" aria-label="tableUsun{{dzial | camelCase}}"></md-icon>
+                                                </md-button>
+                                            </td>
+                                            <td md-cell>{{dane.czasStart | date: 'HH:mm'}}</td>
+                                            <td md-cell>{{dane.czasEnd | date: 'HH:mm'}}</td>
+                                            <td md-cell>{{dane.czasDuration | date: 'HH:mm'}} Rh</td>
+                                            <td md-cell>{{dane.uwagi}}</td>
+                                    </tbody>
+
+                                </table>
+                            </md-table-container>
+                        </div>
+                    </div>
+
+                    <!--elementyZaplanowane-->
+                    <div layout layout-padding ng-if="dzial.planningZamowienieKombiInfo.length>0">
+                        <planning-zamowienie-kombi-info title="Elementy zaplanowane"
+                                                        is-disabled="true"
+                                                        line1="nazwa"
+                                                        line2=""
+                                                        line3="zamowienieInfo"
+                                                        dane-pomocnicze="dzial.planningZamowienieKombiInfo"
+                                                        parent-form="vm.formMain">
+                        </planning-zamowienie-kombi-info>
+                    </div>
+
+                    <!--oblozone stanowiska-->
+                    <div layout="column" layout-padding ng-if="dzial.produkcjaDzial.grupaRobocza">
+                        <toggle class="md-headline" source="dzial.grupaRoboczaShow" title="Przewidziane obłożenie stanowisk"></toggle>
+                        <div layout ng-if="dzial.grupaRoboczaShow">
+                            <!--skład grupy roboczej-->
+                            <div layout="column" layout-fill flex-gt-md="50">
+                                <div ng-repeat="d in dzial.produkcjaDzial.grupaRobocza" style="height:3em;">
+                                    <div layout>
+                                        <md-input-container flex="66">
+                                            <label>{{d.nazwa}}</label>
+                                            <input disabled />
+                                        </md-input-container>
+                                        <md-input-container flex>
+                                            <label>Skład</label>
+                                            <input ng-model="d.ilosc" type="number" ng-min="0" ng-disabled="dzial.planningZamowienieKombiInfo.length>0" />
+                                        </md-input-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <div flex></div>
+                            <!--dzial produkcji info-->
+                            <produkcja-dzial-info produkcja-dzial="dzial.produkcjaDzial"></produkcja-dzial-info>
+                        </div>
+                    </div>
+                </md-tab>
+            </md-tabs>
+
+        </div>
+
+
+    </md-card-content>
+</md-card>

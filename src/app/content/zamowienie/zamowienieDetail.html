@@ -1,0 +1,434 @@
+﻿<md-card md-swipe-right="vm.navIsOpen=true" md-swipe-left="vm.navIsOpen=false">
+    <nawigacja-szczegoly></nawigacja-szczegoly>
+    <naglowek></naglowek>
+    <md-card-content ng-if="vm.startMode" ng-form="vm.formMain">
+        <div layout-sm="column" layout-gt-md="row" layout-padding>
+            <!--WYBÓR DEALERA, KOMISJA REF..-->
+            <div flex flex-sm="100">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        Kontrahent - dealer
+                    </div>
+                </md-toolbar>
+                <div layout="column" layout-padding>
+                    <md-autocomplete flex="100" required
+                                     md-no-cache="true"
+                                     md-search-text="vm.dealerSearchText"
+                                     md-search-text-change="vm.dealerSearchTextChange()"
+                                     md-selected-item="vm.dataObj.dealer"
+                                     md-selected-item-change="vm.dealerChange()"
+                                     md-items="dealer in vm.dealerSearchFilter"
+                                     md-input-name="dealer"
+                                     md-item-text="dealer.nazwa"
+                                     md-min-length="0"
+                                     placeholder="Dealer">
+                        <md-item-template>
+                            <span md-highlight-text="vm.dealerSearchText" md-highlight-flags="^i">{{dealer.nazwa}}</span>&nbsp;<small>({{dealer.kontrahentNazwa}})</small>
+                            <span ng-show="dealer.czyAdresDostawy"><small>&nbsp;[adres dostawy]</small></span>
+                        </md-item-template>
+                        <md-not-found>
+                            Nie znaleziono "{{dealer.nazwa}}".
+                            <a ng-click="vm.dealerUtworzNowego()">Utwórz nowego dealera..</a>
+                        </md-not-found>
+                    </md-autocomplete>
+
+                    <div class="lineHeightByk"></div>
+
+                    <md-autocomplete flex="100" required
+                                     ng-disabled="!vm.dataObj.dealer"
+                                     md-no-cache="true"
+                                     md-search-text="vm.dealerDostawaSearchText"
+                                     md-search-text-change="vm.dealerDostawaSearchTextChange()"
+                                     md-selected-item="vm.dataObj.dealerDostawa"
+                                     md-selected-item-change="vm.dealerDostawaChange()"
+                                     md-items="dealer in vm.dealerDostawaSearchFilter"
+                                     md-item-text="dealer.nazwa"
+                                     md-input-name="dealerDostawa"
+                                     md-min-length="0"
+                                     placeholder="Dostawa">
+                        <md-item-template>
+                            <span md-highlight-text="vm.dealerSearchText" md-highlight-flags="^i">{{dealer.nazwa}} {{dealer.czyWjedziePrzyczepa? "[P]": ""}} {{dealer.uwagi ? "("+dealer.uwagi+")": ""}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Nie znaleziono "{{dealer.nazwa}}"
+                        </md-not-found>
+                    </md-autocomplete>
+
+                    <linia-pozioma></linia-pozioma>
+                    <!--KONTRAHENT INFO CARD-->
+                    <md-card ng-if="vm.dataObj.kontrahent.nazwa">
+                        <md-card-content>
+                            <div layout="column">
+                                <div class="md-caption">Kontrahent:</div>
+                                <div class="md-title">{{vm.dataObj.kontrahent.skrot}}<small>&nbsp;({{vm.dataObj.kontrahent.skrot}})</small></div>
+                            </div>
+                            <div class="lineHeightByk"></div>
+                            <div ng-if="vm.dataObj.kontrahent.email" layout="column">
+                                <div class="md-caption">email:</div>
+                                <div class="md-body-1"><a ng-href="mailto:{{vm.dataObj.kontrahent.email}}">{{vm.dataObj.kontrahent.email}}</a></div>
+                            </div>
+                            <div ng-if="vm.dataObj.kontrahent.www" layout="column">
+                                <div class="md-caption">www:</div>
+                                <div class="md-body-1"><a ng-href="{{vm.dataObj.kontrahent.www}}">{{vm.dataObj.kontrahent.www}}</a></div>
+                            </div>
+                            <div class="lineHeightByk"></div>
+                            <div layout layout-align="space-around center">
+                                <div ng-if="vm.dataObj.kontrahent.tel1" layout="column">
+                                    <div class="md-caption">tel1:</div>
+                                    <div class="md-body-1">{{vm.dataObj.kontrahent.tel1 | separator: 3}}</div>
+                                </div>
+                                <div ng-if="vm.dataObj.kontrahent.tel2" layout="column">
+                                    <div class="md-caption">tel2:</div>
+                                    <div class="md-body-1">{{vm.dataObj.kontrahent.tel2 |separator: 3}}</div>
+                                </div>
+                            </div>
+                            <linia-pozioma></linia-pozioma>
+                            <div layout="column">
+                                <div class="md-caption">Dealer</div>
+                                <div class="md-subhead">{{vm.dataObj.dealer.nazwa}}<small>&nbsp;({{vm.dataObj.dealer.adres}})</small></div>
+                            </div>
+                            <div class="lineHeightByk"></div>
+                            <div ng-if="vm.dataObj.dealerDostawa.nazwa" layout="column">
+                                <div class="md-caption">Dostawa</div>
+                                <div class="md-subhead">
+                                    {{vm.dataObj.dealerDostawa.nazwa}}<small>&nbsp;({{vm.dataObj.dealerDostawa.adres}})</small>
+                                    <span ng-if="vm.dataObj.dealerDostawa.czyWjedziePrzyczepa"><strong>&nbsp;[P]</strong></span>
+                                    <span class="podkreslenie" ng-if="!vm.dataObj.dealerDostawa.czyWjedziePrzyczepa"><strong>&nbsp;[A]</strong></span>
+                                </div>
+                            </div>
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </div>
+
+
+            <!--SZCZEGÓŁY ZAMÓWIEŃ-->
+            <div flex flex-sm="100">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        Szczegóły zamówienia
+                    </div>
+                </md-toolbar>
+                <div>
+                    <div layout layout-align="space-around center">
+                        <md-input-container>
+                            <label>Ilość</label>
+                            <input ng-model="vm.dataObj.ilosc" type="number" min="1" name="ilosc" required />
+                        </md-input-container>
+                        <md-input-container>
+                            <label>
+                                Zamówienie nr
+                            </label>
+                            <input ng-model="vm.dataObj.zamowienieNr" required name="_zamowienieNr" />
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Commission</label>
+                            <input ng-model="vm.dataObj.commission" required name="_commission" />
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label>Reference</label>
+                            <input ng-model="vm.dataObj.reference" required name="_referrence" />
+                        </md-input-container>
+                    </div>
+                    <div layout>
+                        <md-input-container flex="100">
+                            <label>Uwagi</label>
+                            <input ng-model="vm.dataObj.uwagi" name="_uwagi" ng-required="vm.dataObj.status=='zmieniony'" />
+                        </md-input-container>
+                    </div>
+                    <div>
+                        <label>Data zamówienia:&nbsp;</label>
+                        <md-datepicker required
+                                       ng-model="vm.dataObj.dataZamowienia">
+                        </md-datepicker>
+                        <span ng-show="vm.dataObj.dataZamowienia">&nbsp;&nbsp;{{vm.dataObj.dataZamowienia | date: "w"}}&nbsp;KW/{{vm.dataObj.dataZamowienia | date: "yyyy"}}</span>
+                    </div>
+                    <div>&nbsp;</div>
+                    <div>
+                        <label>Termin realizacji:&nbsp;</label>
+                        <md-datepicker required
+                                       ng-model="vm.dataObj.dataRealizacji">
+                        </md-datepicker>
+                        <span ng-show="vm.dataObj.dataRealizacji">&nbsp;&nbsp;{{vm.dataObj.dataRealizacji | date: "w"}}&nbsp;KW/{{vm.dataObj.dataRealizacji | date: "yyyy"}}</span>
+                    </div>
+                    <div>&nbsp;</div>
+                    <div>
+                        <md-checkbox ng-model="vm.dataObj.requireDeliver"
+                                     ng-change="vm.requireDeliverChange()"
+                                     aria-label="requireDeliver">
+                            RequireDeliver
+                        </md-checkbox>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--WYBÓR NORMY-->
+            <div flex flex-sm="100">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        Kombinacje normy (do wyboru)
+                    </div>
+                </md-toolbar>
+                <div layout-padding>
+                    <div>
+                        <md-autocomplete flex="100" md-search-text="vm.normaSearchText"
+                                         md-selected-item="vm.normaSelected"
+                                         md-selected-item-change="vm.normaWybierz(norma)"
+                                         md-items="norma in vm.normaSearch(vm.normaSearchText)"
+                                         md-item-text="norma.nazwa"
+                                         md-min-length="0"
+                                         placeholder="Wybierz normę"
+                                         ng-disabled="!vm.dataObj.dealer">
+                            <md-item-template>
+                                <span md-highlight-text="vm.normaSearchText" md-highlight-flags="^i">{{norma.nazwa}}</span>
+                                <span ng-show="norma.kombinacjeCount>0"><small>&nbsp;({{norma.kombinacjeCount}} kombi)</small></span>
+                            </md-item-template>
+                            <md-not-found>
+                                Nie znaleziono "{{vm.normaSearchText}}".
+                                <a ng-click="vm.normaUtworzNowa()">Utwórz nową normę..</a>
+                            </md-not-found>
+                        </md-autocomplete>
+                    </div>
+                    <!--DOSTEPNE KOMBINACJE-->
+                    <div>
+                        <div style="width:100%; text-align:center">
+                            <md-button ng-repeat="normaKombi in vm.danePomocnicze.norma.kombinacje | orderBy: 'nazwaKombinacji.nazwa' track by normaKombi.kombinacjaId" class="md-raised" 
+                                       ng-disabled="normaKombi.isDisabled"
+                                       ng-click="vm.normaKombiDodaj(normaKombi)">
+                                {{normaKombi.nazwaKombinacji.nazwa}}
+                            </md-button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+            <md-switch ng-change="vm.szablonPrzygotuj()" ng-model="vm.szablon.szablonPokaz" ng-if="vm.dataObj.kombinacje.length>0">Pokaż szablon opcji</md-switch>
+        
+        <!--SZABLON-->
+        <md-card ng-if="vm.szablon.szablonPokaz && vm.dataObj.kombinacje.length>0" ng-form="vm.szablon.formMain">
+            <md-card-content>
+                <md-toolbar class="md-warn md-hue-2">
+                    <div class="md-toolbar-tools">
+                        <div flex>Szablon opcji</div>
+                        <md-button ng-disabled="vm.szablon.formMain.$invalid" class="md-warn md-raised" ng-click="vm.szablon.zastosuj()">&nbsp;Zastosuj szablon&nbsp;</md-button>
+                        <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="vm.szablon.isCollapsed=!vm.szablon.isCollapsed" ng-if="vm.szablon.isCollapsed">
+                            <md-icon md-svg-icon="arrowUp"></md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="vm.szablon.isCollapsed=!vm.szablon.isCollapsed" ng-if="!vm.szablon.isCollapsed">
+                            <md-icon md-svg-icon="arrowDown"></md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+
+                <div ng-show="vm.szablon.isCollapsed">
+                    <div>
+                        <!--<!--WYKONCZENIE WYBOR OPCJI-->
+                        <div layout="row" layout-padding layout-wrap>
+                            <div flex-xl="25" flex-lg="33" flex-md="50" flex-sm="50" flex-xs="100" ng-repeat="opcja in vm.szablon.wykonczenie">
+                                <div layout="column" layout-padding>
+                                    <div class="md-title">{{opcja.wykonczenieGrupa.nazwa}}</div>
+                                    <md-divider></md-divider>
+                                    <div>&nbsp;</div>
+                                    <md-radio-group ng-model="opcja.wykonczenieRefId" name="Szablon_{{opcja.wykonczenieGrupa.nazwa | camelCase}}" required class="md-warn">
+                                        <md-radio-button ng-repeat="wybr in opcja.wykonczenieOpcje" ng-value="wybr.wykonczenieId">
+                                            <strong>{{wybr.nazwa}}</strong><small>&nbsp;<em>{{wybr.uwagi}}</em></small>
+                                        </md-radio-button>
+                                    </md-radio-group>
+                                    <div class="lineHeightByk">&nbsp;</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div flex-sm="100" ng-if="vm.szablon.obszycie.length>0">
+                            <div layout-padding>
+                                <h2>
+                                    Obszycie
+                                </h2>
+
+                                <div layout="column">
+
+                                    <md-autocomplete ng-if="vm.szablon.obszycie.length>1"
+                                                     style="margin-bottom:30px"
+                                                     md-search-text="vm.szablon.materialSearch"
+                                                     md-selected-item="vm.szablon.materialSelected"
+                                                     md-selected-item-change="vm.szablon.materialDomyslnyChange()"
+                                                     md-items="mat in vm.normaKombiMaterialList(vm.szablon.materialSearch)"
+                                                     md-item-text="mat.nazwa"
+                                                     md-min-length="0"
+                                                     md-input-name="[szablon]_obsz_material_domyslny"
+                                                     placeholder="Wybierz materiał dla wszystkich elementów obszycia">
+                                        <md-item-template>
+                                            <span md-highlight-text="vm.szablon.materialSearch" md-highlight-flags="^i">{{mat.nazwa}}</span>
+                                        </md-item-template>
+                                        <md-not-found>
+                                            Nie znaleziono "{{vm.szablon.materialSearch}}".
+                                        </md-not-found>
+                                    </md-autocomplete>
+
+
+                                    <linia-pozioma></linia-pozioma>
+                                    <md-switch ng-model="vm.szablon.obszycieLista">Szczegółowa lista obszyć&nbsp;<span ng-if="vm.szablon.obszycie.length>0">{{kombi.kombinacjaObszycie.length}}&nbsp;poz.</span></md-switch>
+                                    <div ng-repeat="obsz in vm.szablon.obszycie track by obsz.obszycieRefId" layout style="margin-bottom:-3em" ng-if="vm.szablon.obszycieLista">
+
+                                        <md-input-container flex-gt-sm="40">
+                                            <label>Obszycie</label>
+                                            <input ng-model="obsz.obszycieNazwa" disabled />
+                                        </md-input-container>
+                                        <select-pomocnicze flex-gt-sm="40" dane-pomocnicze="vm.danePomocnicze.material"
+                                                           input-name="szabl_{{obsz.nazwa | camelCase}}"
+                                                           placeholder="wybierz materiał"
+                                                           required="true"
+                                                           selected-item="obsz.material"></select-pomocnicze>
+                                        <md-input-container flex-gt-sm="20">
+                                            <label>Uwagi</label>
+                                            <input ng-model="obsz.uwagi" />
+                                        </md-input-container>
+                                        <linia-pozioma hide-gt-sm></linia-pozioma>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div layout layout-align="end center">
+                        <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="vm.szablon.isCollapsed=!vm.szablon.isCollapsed" 
+                                   ng-if="vm.szablon.isCollapsed">
+                            <md-icon md-svg-icon="arrowUp"></md-icon>
+                        </md-button>
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
+
+
+        <!--WYBRANE KOMBINACJE-->
+        <div ng-repeat="kombi in vm.dataObj.kombinacje | orderBy: 'lp' | bezUsunietych: kombi track by $index" 
+             ng-init="kombiIndex=$index+1" layout="column">
+            <md-card>
+                <md-card-content>
+                    <md-toolbar class="md-accent md-hue-2">
+                        <div class="md-toolbar-tools">
+                            <div flex><span class="md-body-2">[{{$index+1}}]</span>&nbsp;&nbsp;{{kombi.nazwaKombinacji.nazwa}}</div>
+                            <md-button class="md-icon-button" aria-label="kombiDelete" ng-click="vm.normaKombiUsun(kombi)">
+                                <md-icon md-svg-icon="delete"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="kombi.isCollapsed=!kombi.isCollapsed" ng-if="kombi.isCollapsed">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="isCollapsedDown" ng-click="kombi.isCollapsed=!kombi.isCollapsed" ng-if="!kombi.isCollapsed">
+                                <md-icon md-svg-icon="arrowDown"></md-icon>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+
+                    <div ng-show="kombi.isCollapsed">
+                        <div>
+                            <!--WYKONCZENIE WYBOR OPCJI-->
+                            <div layout="row" layout-padding layout-wrap>
+                                <div flex-xl="25" flex-lg="33" flex-md="50" flex-sm="50" flex-xs="100" 
+                                     ng-repeat="opcja in kombi.kombinacjaWykonczenie track by opcja.wykonczenieGrupa.wykonczenieGrupaId">
+                                    <div layout="column" layout-padding>
+                                        <div class="md-title">{{opcja.wykonczenieGrupa.nazwa}}</div>
+                                        <md-divider></md-divider>
+                                        <div>&nbsp;</div>
+                                        <md-radio-group ng-model="opcja.kombinacjaWykonczenieRefId" 
+                                                        ng-change="vm.normaKombiWykonczenieChange(opcja)" 
+                                                        name="[{{kombiIndex}}]_{{opcja.wykonczenieGrupa.nazwa | camelCase}}" 
+                                                        class="md-warn">
+                                            <md-radio-button ng-required="true" ng-repeat="wybr in opcja.wykonczenieOpcje track by wybr.kombinacjaWykonczenieRefId" 
+                                                             ng-value="wybr.kombinacjaWykonczenieRefId" 
+                                                             ng-init="vm.objId>0 ? opcja.kombinacjaWykonczenieRefId: opcja.kombinacjaWykonczenieRefId=opcja.wykonczenieOpcje[0].wykonczenieId">
+                                                <strong>{{wybr.nazwa}}</strong><small ng-if="wybr.uwagi">&nbsp;<em>({{wybr.uwagi}})</em></small>
+                                            </md-radio-button>
+                                        </md-radio-group>
+                                        <div class="lineHeightByk">&nbsp;</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div flex-sm="100" ng-if="kombi.kombinacjaObszycie.length>0">
+                                <div layout-padding>
+                                    <h2>
+                                        Obszycie
+                                    </h2>
+
+                                    <div layout="column">
+
+                                        <md-autocomplete ng-if="kombi.kombinacjaObszycie.length>1"
+                                                         style="margin-bottom:30px"
+                                                         md-search-text="kombi.materialSearch"
+                                                         md-selected-item="kombi.materialSelected"
+                                                         md-selected-item-change="vm.normaKombiMaterialDomyslnyChange(mat, kombi)"
+                                                         md-items="mat in vm.normaKombiMaterialList(kombi.materialSearch)"
+                                                         md-item-text="mat.nazwa"
+                                                         md-min-length="0"
+                                                         placeholder="Wybierz materiał dla wszystkich elementów obszycia">
+                                            <md-item-template>
+                                                <span md-highlight-text="kombi.materialSearch" md-highlight-flags="^i">{{mat.nazwa}}</span>
+                                            </md-item-template>
+                                            <md-not-found>
+                                                Nie znaleziono "{{kombi.materialSearch}}".
+                                                <a ng-click="vm.materialUtworzNowy()">Utwórz nowy material..</a>
+                                            </md-not-found>
+                                        </md-autocomplete>
+
+
+                                        <linia-pozioma></linia-pozioma>
+                                        <md-switch ng-model="kombi.obszycieLista">Szczegółowa lista obszyć <span ng-if="kombi.kombinacjaObszycie.length>0">{{kombi.kombinacjaObszycie.length}} poz.</span></md-switch>
+                                        <div ng-repeat="obsz in kombi.kombinacjaObszycie track by obsz.kombinacjaObszycieRefId" layout style="margin-bottom:-3em" ng-show="kombi.obszycieLista">
+                                            <md-input-container flex-gt-sm="40">
+                                                <label>Obszycie</label>
+                                                <input ng-model="obsz.obszycieNazwa" disabled />
+                                            </md-input-container>
+
+
+                                            <md-autocomplete flex-gt-sm="40"
+                                                             required
+                                                             md-searchText="obsz.searchText"
+                                                             md-selected-item="obsz.material"
+                                                             md-selected-item-change="vm.normaKombiObszycieChange(obsz, kombi)"
+                                                             md-input-name="[{{kombiIndex}}]_obsz_{{obsz.nazwa | camelCase}}"
+                                                             md-item-text="mat.nazwa"
+                                                             md-items="mat in vm.danePomocnicze.material"
+                                                             md-min-length="0"
+                                                             md-no-cache="true"
+                                                             md-floating-label="Wybierz materiał">
+                                                <md-item-template>
+                                                    <span md-highlight-text="obsz.searchText" md-highlight-flags="^i">{{mat.nazwa}}</span>
+                                                </md-item-template>
+                                            </md-autocomplete>
+                                            <md-input-container flex-gt-sm="20">
+                                                <label>Uwagi</label>
+                                                <input ng-model="obsz.uwagi" name="uwagi" ng-change="vm.normaKombiObszycieChange(obsz, kombi)" />
+                                            </md-input-container>
+                                            <linia-pozioma hide-gt-sm></linia-pozioma>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div layout layout-align="end center">
+                            <md-button class="md-icon-button" aria-label="isCollapsedUp" ng-click="kombi.isCollapsed=!kombi.isCollapsed" ng-if="kombi.isCollapsed">
+                                <md-icon md-svg-icon="arrowUp"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+        </div>
+
+    </md-card-content>
+</md-card>

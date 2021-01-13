@@ -1,0 +1,108 @@
+﻿<div ng-if="start">
+    <md-card>
+        <md-card-content>
+            <div class="md-headline">{{naglowek}}</div>
+            <div layout="row" layout-align="space-between start">
+                <div flex="40">
+                        <div layout="row">
+                            <div flex>
+                                <p>
+                                    Dostępne:&nbsp;
+                                </p>
+                                <hr />
+                            </div>
+                            <div flex></div>
+                            <div>
+                                <md-button class="md-icon-button" aria-label="done_all" ng-click="wszystkieDodaj()" ng-show="dost.length>0">
+                                    <md-tooltip md-direction="left">Dodaj wszystkie</md-tooltip>
+                                    <md-icon md-svg-icon="doneAll"></md-icon>
+                                </md-button>
+                            </div>
+                        </div>
+
+                    <md-list>
+                        <md-list-item class="md-2-line" ng-repeat="d in dost track by d.wykonczenieId" ng-click="wykonczenieDodaj(d)">
+                            <div class="md-list-item-text">
+                                <h3>{{d.nazwa}}</h3>
+                                <h4>{{d.uwagi}}</h4>
+                            </div>
+                            <md-divider></md-divider>
+                        </md-list-item>
+                    </md-list>
+
+
+                    <!--<div ng-repeat="d in dost track by d.id" ng-click="wykonczenieDodaj(d)">
+                        <div layout="row" layout-align="center center">
+                            <md-button class="md-raised" style="width:100%" aria-label="d.nazwa">
+                                <strong>{{d.nazwa}}</strong><span ng-if="d.uwagi">&nbsp;-&nbsp;<em>{{d.uwagi}}</em></span>
+                            </md-button>
+                        </div>
+                    </div>-->
+                </div>
+                <div flex="55">
+                        <div layout="row">
+                            <div flex>
+                                <p>
+                                    Wybrane:&nbsp;
+                                </p>
+                                <hr />
+                            </div>
+                            <div flex></div>
+                            <!--<md-button class="md-icon-button" aria-label="remove_all" ng-click="wszystkieUsun()" ng-show="selectedItems.length>0">
+                                <md-tooltip md-direction="left">Usuń wszystkie</md-tooltip>
+                                <md-icon md-svg-icon="remove_circle"></md-icon>
+                            </md-button>-->
+                            </div>
+                    <md-list>
+                        <md-list-item class="md-3-line" ng-repeat="wybr in selectedItems | filter: {status: '!usuniety', wykonczenieGrupa: {nazwa: danePomocniczeGrupa}}">
+                            <div class="md-list-item-text" aria-label="wybr.nazwa">
+                                <h3>{{wybr.nazwa}}</h3>
+                                <h4>{{wybr.uwagi}}</h4>
+                                <p ng-if="wybr.politykaCenowa">Polityka cenowa:<strong>{{wybr.politykaCenowa.nazwa}}</strong>
+                                    <i ng-if="wybr.ilosc">&nbsp;({{wybr.ilosc}})&nbsp;</i>
+                                    <span ng-click="politykaCenowaUsun(wybr)" style="cursor:pointer">
+                                    <md-tooltip>Usuń polktykę cenową</md-tooltip>
+                                        &nbsp;<strong>(X)</strong>&nbsp;
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="md-secondary">
+                                <md-button class="md-icon-button" ng-click="politykaCenowaDodaj(wybr)">
+                                    <md-tooltip>Dodaj politykę cenową</md-tooltip>
+                                    <md-icon md-svg-icon="add"></md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button md-warn" ng-click="wykonczenieUsun(wybr)">
+                                    <md-icon md-svg-icon="remove_circle"></md-icon>
+                                </md-button>
+
+                            </div>
+                            <md-divider></md-divider>
+                        </md-list-item>
+                    </md-list>
+
+
+
+                    
+
+                    </div>
+
+
+
+                    <!--<div ng-repeat="wybr in selectedItems | filter: {status:'!usuniety', wykonczenieGrupa:{nazwa: danePomocniczeGrupa}}">
+                        <div layout="row" layout-align="center center">
+                            <md-button class="md-raised" style="width:100%" aria-label="wybr.nazwa" ng-click="wykonczenieUsun(wybr)">
+                                <strong>{{wybr.nazwa}}</strong><span ng-if="wybr.uwagi">&nbsp;-&nbsp;<em>{{wybr.uwagi}}</em></span>
+                            </md-button>
+                            <select-pomocnicze dane-pomocnicze="vm.danePomocnicze.wykonczenieGrupa"
+                                               selected-item="vm.dataObj.wykonczenieGrupa"
+                                               required
+                                               input-name="wykonczenieGrupa"
+                                               placeholder="Rodzaj grupy wykończenia"></select-pomocnicze>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </md-card-content>
+    </md-card>
+</div>
+
